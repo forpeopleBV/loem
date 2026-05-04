@@ -120,17 +120,25 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 260px;
-            height: 260px;
+            width: clamp(180px, 22vw, 420px);
+            height: clamp(180px, 22vw, 420px);
             border-radius: 50%;
             pointer-events: none;
             z-index: 5;
-            transform: translate(-50%, -50%);
-            background: url("/assets/cursors/landing-cursor.png") center / contain no-repeat;
+            transform: translate3d(-50%, -50%, 0) scale(0.9);
+            background:
+                radial-gradient(
+                    closest-side at 50% 50%,
+                    rgba(255, 255, 255, 0.68) 0%,
+                    rgba(255, 255, 255, 0.36) 42%,
+                    rgba(255, 255, 255, 0) 100%
+                );
             mix-blend-mode: color-dodge;
-            filter: blur(2px);
+            filter: blur(1.5px);
             opacity: 0;
-            transition: opacity 220ms ease;
+            transition: opacity 360ms ease;
+            will-change: transform, opacity;
+            contain: layout style paint;
         }
 
         .light-cursor.is-visible {
@@ -392,6 +400,15 @@
         const cardRevealState = { progress: 0 };
         let cardRevealAnimation = null;
         let lastBackgroundProgress = null;
+        const cursorState = {
+            targetX: 0,
+            targetY: 0,
+            x: 0,
+            y: 0,
+            scale: 0.9,
+            targetScale: 0.9,
+            hasMoved: false,
+        };
 
         const BASE_IMAGE_PATHS = [
             "/assets/images/landing/cards/Frame 2090055623.jpg",
@@ -919,22 +936,37 @@
             scheduleScrollStateAnimation();
         }
 
-        function updateLightCursorPosition(clientX, clientY) {
-            lightCursor.style.left = `${clientX}px`;
-            lightCursor.style.top = `${clientY}px`;
+        function updateLightCursorTarget(clientX, clientY) {
+            cursorState.targetX = clientX;
+            cursorState.targetY = clientY;
+            cursorState.targetScale = 1;
+            if (!cursorState.hasMoved) {
+                cursorState.x = clientX;
+                cursorState.y = clientY;
+                cursorState.hasMoved = true;
+            }
+        }
+
+        function renderLightCursor() {
+            if (!cursorState.hasMoved) return;
+            cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
+            cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
+            cursorState.scale += (cursorState.targetScale - cursorState.scale) * 0.12;
+            lightCursor.style.transform = `translate3d(${cursorState.x.toFixed(2)}px, ${cursorState.y.toFixed(2)}px, 0) translate(-50%, -50%) scale(${cursorState.scale.toFixed(3)})`;
         }
 
         window.addEventListener('mousemove', (event) => {
-            updateLightCursorPosition(event.clientX, event.clientY);
+            updateLightCursorTarget(event.clientX, event.clientY);
             lightCursor.classList.add('is-visible');
         }, { passive: true });
 
         window.addEventListener('mouseenter', (event) => {
-            updateLightCursorPosition(event.clientX, event.clientY);
+            updateLightCursorTarget(event.clientX, event.clientY);
             lightCursor.classList.add('is-visible');
         }, { passive: true });
 
         window.addEventListener('mouseleave', () => {
+            cursorState.targetScale = 0.9;
             lightCursor.classList.remove('is-visible');
         }, { passive: true });
 
@@ -1116,6 +1148,7 @@
 
             const renderProgress = scrollState.renderProgress;
             const currentSpin = scrollState.currentSpin;
+            renderLightCursor();
             const settleDelta = Math.abs(scrollProgress - renderProgress);
             const isIdle = settleDelta < IDLE_START_DELTA;
             idleTime = isIdle ? idleTime + dt * 0.001 : 0;
