@@ -1,0 +1,42 @@
+.site-footer {
+  display: flex;
+  justify-content: center;
+  padding: 48px 28px 28px;
+  z-index: var(--site-footer-z, 6);
+  color: var(--site-footer-color, rgba(39, 22, 15, 0.68));
+  opacity: var(--site-footer-opacity, 1);
+}
+
+.site-footer__link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.site-footer__logo {
+  display: block;
+  width: 67px;
+  height: 15px;
+  background: currentColor;
+  mask: url("/assets/brand/forpeople.svg") center / contain no-repeat;
+  -webkit-mask: url("/assets/brand/forpeople.svg") center / contain no-repeat;
+}
+
+.site-footer__year {
+  display: block;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 780px) {
+  .site-footer {
+    padding: 36px 12px 14px;
+  }
+}
