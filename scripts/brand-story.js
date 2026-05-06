@@ -11,12 +11,19 @@ const overviewItems = Array.from(
   document.querySelectorAll(".brand-overview__item"),
 );
 const brandOverview = document.querySelector(".brand-overview");
+const brandLockup = document.querySelector(".brand-lockup");
+const siteFooter = document.querySelector(".site-footer");
 const emWhiteVideo = document.getElementById("emWhiteVideo");
 const emVideoSection = document.querySelector(".em-video-section");
+const topFlowCaption = document.querySelector(".top-flow-caption");
 const autoplayVideos = Array.from(
   document.querySelectorAll(".js-autoplay-video"),
 );
 const flowVideos = Array.from(document.querySelectorAll(".js-flow-video"));
+const flowVideoSections = Array.from(
+  document.querySelectorAll(".flow-video-section"),
+);
+const topFadeMask = document.querySelector(".top-fade-mask");
 const lightCursorController = createLightCursor(lightCursor);
 const SCROLL_EASE = [0.16, 1, 0.3, 1];
 const SCROLL_MOTION_DURATION = 0.46;
@@ -30,6 +37,14 @@ let lastScrollTarget = scrollState.y;
 let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
+let flowTopMaskMix = 0;
+let flowCaptionOnVideo = 0;
+const FLOW_ACCENT_BY_STATE = {
+  presence: "#d2d20d",
+  connection: "#ece7df",
+  energy: "#fdbc05",
+  boundless: "#7886fa",
+};
 
 function playEmVideoOnceWhenReady() {
   if (!emWhiteVideo || emVideoPlayedOnce || emPlayPending) return;
@@ -66,6 +81,83 @@ function clamp(v, min, max) {
 function smoothstep(v) {
   const t = clamp(v, 0, 1);
   return t * t * (3 - 2 * t);
+}
+
+function computeFlowTopMaskTarget(vh) {
+  if (!flowVideos.length && !brandOverview && !siteFooter) return 0;
+  const maskHeight = topFadeMask?.offsetHeight || 220;
+  const enterRange = Math.max(maskHeight * 1.6, 220);
+  let target = 0;
+
+  flowVideos.forEach((video) => {
+    const rect = getVirtualRect(video);
+    if (rect.bottom <= 0 || rect.top >= vh) return;
+
+    // Darken progressively as each flow video approaches/passes behind top mask.
+    const enter = smoothstep((enterRange - rect.top) / enterRange);
+    // Fade out smoothly when section leaves the viewport.
+    const exit = smoothstep(rect.bottom / Math.max(maskHeight, 1));
+    target = Math.max(target, Math.min(enter, exit));
+  });
+
+  // Keep the top mask dark over the dark ending zone (brand overview + footer).
+  [brandOverview, siteFooter].forEach((section) => {
+    if (!section) return;
+    const rect = getVirtualRect(section);
+    if (rect.bottom <= 0 || rect.top >= vh) return;
+
+    const enter = smoothstep((enterRange - rect.top) / enterRange);
+    const exit = smoothstep(rect.bottom / Math.max(maskHeight, 1));
+    target = Math.max(target, Math.min(enter, exit));
+  });
+
+  return clamp(target, 0, 1);
+}
+
+function computeActiveFlowAccent(vh) {
+  if (!flowVideoSections.length) return null;
+  let activeSection = null;
+  let bestVisibleHeight = 0;
+
+  flowVideoSections.forEach((section) => {
+    const rect = getVirtualRect(section);
+    const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+    if (visibleHeight <= 0) return;
+    if (visibleHeight > bestVisibleHeight) {
+      bestVisibleHeight = visibleHeight;
+      activeSection = section;
+    }
+  });
+
+  if (!activeSection) return null;
+  return FLOW_ACCENT_BY_STATE[activeSection.dataset.flowState] || null;
+}
+
+function computeFlowCaptionPlacement(vh) {
+  if (!topFlowCaption || !flowVideos.length) {
+    return { y: null, opacity: 0, onVideoTarget: 0 };
+  }
+
+  const firstFlowVideoRect = getVirtualRect(flowVideos[0]);
+  const lastFlowVideoRect = getVirtualRect(flowVideos[flowVideos.length - 1]);
+  const lockY = (brandLockup?.getBoundingClientRect().bottom || 84) + 8;
+  const flowVideoTopY = firstFlowVideoRect.top + 10;
+  const y = Math.max(flowVideoTopY, lockY);
+
+  const isFlowEnteredViewport = firstFlowVideoRect.top < vh;
+  const isFlowFullyPastViewport = lastFlowVideoRect.bottom <= 0;
+  const opacity = isFlowEnteredViewport && !isFlowFullyPastViewport ? 1 : 0;
+
+  let onVideoTarget = 0;
+  if (opacity > 0) {
+    const isCaptionOverVideo = flowVideos.some((video) => {
+      const rect = getVirtualRect(video);
+      return rect.top <= y && rect.bottom >= y;
+    });
+    onVideoTarget = isCaptionOverVideo ? 1 : 0;
+  }
+
+  return { y, opacity, onVideoTarget };
 }
 
 function getVirtualRect(element) {
@@ -237,6 +329,40 @@ function updateScenesAndParallax(now) {
     emWasInSection = inSection;
   }
 
+  const flowMaskTarget = computeFlowTopMaskTarget(vh);
+  flowTopMaskMix += (flowMaskTarget - flowTopMaskMix) * 0.12;
+  if (Math.abs(flowMaskTarget - flowTopMaskMix) < 0.0015) {
+    flowTopMaskMix = flowMaskTarget;
+  }
+  document.body.style.setProperty(
+    "--top-fade-video-mix",
+    flowTopMaskMix.toFixed(4),
+  );
+
+  const activeFlowAccent = computeActiveFlowAccent(vh);
+  document.body.style.setProperty(
+    "--active-flow-accent",
+    activeFlowAccent || "var(--top-nav-color)",
+  );
+
+  const flowCaption = computeFlowCaptionPlacement(vh);
+  flowCaptionOnVideo += (flowCaption.onVideoTarget - flowCaptionOnVideo) * 0.18;
+  if (Math.abs(flowCaption.onVideoTarget - flowCaptionOnVideo) < 0.0015) {
+    flowCaptionOnVideo = flowCaption.onVideoTarget;
+  }
+  document.body.style.setProperty(
+    "--top-flow-caption-y",
+    flowCaption.y === null ? "-9999px" : `${flowCaption.y.toFixed(2)}px`,
+  );
+  document.body.style.setProperty(
+    "--top-flow-caption-opacity",
+    flowCaption.opacity.toFixed(3),
+  );
+  document.body.style.setProperty(
+    "--top-flow-caption-on-video",
+    flowCaptionOnVideo.toFixed(4),
+  );
+
   requestAnimationFrame(updateScenesAndParallax);
 }
 
@@ -290,7 +416,7 @@ window.addEventListener(
 
 document.querySelectorAll(".js-nav").forEach((link) => {
   link.addEventListener("click", (event) => {
-    const href = link.getAttribute("href");
+    const href = link.getAttribute("href") || link.getAttribute("data-href");
     if (!href) return;
     event.preventDefault();
     if (href === window.location.pathname) return;

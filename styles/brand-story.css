@@ -45,21 +45,64 @@ body {
 }
 
 body {
-  --light-cursor-size: clamp(180px, 22vw, 420px);
+  --light-cursor-size: clamp(220px, 18vw, 290px);
   --light-cursor-z: 60;
-  --light-cursor-opacity: 0.38;
-  --light-cursor-opacity-duration: 360ms;
-  --light-cursor-filter: blur(3px);
-  --site-footer-color: #fff;
+  --light-cursor-opacity: 1;
+  --light-cursor-opacity-duration: 220ms;
+  --light-cursor-blend-mode: multiply;
+  --light-cursor-background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 232, 168, 0.83) 0%,
+      rgba(255, 232, 168, 0.6) 24%,
+      rgba(255, 232, 168, 0.37) 44%,
+      rgba(255, 232, 168, 0.18) 63%,
+      rgba(255, 232, 168, 0.07) 74%,
+      rgba(255, 232, 168, 0) 86%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 232, 168, 0.25) 0%,
+      rgba(255, 232, 168, 0) 70%
+    ),
+    url("/assets/cursors/landing-cursor.png") center / 88% 88% no-repeat;
+  --light-cursor-filter:
+    blur(1.8px)
+    saturate(1.02)
+    brightness(1.02);
+  --site-footer-color: #FFFAF2;
   --site-footer-bg: #27160f;
   --site-footer-z: 50;
+  --top-fade-mask-rgb: 255, 250, 242;
+  --top-fade-mask-a1: 0.92;
+  --top-fade-mask-a2: 0.58;
+  --top-fade-mask-a3: 0.18;
+  --top-fade-dark-a1: 0.8;
+  --top-fade-dark-a2: 0.5;
+  --top-fade-dark-a3: 0.16;
+  --top-fade-video-mix: 0;
+  --top-nav-r: calc(39 + 216 * var(--top-fade-video-mix));
+  --top-nav-g: calc(22 + 233 * var(--top-fade-video-mix));
+  --top-nav-b: calc(15 + 240 * var(--top-fade-video-mix));
+  --top-nav-color: rgb(var(--top-nav-r), var(--top-nav-g), var(--top-nav-b));
+  --active-flow-accent: var(--top-nav-color);
+  --top-flow-caption-y: -9999px;
+  --top-flow-caption-opacity: 0;
+  --top-flow-caption-on-video: 0;
   min-height: 100%;
-  background: #fff;
+  background: #FFFAF2;
   color: #27160f;
   overflow-x: hidden;
   opacity: 0;
   transition: opacity 620ms ease;
   font-family: "Test Martina Plantijn", serif;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body:not(.lookbook-page),
+  body:not(.lookbook-page) * {
+    cursor: none !important;
+  }
 }
 
 body.page-in {
@@ -113,22 +156,52 @@ body::-webkit-scrollbar {
   height: 220px;
   pointer-events: none;
   z-index: 45;
-  background-image: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.58) 42%,
-    rgba(255, 255, 255, 0.18) 75%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a1) * (1 - var(--top-fade-video-mix)))
+      )
+      0%,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a2) * (1 - var(--top-fade-video-mix)))
+      )
+      42%,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a3) * (1 - var(--top-fade-video-mix)))
+      )
+      75%,
+      rgba(var(--top-fade-mask-rgb), 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a1) * var(--top-fade-video-mix)))
+      0%,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a2) * var(--top-fade-video-mix)))
+      42%,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a3) * var(--top-fade-video-mix)))
+      75%,
+      rgba(0, 0, 0, 0) 100%
+    );
 }
 
 .top-link,
 .top-link:visited {
+  display: inline-flex;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 1;
   position: relative;
   pointer-events: auto;
-  color: #27160f;
+  color: var(--top-nav-color);
   border: 0;
   background: transparent;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
   text-decoration: none;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
@@ -141,21 +214,29 @@ body::-webkit-scrollbar {
 }
 
 .top-link:hover {
-  color: #ff9d00;
+  color: color-mix(
+    in srgb,
+    #ff9d00 calc((1 - var(--top-fade-video-mix)) * 100%),
+    #fff calc(var(--top-fade-video-mix) * 100%)
+  );
 }
 
 .top-link--current,
 .top-link--current:hover {
-  color: #27160f;
+  color: var(--top-nav-color);
   cursor: default;
   pointer-events: none;
 }
 
 .top-link.right {
+  grid-row: 1;
+  grid-column: 3;
   justify-self: end;
 }
 
 .brand-lockup {
+  grid-row: 1;
+  grid-column: 2;
   justify-self: center;
   text-align: center;
   pointer-events: auto;
@@ -166,13 +247,39 @@ body::-webkit-scrollbar {
   height: auto;
   display: block;
   margin: 0 auto;
-  filter: none;
+  filter: invert(var(--top-fade-video-mix));
+}
+
+.top-flow-caption {
+  position: fixed;
+  left: 50%;
+  top: var(--top-flow-caption-y);
+  z-index: 56;
+  margin: 0;
+  transform: translateX(-50%);
+  color: color-mix(
+    in srgb,
+    var(--top-nav-color) calc((1 - var(--top-flow-caption-on-video)) * 100%),
+    var(--active-flow-accent) calc(var(--top-flow-caption-on-video) * 100%)
+  );
+  text-align: center;
+  font-family: "Greed Condensed", Arial, sans-serif;
+  font-size: clamp(10px, 0.74vw, 14px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.22);
+  opacity: var(--top-flow-caption-opacity);
+  transition: color 180ms ease, opacity 180ms ease;
+  pointer-events: none;
 }
 
 .lookbook-page {
   --light-cursor-opacity: 0;
   --site-footer-color: rgba(39, 22, 15, 0.62);
   --site-footer-bg: transparent;
+  --top-fade-mask-rgb: 237, 229, 218;
   min-height: 100vh;
   background: #ede5da;
   color: #27160f;
@@ -521,6 +628,7 @@ body::-webkit-scrollbar {
   min-height: 72vh;
   display: grid;
   place-items: center;
+  gap: clamp(14px, 1.8vw, 28px);
   padding: 6vh 0 10vh;
 }
 
@@ -550,7 +658,17 @@ body::-webkit-scrollbar {
   will-change: transform, opacity;
 }
 
+.em-video-signature {
+  width: clamp(112px, 13vw, 208px);
+  height: auto;
+  display: block;
+  opacity: calc(var(--text-o, 1) * 0.96);
+  transform: translateY(var(--text-y, 0px));
+  will-change: transform, opacity;
+}
+
 .flow-video-section {
+  --flow-accent: #d2d20d;
   min-height: 100vh;
   width: 100vw;
   margin-top: 0;
@@ -559,6 +677,18 @@ body::-webkit-scrollbar {
   position: relative;
   z-index: 3;
   overflow: hidden;
+}
+
+.flow-video-section[data-flow-state="connection"] {
+  --flow-accent: #ece7df;
+}
+
+.flow-video-section[data-flow-state="energy"] {
+  --flow-accent: #fdbc05;
+}
+
+.flow-video-section[data-flow-state="boundless"] {
+  --flow-accent: #7886fa;
 }
 
 .flow-video {
@@ -576,7 +706,7 @@ body::-webkit-scrollbar {
 }
 
 .flow-state {
-  --flow-state-color: #1fa36f;
+  --flow-state-color: var(--flow-accent);
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -587,16 +717,17 @@ body::-webkit-scrollbar {
   will-change: transform, opacity;
 }
 
-.flow-state[data-flow-state="connection"] {
-  --flow-state-color: #ece7df;
-}
-
-.flow-state[data-flow-state="energy"] {
-  --flow-state-color: #fdbc05;
-}
-
-.flow-state[data-flow-state="boundless"] {
-  --flow-state-color: #7886fa;
+.em-video-caption--flow {
+  position: absolute;
+  top: clamp(10px, 1.65vw, 30px);
+  left: 50%;
+  z-index: 6;
+  margin: 0;
+  transform: translateX(-50%);
+  color: var(--flow-accent);
+  opacity: 1;
+  text-shadow: 0 0 14px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
 }
 
 .flow-state::after {
@@ -940,12 +1071,17 @@ body::-webkit-scrollbar {
     top: 12px;
     left: 12px;
     right: 12px;
+    row-gap: 4px;
   }
 
   .top-link,
   .top-link:visited {
     font-size: 13px;
     padding: 8px 10px;
+  }
+
+  .top-flow-caption {
+    font-size: clamp(9px, 2.2vw, 12px);
   }
 
   .scene {

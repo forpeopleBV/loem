@@ -69,6 +69,7 @@ let W = 0;
 let H = 0;
 let cx = 0;
 let cy = 0;
+let canvasDpr = window.devicePixelRatio || 1;
 let scrollProgress = 0;
 const scrollState = {
   renderProgress: 0,
@@ -120,6 +121,7 @@ function updateDynamicBackground() {
 
 function resize() {
   const dpr = window.devicePixelRatio || 1;
+  canvasDpr = dpr;
   W = window.innerWidth;
   H = window.innerHeight;
   canvas.width = W * dpr;
@@ -128,7 +130,7 @@ function resize() {
   canvas.style.height = `${H}px`;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = "medium";
+  ctx.imageSmoothingQuality = "high";
   cx = W / 2;
   cy = H / 2;
 }
@@ -607,13 +609,15 @@ function drawCenterStep(step, centerX, alpha) {
       );
       const drawW = video.videoWidth * scale;
       const drawH = video.videoHeight * scale;
-      // Key out near-white at display size to avoid processing full source frames.
-      const keyW = Math.max(1, Math.round(drawW));
-      const keyH = Math.max(1, Math.round(drawH));
+      // Key out at device-pixel resolution to preserve retina sharpness.
+      const keyW = Math.max(1, Math.round(drawW * canvasDpr));
+      const keyH = Math.max(1, Math.round(drawH * canvasDpr));
       if (videoKeyCanvas.width !== keyW || videoKeyCanvas.height !== keyH) {
         videoKeyCanvas.width = keyW;
         videoKeyCanvas.height = keyH;
       }
+      videoKeyCtx.imageSmoothingEnabled = true;
+      videoKeyCtx.imageSmoothingQuality = "high";
       videoKeyCtx.clearRect(0, 0, keyW, keyH);
       videoKeyCtx.drawImage(video, 0, 0, keyW, keyH);
       const frame = videoKeyCtx.getImageData(0, 0, keyW, keyH);

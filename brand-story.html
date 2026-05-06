@@ -14,12 +14,13 @@
     <div class="top-fade-mask" aria-hidden="true"></div>
 
     <header class="top-nav">
-      <span class="top-link top-link--current" aria-current="page">
-        Brand Story
-      </span>
+      <button class="top-link js-nav" type="button" data-href="/">
+        BRAND INTRO
+      </button>
       <a class="brand-lockup js-nav" href="/" aria-label="LOEM home">
         <img src="/assets/brand/Wordmark.svg" alt="LOEM wordmark" />
       </a>
+      <p class="top-flow-caption">THE FLOW STATES WE EMBRACE</p>
       <a class="top-link right js-nav" href="/lookbook">Lookbook</a>
     </header>
 
@@ -138,10 +139,14 @@
       </section>
 
       <section class="scene em-video-section" data-scene>
-          <p class="em-video-caption">THE FLOW STATES WE EMBRACE</p>
+          <img
+            class="em-video-signature"
+            src="/assets/brand/Loem%20calligraphy%20signature.png"
+            alt="Loem calligraphy signature"
+          />
       </section>
 
-      <section class="scene flow-video-section" data-scene>
+      <section class="scene flow-video-section" data-scene data-flow-state="presence">
         <video
           class="flow-video js-flow-video"
           preload="auto"
@@ -178,7 +183,7 @@
         </div>
       </section>
 
-      <section class="scene flow-video-section" data-scene>
+      <section class="scene flow-video-section" data-scene data-flow-state="connection">
         <video
           class="flow-video js-flow-video"
           preload="auto"
@@ -219,7 +224,7 @@
         </div>
       </section>
 
-      <section class="scene flow-video-section" data-scene>
+      <section class="scene flow-video-section" data-scene data-flow-state="energy">
         <video
           class="flow-video js-flow-video"
           preload="auto"
@@ -259,7 +264,7 @@
         </div>
       </section>
 
-      <section class="scene flow-video-section" data-scene>
+      <section class="scene flow-video-section" data-scene data-flow-state="boundless">
         <video
           class="flow-video js-flow-video"
           preload="auto"
