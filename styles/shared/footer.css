@@ -1,5 +1,7 @@
 .site-footer {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
   padding: 48px 28px 28px;
   z-index: var(--site-footer-z, 6);
@@ -26,13 +28,21 @@
   -webkit-mask: url("/assets/brand/forpeople.svg") center / contain no-repeat;
 }
 
-.site-footer__year {
+.site-footer__year,
+.site-footer__disclaimer {
   display: block;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-footer__meta {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
 }
 
 @media (max-width: 780px) {
