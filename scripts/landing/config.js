@@ -27,7 +27,7 @@ export const CENTER_STEPS = [
     { type: 'text', text: "redefining daily essentials—for flow." },
     { type: 'text', text: "Where the mind awakens," },
     { type: 'text', text: "the self dissolves," },
-    { type: 'text', text: "And everything moves effortlessly." },
+    { type: 'text', text: "and everything moves effortlessly." },
     { type: 'video', videoPath: CENTER_VIDEO_PATH },
 ];
 export const CENTER_SLIDE_DISTANCE_RATIO = 0.36;

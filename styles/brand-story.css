@@ -50,11 +50,12 @@ body {
   --light-cursor-opacity: 0.38;
   --light-cursor-opacity-duration: 360ms;
   --light-cursor-filter: blur(3px);
-  --site-footer-color: rgba(255, 255, 255, 0.72);
+  --site-footer-color: #fff;
+  --site-footer-bg: #27160f;
   --site-footer-z: 50;
   min-height: 100%;
   background: #fff;
-  color: #fff;
+  color: #27160f;
   overflow-x: hidden;
   opacity: 0;
   transition: opacity 620ms ease;
@@ -114,10 +115,10 @@ body::-webkit-scrollbar {
   z-index: 45;
   background-image: linear-gradient(
     180deg,
-    rgba(39, 22, 15, 0.72) 0%,
-    rgba(39, 22, 15, 0.42) 42%,
-    rgba(39, 22, 15, 0.16) 75%,
-    rgba(39, 22, 15, 0) 100%
+    rgba(255, 255, 255, 0.92) 0%,
+    rgba(255, 255, 255, 0.58) 42%,
+    rgba(255, 255, 255, 0.18) 75%,
+    rgba(255, 255, 255, 0) 100%
   );
 }
 
@@ -125,13 +126,13 @@ body::-webkit-scrollbar {
 .top-link:visited {
   position: relative;
   pointer-events: auto;
-  color: #685c57;
+  color: #27160f;
   border: 0;
   background: transparent;
   text-decoration: none;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -145,7 +146,7 @@ body::-webkit-scrollbar {
 
 .top-link--current,
 .top-link--current:hover {
-  color: #fff;
+  color: #27160f;
   cursor: default;
   pointer-events: none;
 }
@@ -165,12 +166,13 @@ body::-webkit-scrollbar {
   height: auto;
   display: block;
   margin: 0 auto;
-  filter: brightness(0) invert(1);
+  filter: none;
 }
 
 .lookbook-page {
   --light-cursor-opacity: 0;
   --site-footer-color: rgba(39, 22, 15, 0.62);
+  --site-footer-bg: transparent;
   min-height: 100vh;
   background: #ede5da;
   color: #27160f;
@@ -380,7 +382,7 @@ body::-webkit-scrollbar {
 
 .what-we-do__copy {
   width: min(521px, 100%);
-  color: #fff;
+  color: #27160f;
   text-align: center;
 }
 
@@ -499,7 +501,7 @@ body::-webkit-scrollbar {
   height: auto;
   display: block;
   margin: 0 auto 12px;
-  filter: brightness(0) invert(1);
+  filter: brightness(0);
 }
 
 .collection-item span {

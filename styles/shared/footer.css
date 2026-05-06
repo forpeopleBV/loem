@@ -4,6 +4,7 @@
   align-items: center;
   justify-content: center;
   padding: 48px 28px 28px;
+  background: var(--site-footer-bg, transparent);
   z-index: var(--site-footer-z, 6);
   color: var(--site-footer-color, rgba(39, 22, 15, 0.68));
   opacity: var(--site-footer-opacity, 1);
