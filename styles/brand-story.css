@@ -53,7 +53,7 @@ body {
   --site-footer-color: rgba(255, 255, 255, 0.72);
   --site-footer-z: 50;
   min-height: 100%;
-  background: #27160f;
+  background: #fff;
   color: #fff;
   overflow-x: hidden;
   opacity: 0;
