@@ -73,13 +73,6 @@ body {
   transition: opacity 620ms ease;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  body,
-  body * {
-    cursor: none !important;
-  }
-}
-
 body.page-in {
   opacity: 1;
 }

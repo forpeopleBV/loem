@@ -5,72 +5,206 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
     <title>LOEM - Lookbook</title>
-    <link rel="stylesheet" href="/styles/brand-story.css" />
+    <link rel="stylesheet" href="/styles/lookbook.css" />
   </head>
 
   <body class="lookbook-page">
-    <div id="lightCursor" class="light-cursor" aria-hidden="true"></div>
-    <div class="grain-overlay" aria-hidden="true"></div>
     <div class="top-fade-mask" aria-hidden="true"></div>
 
     <header class="top-nav">
-      <a class="top-link js-nav" href="/brand-story">Brand Story</a>
+      <button class="top-link js-nav" type="button" data-href="/">
+        <span class="top-link__main">BRAND INTRO</span>
+        <span class="top-link__sub">品牌概述</span>
+      </button>
       <a class="brand-lockup js-nav" href="/" aria-label="LOEM home">
         <img src="/assets/brand/Wordmark.svg" alt="LOEM wordmark" />
       </a>
-      <span class="top-link top-link--current right" aria-current="page">
-        Lookbook
-      </span>
+      <a class="top-link right js-nav" href="/brand-story">
+        <span class="top-link__main">BRAND STORY</span>
+        <span class="top-link__sub">品牌故事</span>
+      </a>
     </header>
 
-    <main class="lookbook-shell" aria-label="Lookbook">
-      <section class="lookbook-wordmark-section" aria-labelledby="wordmark-title">
-        <div class="lookbook-intro lookbook-intro--left">
-          Inspired by Zen Eastern philosophy, our brand embodies a spirit of
-          flow—unbound, energising, and intuitively alive.
-        </div>
-        <div class="lookbook-intro lookbook-intro--right">
-          It moves with purpose yet without resistance, creating an experience
-          that feels both effortless and deeply considered.
-        </div>
-
-        <div class="lookbook-wordmark-copy">
-          <h1 id="wordmark-title">Wordmark</h1>
-          <p>
-            Our wordmark is always set small. It needs room to breathe, so keep
-            whitespace generous. Use it in black or white only or in Golden
-            Yellow. Use a deboss it for an ultra-premium finish on packaging.
+    <main class="lookbook-root" aria-label="Brand in action">
+      <section class="lookbook-section lookbook-section--intro" aria-label="Introduction">
+        <div class="lookbook-section__copy-grid">
+          <p class="lookbook-section__copy">
+            Inspired by Zen Eastern philosophy, our brand embodies a spirit of
+            flow--unbound, energising, and intuitively alive.
+          </p>
+          <p class="lookbook-section__copy">
+            It moves with purpose yet without resistance, creating an
+            experience that feels both effortless and deeply considered.
           </p>
         </div>
+      </section>
 
-        <figure class="lookbook-wordmark-image">
-          <img
-            src="/assets/images/lookbook/a6-1.png"
-            alt="LOEM golden yellow wordmark applied to glass by a tiled entryway."
-          />
-        </figure>
+      <section class="lookbook-section lookbook-section--map" aria-label="Section map">
+        <div class="lookbook-map" role="group" aria-label="Lookbook sections">
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="wordmark">
+            Wordmark
+          </button>
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="motif-signature">
+            Motif & signature
+          </button>
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="product-line-icons">
+            Product line icons
+          </button>
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="art-direction">
+            Art direction
+          </button>
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="typography">
+            Typography
+          </button>
+          <button class="lookbook-map__item js-lookbook-map-item" type="button" data-target="colour">
+            Colour
+          </button>
+        </div>
+      </section>
+
+      <section
+        id="wordmark"
+        class="lookbook-section lookbook-section--wordmark lookbook-scene"
+        data-scene
+        aria-label="Wordmark"
+      >
+        <div class="wordmark-freeform">
+          <article
+            class="wordmark-copy lookbook-reveal lookbook-reveal--text"
+            data-reveal="text"
+            data-reveal-start="0.06"
+          >
+            <h2>WORDMARK</h2>
+            <p>
+              Our wordmark is always set small. It needs room to breathe, so
+              keep whitespace generous.
+            </p>
+            <p>
+              Use it in black or white only or in Golden Yellow. Use a deboss
+              it for an ultra-premium finish on packaging.
+            </p>
+            <a href="#" aria-label="Download Wordmark artwork pack">
+              Download Artwork Pack
+            </a>
+          </article>
+
+          <figure
+            class="wordmark-media-card wordmark-media-card--left lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.12"
+            data-parallax="0.24"
+          >
+            <img
+              src="/assets/images/lookbook/a6-1.png"
+              alt="LOEM wordmark application on stone bench."
+            />
+          </figure>
+
+          <figure
+            class="wordmark-media-card wordmark-media-card--right lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.16"
+            data-parallax="0.34"
+          >
+            <video
+              class="wordmark-media-card__video js-autoplay-video"
+              preload="auto"
+              playsinline
+              webkit-playsinline
+              muted
+              autoplay
+              loop
+            >
+              <source
+                src="/assets/videos/brand-story/brand-story-header.mp4"
+                type="video/mp4"
+              />
+            </video>
+          </figure>
+
+          <figure
+            class="wordmark-guide lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.24"
+            data-parallax="0.16"
+          >
+            <img
+              src="/assets/images/lookbook/guide_logo.png"
+              alt="LOEM wordmark guide."
+            />
+          </figure>
+
+          <figure
+            class="wordmark-media-card wordmark-media-card--parfum lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.3"
+            data-parallax="0.4"
+          >
+            <figcaption class="wordmark-media-card__meta">
+              <span>LOĒM</span>
+              <span>LIFE IN FLOW.</span>
+            </figcaption>
+            <img
+              src="/assets/images/lookbook/parfum.png"
+              alt="LOEM parfum visual."
+            />
+          </figure>
+
+          <article
+            id="motif-signature"
+            class="motif-copy lookbook-reveal lookbook-reveal--text"
+            data-reveal="text"
+            data-reveal-start="0.38"
+          >
+            <h2>MOTIF &amp; SIGNATURE</h2>
+            <p>
+              Our <em>ēm</em> motif is a shorthand for the brand. Designed to
+              capture a sense of flowing energy, it brings a human quality to
+              layouts.
+            </p>
+            <p>
+              The signature is our more expressive mark. Set it large, in
+              colour, or let it crop off the edge. It is meant to feel
+              confident and full of energy.
+            </p>
+            <a href="#" aria-label="Download Motif artwork pack">
+              Download Artwork Pack
+            </a>
+
+            <figure class="motif-mark">
+              <img
+                src="/assets/images/lookbook/Loem_Motif-Black%201.svg"
+                alt="LOEM motif mark in black."
+              />
+            </figure>
+          </article>
+
+          <figure
+            class="wordmark-media-card wordmark-media-card--phone lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.47"
+            data-parallax="0.29"
+          >
+            <img
+              src="/assets/images/lookbook/phone_mockup.png"
+              alt="LOEM phone mockup visual."
+            />
+          </figure>
+
+          <figure
+            class="wordmark-media-card wordmark-media-card--box lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.51"
+            data-parallax="0.27"
+          >
+            <img
+              src="/assets/images/lookbook/box_yellow.png"
+              alt="LOEM yellow box packaging visual."
+            />
+          </figure>
+        </div>
       </section>
     </main>
-
-    <footer class="site-footer">
-      <a
-        class="site-footer__link"
-        href="http://forpeople.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Forpeople"
-      >
-        <span
-          class="site-footer__logo"
-          role="img"
-          aria-label="Forpeople"
-        ></span>
-        <span class="site-footer__meta">
-          <span class="site-footer__year">&copy; 2026</span>
-          <small class="site-footer__disclaimer">FOR INTERNAL USE ONLY</small>
-        </span>
-      </a>
-    </footer>
-    <script type="module" src="/scripts/brand-story.js"></script>
+    <script type="module" src="/scripts/lookbook.js"></script>
   </body>
 </html>

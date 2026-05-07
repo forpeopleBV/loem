@@ -1,0 +1,597 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&display=swap");
+
+@font-face {
+  font-family: "Test Martina Plantijn";
+  src:
+    url("/assets/fonts/MartinaPlantijn-Light.woff2") format("woff2"),
+    url("/assets/fonts/MartinaPlantijn-Light.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Greed Condensed";
+  src:
+    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff2")
+      format("woff2"),
+    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff")
+      format("woff");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  --top-fade-mask-rgb: 255, 250, 242;
+  --top-fade-mask-a1: 0.92;
+  --top-fade-mask-a2: 0.58;
+  --top-fade-mask-a3: 0.18;
+  --top-fade-dark-a1: 0.8;
+  --top-fade-dark-a2: 0.5;
+  --top-fade-dark-a3: 0.16;
+  --top-fade-video-mix: 0;
+  background: #fffaf2;
+  color: #27160f;
+  opacity: 0;
+  transition: opacity 380ms ease;
+}
+
+body.page-in {
+  opacity: 1;
+}
+
+body.page-out {
+  opacity: 0;
+}
+
+.top-fade-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  pointer-events: none;
+  z-index: 45;
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a1) * (1 - var(--top-fade-video-mix)))
+      )
+      0%,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a2) * (1 - var(--top-fade-video-mix)))
+      )
+      42%,
+      rgba(
+        var(--top-fade-mask-rgb),
+        calc(var(--top-fade-mask-a3) * (1 - var(--top-fade-video-mix)))
+      )
+      75%,
+      rgba(var(--top-fade-mask-rgb), 0) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a1) * var(--top-fade-video-mix)))
+      0%,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a2) * var(--top-fade-video-mix)))
+      42%,
+      rgba(0, 0, 0, calc(var(--top-fade-dark-a3) * var(--top-fade-video-mix)))
+      75%,
+      rgba(0, 0, 0, 0) 100%
+    );
+}
+
+.top-nav {
+  position: fixed;
+  top: 52px;
+  left: 28px;
+  right: 28px;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  pointer-events: none;
+}
+
+.top-link,
+.top-link:visited {
+  --top-link-pad-x: 14px;
+  display: inline-flex;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 1;
+  justify-self: start;
+  position: relative;
+  pointer-events: auto;
+  color: #27160f;
+  border: 0;
+  background: transparent;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  text-decoration: none;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: center;
+  width: fit-content;
+  padding: 10px var(--top-link-pad-x);
+  transition: color 180ms ease;
+}
+
+.top-link__main,
+.top-link__sub {
+  display: inline;
+  white-space: nowrap;
+}
+
+.top-link__sub {
+  position: absolute;
+  top: 80%;
+  left: var(--top-link-pad-x);
+  right: var(--top-link-pad-x);
+  text-align: left;
+  font-family:
+    "Noto Sans SC",
+    "Noto Sans",
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  font-size: calc(0.72em + 2px);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-transform: none;
+  pointer-events: none;
+}
+
+.top-link.right .top-link__sub {
+  text-align: right;
+}
+
+.top-link:hover,
+.top-link:focus-visible {
+  color: #ff9d00;
+  outline: none;
+}
+
+.top-link.right {
+  grid-row: 1;
+  grid-column: 3;
+  justify-self: end;
+}
+
+.brand-lockup {
+  grid-row: 1;
+  grid-column: 2;
+  justify-self: center;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.brand-lockup img {
+  width: clamp(95px, 9vw, 152px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  filter: none;
+}
+
+.lookbook-root {
+  min-height: 100vh;
+}
+
+.lookbook-section {
+  width: min(1728px, 100vw);
+  margin: 0 auto;
+}
+
+.lookbook-section--intro {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 0 clamp(24px, 4vw, 72px);
+}
+
+.lookbook-section__copy-grid {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 420px));
+  justify-content: center;
+  gap: clamp(44px, 5.8vw, 96px);
+  align-items: center;
+}
+
+.lookbook-section__copy {
+  max-width: 420px;
+  margin: 0;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(13px, 1.28vw, 25px);
+  font-weight: 300;
+  line-height: 1.08;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.lookbook-section--map {
+  min-height: auto;
+  display: grid;
+  place-items: start center;
+  padding: clamp(20px, 3vh, 46px) clamp(24px, 4vw, 72px)
+    clamp(54px, 8vh, 120px);
+}
+
+.lookbook-map {
+  width: min(1260px, 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(22px, 2.7vw, 52px);
+  flex-wrap: wrap;
+}
+
+.lookbook-map__item {
+  --map-o: 0;
+  --map-y: 22px;
+  border: 0;
+  background: transparent;
+  color: #27160f;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: var(--map-o);
+  transform: translateY(var(--map-y));
+  transition: color 180ms ease;
+}
+
+.lookbook-map__item:hover,
+.lookbook-map__item:focus-visible {
+  color: #ff9d00;
+  outline: none;
+}
+
+.lookbook-section--wordmark {
+  padding: clamp(22px, 3.1vh, 56px) clamp(24px, 4vw, 72px)
+    clamp(84px, 10vh, 150px);
+}
+
+.lookbook-scene {
+  --scene-local: 0;
+  --text-y: 0px;
+  --text-o: 1;
+  --media-y: 0px;
+  --media-o: 1;
+}
+
+.lookbook-reveal {
+  will-change: transform, opacity;
+}
+
+.lookbook-reveal--text {
+  opacity: var(--text-o);
+  transform: translateY(var(--text-y));
+}
+
+.lookbook-reveal--media {
+  opacity: var(--media-o);
+  transform: translate(var(--px, 0px), calc(var(--py, 0px) + var(--media-y)));
+}
+
+.wordmark-freeform {
+  width: min(1660px, 94vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(20px, 2.7vw, 52px);
+  row-gap: clamp(10px, 1.4vw, 26px);
+}
+
+.wordmark-copy {
+  grid-column: 1 / 5;
+  grid-row: 1;
+  max-width: min(100%, 430px);
+  align-self: start;
+  color: #27160f;
+}
+
+.wordmark-copy h2,
+.motif-copy h2 {
+  margin: 0 0 12px;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(16px, 1.08vw, 21px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.wordmark-copy p,
+.motif-copy p {
+  margin: 0;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(13px, 1.12vw, 22px);
+  font-weight: 300;
+  line-height: 1.08;
+}
+
+.wordmark-copy p + p,
+.motif-copy p + p {
+  margin-top: 0;
+}
+
+.wordmark-copy a,
+.motif-copy a {
+  display: inline-block;
+  margin-top: 16px;
+  color: #27160f;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(13px, 1.12vw, 22px);
+  font-weight: 300;
+  line-height: 1.08;
+  text-decoration: underline;
+}
+
+.wordmark-copy a:hover,
+.wordmark-copy a:focus-visible,
+.motif-copy a:hover,
+.motif-copy a:focus-visible {
+  color: #ff9d00;
+  outline: none;
+}
+
+.wordmark-media-card {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  background: #eee8df;
+}
+
+.wordmark-media-card img,
+.wordmark-media-card__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto;
+}
+
+.wordmark-media-card--left {
+  grid-column: 1 / 5;
+  grid-row: 2;
+  aspect-ratio: 1 / 1.12;
+  margin-top: clamp(14px, 1.8vw, 34px);
+}
+
+.wordmark-media-card--right {
+  grid-column: 6 / 13;
+  grid-row: 1 / span 2;
+  aspect-ratio: 1 / 1.18;
+}
+
+.wordmark-guide {
+  grid-column: 3 / 11;
+  grid-row: 3;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 3;
+  margin-top: clamp(-24px, -1.8vw, -12px);
+}
+
+.wordmark-guide img {
+  width: min(100%, 980px);
+  height: auto;
+  display: block;
+}
+
+.wordmark-media-card--parfum {
+  grid-column: 1 / 7;
+  grid-row: 4;
+  aspect-ratio: 1 / 1.18;
+  margin-top: clamp(8px, 1.2vw, 20px);
+}
+
+.wordmark-media-card__meta {
+  position: absolute;
+  top: clamp(20px, 2.8vw, 54px);
+  left: clamp(18px, 2.7vw, 52px);
+  right: clamp(18px, 2.7vw, 52px);
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fdbc05;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(18px, 2.2vw, 44px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.motif-copy {
+  grid-column: 8 / 12;
+  grid-row: 4;
+  max-width: min(100%, 460px);
+  margin-top: clamp(8px, 1.2vw, 20px);
+  color: #27160f;
+}
+
+.motif-mark {
+  grid-column: 8 / 12;
+  grid-row: 5;
+  margin: 0;
+  align-self: start;
+}
+
+.motif-mark img {
+  display: block;
+  width: min(100%, 430px);
+  height: auto;
+}
+
+.wordmark-media-card--phone {
+  grid-column: 1 / 7;
+  grid-row: 6;
+  aspect-ratio: 1 / 1.16;
+  margin-top: clamp(18px, 2vw, 38px);
+}
+
+.wordmark-media-card--box {
+  grid-column: 8 / 13;
+  grid-row: 6;
+  aspect-ratio: 1 / 1.16;
+  margin-top: clamp(18px, 2vw, 38px);
+  background: #d5d6da;
+}
+
+@media (max-width: 780px) {
+  .top-nav {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    row-gap: 4px;
+  }
+
+  .top-link,
+  .top-link:visited {
+    --top-link-pad-x: 10px;
+    font-size: 13px;
+    padding: 8px var(--top-link-pad-x);
+  }
+
+  .lookbook-section--intro {
+    min-height: 100svh;
+    padding: 0 22px;
+  }
+
+  .lookbook-section__copy-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    width: min(100%, 640px);
+  }
+
+  .lookbook-section__copy {
+    text-align: left;
+    font-size: clamp(13px, 4.4vw, 25px);
+  }
+
+  .lookbook-section--map {
+    min-height: auto;
+    padding: 18px 22px 44px;
+  }
+
+  .lookbook-map {
+    justify-content: flex-start;
+    gap: 14px 20px;
+    width: min(100%, 640px);
+  }
+
+  .lookbook-map__item {
+    font-size: 13px;
+  }
+
+  .lookbook-section--wordmark {
+    padding: 18px 22px 68px;
+  }
+
+  .wordmark-freeform {
+    width: min(100%, 640px);
+    grid-template-columns: 1fr;
+    row-gap: 18px;
+  }
+
+  .wordmark-copy,
+  .wordmark-media-card--left,
+  .wordmark-media-card--right,
+  .wordmark-guide,
+  .wordmark-media-card--parfum,
+  .motif-copy,
+  .motif-mark,
+  .wordmark-media-card--phone,
+  .wordmark-media-card--box {
+    grid-column: auto;
+    grid-row: auto;
+    margin-top: 0;
+  }
+
+  .wordmark-copy {
+    order: 1;
+    max-width: 100%;
+  }
+
+  .wordmark-media-card--right {
+    order: 2;
+  }
+
+  .wordmark-media-card--left {
+    order: 3;
+  }
+
+  .wordmark-guide {
+    order: 4;
+  }
+
+  .wordmark-media-card--parfum {
+    order: 5;
+  }
+
+  .motif-copy {
+    order: 6;
+    max-width: 100%;
+  }
+
+  .motif-mark {
+    order: 7;
+  }
+
+  .wordmark-media-card--phone {
+    order: 8;
+  }
+
+  .wordmark-media-card--box {
+    order: 9;
+  }
+
+  .wordmark-guide img {
+    width: min(100%, 620px);
+  }
+
+  .motif-mark img {
+    width: min(100%, 360px);
+  }
+
+  .wordmark-media-card__meta {
+    font-size: clamp(16px, 7vw, 38px);
+  }
+}

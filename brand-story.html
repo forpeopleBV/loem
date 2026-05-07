@@ -8,20 +8,24 @@
     <link rel="stylesheet" href="/styles/brand-story.css" />
   </head>
 
-  <body>
+  <body class="brand-story-page">
     <div id="lightCursor" class="light-cursor" aria-hidden="true"></div>
     <div class="grain-overlay" aria-hidden="true"></div>
     <div class="top-fade-mask" aria-hidden="true"></div>
 
     <header class="top-nav">
       <button class="top-link js-nav" type="button" data-href="/">
-        BRAND INTRO
+        <span class="top-link__main">BRAND INTRO</span>
+        <span class="top-link__sub">品牌概述</span>
       </button>
       <a class="brand-lockup js-nav" href="/" aria-label="LOEM home">
         <img src="/assets/brand/Wordmark.svg" alt="LOEM wordmark" />
       </a>
       <p class="top-flow-caption">THE FLOW STATES WE EMBRACE</p>
-      <a class="top-link right js-nav" href="/lookbook">Lookbook</a>
+      <a class="top-link right js-nav" href="/lookbook">
+        <span class="top-link__main">BRAND IN ACTION</span>
+        <span class="top-link__sub">品牌应用</span>
+      </a>
     </header>
 
     <main class="story">
@@ -59,7 +63,6 @@
 
       <section class="scene scene-our-name" data-scene>
         <div class="our-name">
-          <p class="our-name__title">OUR NAME<br />我们的名字</p>
           <div class="our-name__wordmark-wrap scene-media">
             <img
               class="our-name__wordmark"
@@ -68,15 +71,16 @@
             />
           </div>
           <div class="our-name__copy scene-text">
+            <p class="our-name__title">OUR NAME<br />我们的名字</p>
             <p class="our-name__body">
               Taking the <em>lo</em> from our core concept of flow, pairing this
               with an elongated <em>e</em> to create distinction and elevation
-              through something unexpected.
+              through something&nbsp;unexpected.
             </p>
             <p class="our-name__body">
               The <em>ēm</em> echoes the sacred om syllable which represents the
               harmony of the universe. Together, this creates a modern and
-              timeless meaning.
+              timeless&nbsp;meaning.
             </p>
             <p class="our-name__meta">
               COINED • ROOTED IN ZEN • EMOTIONAL DEPTH VS SIMPLICITY
@@ -164,14 +168,6 @@
             </p>
           </section>
         </div>
-      </section>
-
-      <section class="scene em-video-section" data-scene>
-          <img
-            class="em-video-signature"
-            src="/assets/brand/Loem%20calligraphy%20signature.png"
-            alt="Loem calligraphy signature"
-          />
       </section>
 
       <section class="scene flow-video-section" data-scene data-flow-state="presence">
@@ -423,31 +419,33 @@
         </div>
       </section>
 
-      <section class="brand-action-cta" aria-label="Explore Brand In Action">
-        <a class="brand-action-cta__button js-nav" href="/lookbook">
-          EXPLORE BRAND IN ACTION
-        </a>
+      <section class="brand-action-cta" aria-label="Brand actions">
+        <div class="brand-action-cta__media">
+          <video
+            id="brandActionVideo"
+            class="brand-action-cta__video"
+            preload="auto"
+            playsinline
+            webkit-playsinline
+            muted
+          >
+            <source src="/assets/videos/brand-story/Loem-Animation-Signature-White.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="brand-action-cta__actions" aria-hidden="true">
+          <a class="brand-action-cta__button js-nav" href="/">
+            BRAND INTRO
+          </a>
+          <a class="brand-action-cta__button js-nav" href="/lookbook">
+            BRAND IN ACTION
+          </a>
+        </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <a
-        class="site-footer__link"
-        href="http://forpeople.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Forpeople"
-      >
-        <span
-          class="site-footer__logo"
-          role="img"
-          aria-label="Forpeople"
-        ></span>
-        <span class="site-footer__meta">
-          <span class="site-footer__year">&copy; 2026</span>
-          <small class="site-footer__disclaimer">FOR INTERNAL USE ONLY</small>
-        </span>
-      </a>
+      <span class="site-footer__year">ESTABLISHED 2026</span>
+      <small class="site-footer__disclaimer">INTERNAL USE ONLY</small>
     </footer>
     <script type="module" src="/scripts/brand-story.js"></script>
   </body>

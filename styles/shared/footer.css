@@ -1,32 +1,13 @@
 .site-footer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 28px 28px;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 48px clamp(20px, 4.8vw, 92px) 28px;
   background: var(--site-footer-bg, transparent);
   z-index: var(--site-footer-z, 6);
   color: var(--site-footer-color, rgba(39, 22, 15, 0.68));
   opacity: var(--site-footer-opacity, 1);
-}
-
-.site-footer__link {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  color: inherit;
-  text-decoration: none;
-  pointer-events: auto;
-}
-
-.site-footer__logo {
-  display: block;
-  width: 67px;
-  height: 15px;
-  background: currentColor;
-  mask: url("/assets/brand/forpeople.svg") center / contain no-repeat;
-  -webkit-mask: url("/assets/brand/forpeople.svg") center / contain no-repeat;
 }
 
 .site-footer__year,
@@ -38,16 +19,12 @@
   line-height: 1;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.site-footer__meta {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 8px;
+  white-space: nowrap;
 }
 
 @media (max-width: 780px) {
   .site-footer {
+    gap: 14px;
     padding: 36px 12px 14px;
   }
 }

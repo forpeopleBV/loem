@@ -30,11 +30,13 @@ Always run `npm run build` after code changes. Run `git diff --check` before han
 ## File Layout
 
 - `styles/landing.css` - landing page styles.
-- `styles/brand-story.css` - Brand Story and Lookbook styles.
+- `styles/brand-story.css` - Brand Story styles.
+- `styles/lookbook.css` - Lookbook page styles.
 - `styles/shared/` - shared CSS modules, currently cursor and footer.
 - `scripts/landing.js` - landing page runtime and canvas animation loop.
 - `scripts/landing/` - landing constants and pure utilities.
-- `scripts/brand-story.js` - Brand Story and Lookbook runtime.
+- `scripts/brand-story.js` - Brand Story runtime.
+- `scripts/lookbook.js` - Lookbook runtime.
 - `scripts/shared/` - shared JavaScript modules.
 - `public/assets/` - served fonts, images, SVGs, videos, and textures.
 - `references/images/` - parked visual references that should not be copied into production builds.

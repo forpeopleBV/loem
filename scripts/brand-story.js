@@ -12,7 +12,8 @@ const overviewItems = Array.from(
 );
 const brandOverview = document.querySelector(".brand-overview");
 const brandActionCta = document.querySelector(".brand-action-cta");
-const brandLockup = document.querySelector(".brand-lockup");
+const brandActionVideo = document.getElementById("brandActionVideo");
+const brandActionActions = document.querySelector(".brand-action-cta__actions");
 const siteFooter = document.querySelector(".site-footer");
 const emWhiteVideo = document.getElementById("emWhiteVideo");
 const emVideoSection = document.querySelector(".em-video-section");
@@ -38,6 +39,12 @@ let lastScrollTarget = scrollState.y;
 let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
+let brandActionVideoPlayedOnce = false;
+let brandActionInZone = false;
+let brandActionDelayReady = false;
+let brandActionDelayStarted = false;
+let brandActionDelayConsumed = false;
+let brandActionDelayTimer = null;
 let flowTopMaskMix = 0;
 let darkCursorZoneMix = 0;
 const FLOW_ACCENT_BY_STATE = {
@@ -46,7 +53,9 @@ const FLOW_ACCENT_BY_STATE = {
   energy: "#fdbc05",
   boundless: "#7886fa",
 };
-const FLOW_CAPTION_START_OFFSET = 34;
+const FLOW_CAPTION_STICKY_TOP = 68;
+const FLOW_CAPTION_START_OFFSET = 52;
+let lastFlowCaptionAccent = FLOW_ACCENT_BY_STATE.presence;
 
 function playEmVideoOnceWhenReady() {
   if (!emWhiteVideo || emVideoPlayedOnce || emPlayPending) return;
@@ -74,6 +83,31 @@ function playEmVideoOnceWhenReady() {
     };
     emWhiteVideo.addEventListener("loadeddata", onReady, { once: true });
     emWhiteVideo.load();
+  }
+}
+
+function playBrandActionVideoOnceWhenReady() {
+  if (!brandActionVideo || brandActionVideoPlayedOnce) return;
+
+  const doPlay = () => {
+    brandActionVideo.currentTime = 0;
+    brandActionVideo
+      .play()
+      .then(() => {
+        brandActionVideoPlayedOnce = true;
+      })
+      .catch(() => {});
+  };
+
+  if (brandActionVideo.readyState >= 2) {
+    doPlay();
+  } else {
+    const onReady = () => {
+      brandActionVideo.removeEventListener("loadeddata", onReady);
+      doPlay();
+    };
+    brandActionVideo.addEventListener("loadeddata", onReady, { once: true });
+    brandActionVideo.load();
   }
 }
 
@@ -132,34 +166,44 @@ function computeFlowCaptionPlacement(vh) {
     return { y: null, opacity: 0, onVideoTarget: 0, accent: null };
   }
 
-  const firstFlowVideoRect = getRealRect(flowVideos[0]);
-  const lastFlowVideoRect = getRealRect(flowVideos[flowVideos.length - 1]);
-  const lockY = (brandLockup?.getBoundingClientRect().bottom || 84) + 8;
-  const flowVideoTopY = firstFlowVideoRect.top + FLOW_CAPTION_START_OFFSET;
-  const y = Math.max(flowVideoTopY, lockY);
+  const firstFlowSectionRect = getRealRect(flowVideoSections[0] || flowVideos[0]);
+  const lastFlowSectionRect = getRealRect(
+    flowVideoSections[flowVideoSections.length - 1] ||
+      flowVideos[flowVideos.length - 1],
+  );
+  const ySticky = FLOW_CAPTION_STICKY_TOP;
+  const yStart = firstFlowSectionRect.top + FLOW_CAPTION_START_OFFSET;
+  const yEnd = lastFlowSectionRect.top + ySticky;
+  const y = Math.min(Math.max(ySticky, yStart), yEnd);
 
-  const isFlowEnteredViewport = firstFlowVideoRect.top < vh;
-  const isFlowFullyPastViewport = lastFlowVideoRect.bottom <= 0;
-  let opacity = isFlowEnteredViewport && !isFlowFullyPastViewport ? 1 : 0;
+  const hasEnteredFlow = firstFlowSectionRect.top < vh;
+  const hasFlowRemaining = lastFlowSectionRect.bottom > 0;
+  const isFlowActive = hasEnteredFlow && hasFlowRemaining;
+  const opacity = isFlowActive ? 1 : 0;
 
-  let onVideoTarget = 0;
-  let accent = null;
-  if (opacity > 0) {
+  let onVideoTarget = isFlowActive ? 1 : 0;
+  let accent = isFlowActive ? lastFlowCaptionAccent : null;
+  if (isFlowActive) {
     const captionProbeY = y + (topFlowCaption.offsetHeight || 0) * 0.5;
-    const sectionUnderCaption = flowVideoSections.find((section) => {
+    let sectionUnderCaption = flowVideoSections.find((section) => {
       const rect = getRealRect(section);
       return rect.top <= captionProbeY && rect.bottom >= captionProbeY;
     });
-    if (sectionUnderCaption) {
-      onVideoTarget = 1;
-      accent = FLOW_ACCENT_BY_STATE[sectionUnderCaption.dataset.flowState] || null;
-    }
-  }
 
-  // Hide exactly when caption is no longer over a flow video
-  // (same moment it would otherwise switch to white in footer zone).
-  if (!onVideoTarget) {
-    opacity = 0;
+    // Fallback for sub-pixel gaps between stacked video sections.
+    if (!sectionUnderCaption) {
+      sectionUnderCaption = flowVideoSections.find((section) => {
+        const rect = getRealRect(section);
+        return rect.bottom > 0 && rect.top < vh;
+      });
+    }
+
+    if (sectionUnderCaption) {
+      accent =
+        FLOW_ACCENT_BY_STATE[sectionUnderCaption.dataset.flowState] ||
+        lastFlowCaptionAccent;
+      lastFlowCaptionAccent = accent;
+    }
   }
 
   return { y, opacity, onVideoTarget, accent };
@@ -206,6 +250,38 @@ function scheduleScrollMotion() {
     scrollMotionFrame = null;
     animateScrollMotion();
   });
+}
+
+function setBrandActionVisibility(isInZone) {
+  if (!brandActionCta) return;
+  brandActionInZone = isInZone;
+
+  if (isInZone && !brandActionDelayReady) {
+    if (brandActionDelayConsumed) {
+      brandActionDelayReady = true;
+    } else if (!brandActionDelayStarted) {
+      brandActionDelayStarted = true;
+      brandActionDelayTimer = setTimeout(() => {
+        brandActionDelayReady = true;
+        brandActionDelayConsumed = true;
+        setBrandActionVisibility(brandActionInZone);
+      }, 2000);
+    }
+  }
+
+  if (!isInZone) {
+    brandActionDelayReady = false;
+    brandActionDelayStarted = false;
+    if (brandActionDelayTimer) {
+      clearTimeout(brandActionDelayTimer);
+      brandActionDelayTimer = null;
+    }
+  }
+
+  const isVisible = isInZone && brandActionDelayReady;
+  brandActionCta.classList.toggle("is-visible", isVisible);
+  brandActionCta.classList.toggle("is-active", isInZone);
+  brandActionActions?.setAttribute("aria-hidden", isVisible ? "false" : "true");
 }
 
 function updateScenesAndParallax(now) {
@@ -421,18 +497,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (brandActionCta) {
+    if (brandActionVideo) {
+      brandActionVideo.muted = true;
+      brandActionVideo.defaultMuted = true;
+      brandActionVideo.playsInline = true;
+      brandActionVideo.loop = false;
+      brandActionVideo.preload = "auto";
+      brandActionVideo.load();
+    }
+
     if (!("IntersectionObserver" in window)) {
-      brandActionCta.classList.add("is-visible");
+      setBrandActionVisibility(true);
+      playBrandActionVideoOnceWhenReady();
     } else {
       const ctaObserver = new IntersectionObserver(
-        (entries, obs) => {
+        (entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            brandActionCta.classList.add("is-visible");
-            obs.unobserve(entry.target);
+            const isInZone = entry.isIntersecting && entry.intersectionRatio > 0.28;
+            setBrandActionVisibility(isInZone);
+            if (isInZone) playBrandActionVideoOnceWhenReady();
           });
         },
-        { threshold: 0.32 },
+        { threshold: [0.28, 0.35, 0.5] },
       );
       ctaObserver.observe(brandActionCta);
     }
