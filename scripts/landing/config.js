@@ -20,8 +20,8 @@ export const BASE_IMAGE_PATHS = [
     "/assets/images/landing/cards/samuelpasquier_1691943848_3168577116093411413_9420069 5.jpg",
 ];
 
-export const CENTER_VIDEO_PATH = "/assets/videos/landing/Loem-Black.mov";
-export const CENTER_VIDEO_FALLBACK_PATH = "/assets/videos/landing/A-Black.mp4";
+export const CENTER_VIDEO_PATH = "/assets/videos/landing/Loem-Black.mp4";
+export const CENTER_VIDEO_FALLBACK_PATH = "/assets/videos/landing/Loem-Black.mp4";
 export const CENTER_STEPS = [
     { type: 'text', text: "A modern living practice," },
     { type: 'text', text: "redefining daily essentials—for flow." },
