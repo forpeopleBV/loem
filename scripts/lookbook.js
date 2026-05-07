@@ -104,17 +104,14 @@ function updateSceneReveal(vh) {
     const revealWindow = isText ? 0.09 : 0.16;
     const revealIn = smoothstep((local - revealStart) / revealWindow);
     const revealOut = smoothstep((local - 0.94) / 0.16);
-    const reveal = revealIn * (1 - revealOut);
     const lift = isText ? 24 : 62;
     const y = (1 - revealIn) * lift - revealOut * 70;
 
     if (isText) {
-      item.element.style.setProperty("--text-o", reveal.toFixed(3));
       item.element.style.setProperty("--text-y", `${y.toFixed(2)}px`);
       return;
     }
 
-    item.element.style.setProperty("--media-o", reveal.toFixed(3));
     item.element.style.setProperty("--media-y", `${y.toFixed(2)}px`);
   });
 }

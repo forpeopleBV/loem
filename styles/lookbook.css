@@ -61,7 +61,7 @@ body.page-out {
 }
 
 .top-fade-mask {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -101,7 +101,7 @@ body.page-out {
 }
 
 .top-nav {
-  position: fixed;
+  position: absolute;
   top: 52px;
   left: 28px;
   right: 28px;
@@ -284,29 +284,31 @@ body.page-out {
     clamp(84px, 10vh, 150px);
 }
 
+.lookbook-section--product-icons {
+  padding: clamp(28px, 4vh, 72px) clamp(24px, 4vw, 72px)
+    clamp(86px, 11vh, 160px);
+}
+
 .lookbook-scene {
   --scene-local: 0;
   --text-y: 0px;
-  --text-o: 1;
   --media-y: 0px;
-  --media-o: 1;
 }
 
 .lookbook-reveal {
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 .lookbook-reveal--text {
-  opacity: var(--text-o);
   transform: translateY(var(--text-y));
 }
 
 .lookbook-reveal--media {
-  opacity: var(--media-o);
   transform: translate(var(--px, 0px), calc(var(--py, 0px) + var(--media-y)));
 }
 
 .wordmark-freeform {
+  --lookbook-edge-offset: calc((100vw - min(1660px, 94vw)) / -2);
   width: min(1660px, 94vw);
   margin: 0 auto;
   display: grid;
@@ -324,7 +326,10 @@ body.page-out {
 }
 
 .wordmark-copy h2,
-.motif-copy h2 {
+.motif-copy h2,
+.product-icons-copy h2,
+.art-direction-copy h2,
+.typography-copy h2 {
   margin: 0 0 12px;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(16px, 1.08vw, 21px);
@@ -335,7 +340,10 @@ body.page-out {
 }
 
 .wordmark-copy p,
-.motif-copy p {
+.motif-copy p,
+.product-icons-copy p,
+.art-direction-copy p,
+.typography-copy p {
   margin: 0;
   font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
   font-size: clamp(13px, 1.12vw, 22px);
@@ -344,12 +352,16 @@ body.page-out {
 }
 
 .wordmark-copy p + p,
-.motif-copy p + p {
+.motif-copy p + p,
+.product-icons-copy p + p,
+.art-direction-copy p + p,
+.typography-copy p + p {
   margin-top: 0;
 }
 
 .wordmark-copy a,
-.motif-copy a {
+.motif-copy a,
+.product-icons-copy a {
   display: inline-block;
   margin-top: 16px;
   color: #27160f;
@@ -363,7 +375,9 @@ body.page-out {
 .wordmark-copy a:hover,
 .wordmark-copy a:focus-visible,
 .motif-copy a:hover,
-.motif-copy a:focus-visible {
+.motif-copy a:focus-visible,
+.product-icons-copy a:hover,
+.product-icons-copy a:focus-visible {
   color: #ff9d00;
   outline: none;
 }
@@ -414,10 +428,13 @@ body.page-out {
 }
 
 .wordmark-media-card--parfum {
-  grid-column: 1 / 7;
+  grid-column: 1 / 6;
   grid-row: 4;
   aspect-ratio: 1 / 1.18;
   margin-top: clamp(8px, 1.2vw, 20px);
+  margin-left: var(--lookbook-edge-offset);
+  justify-self: start;
+  width: 100%;
 }
 
 .wordmark-media-card__meta {
@@ -450,7 +467,7 @@ body.page-out {
 .motif-mark {
   grid-column: 8 / 12;
   grid-row: 5;
-  margin: 0;
+  margin: clamp(36px, 3.4vw, 64px) 0 0;
   align-self: start;
 }
 
@@ -461,18 +478,157 @@ body.page-out {
 }
 
 .wordmark-media-card--phone {
-  grid-column: 1 / 7;
+  grid-column: 1 / 5;
   grid-row: 6;
   aspect-ratio: 1 / 1.16;
   margin-top: clamp(18px, 2vw, 38px);
+  margin-left: var(--lookbook-edge-offset);
+  justify-self: start;
+  width: 100%;
 }
 
 .wordmark-media-card--box {
-  grid-column: 8 / 13;
+  grid-column: 7 / 12;
   grid-row: 6;
   aspect-ratio: 1 / 1.16;
-  margin-top: clamp(18px, 2vw, 38px);
+  margin-top: clamp(-24px, -1.4vw, -10px);
   background: #d5d6da;
+}
+
+.product-icons-freeform {
+  --product-icons-edge-offset: calc((100vw - min(1660px, 94vw)) / -2);
+  width: min(1660px, 94vw);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(20px, 2.7vw, 52px);
+  row-gap: clamp(22px, 3.2vw, 62px);
+}
+
+.product-icons-copy {
+  grid-column: 2 / 5;
+  grid-row: 1;
+  align-self: start;
+  max-width: min(100%, 390px);
+}
+
+.product-icons-strip {
+  grid-column: 5 / 11;
+  grid-row: 2;
+  margin: clamp(8px, 1.8vw, 34px) 0 0;
+}
+
+.product-icons-strip img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.product-icons-media {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  background: #eee8df;
+}
+
+.product-icons-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-icons-media--bag {
+  grid-column: 1 / 5;
+  grid-row: 3;
+  aspect-ratio: 1347 / 1800;
+  margin-left: var(--product-icons-edge-offset);
+  width: 100%;
+}
+
+.product-icons-media--iphone {
+  grid-column: 6 / 13;
+  grid-row: 3 / span 2;
+  aspect-ratio: 1718 / 2576;
+  justify-self: end;
+  margin-right: var(--product-icons-edge-offset);
+  width: 100%;
+}
+
+.product-icons-media--disc {
+  grid-column: 3 / 6;
+  grid-row: 4;
+  aspect-ratio: 818 / 1048;
+  justify-self: start;
+  width: 86%;
+}
+
+.art-direction-copy {
+  grid-column: 6 / 9;
+  grid-row: 5;
+  max-width: min(100%, 390px);
+  margin-left: clamp(24px, 2vw, 42px);
+  margin-top: clamp(12px, 1.6vw, 32px);
+}
+
+.typography-media {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  background: #eee8df;
+}
+
+.typography-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.typography-media--label-pull {
+  grid-column: 1 / 5;
+  grid-row: 6;
+  aspect-ratio: 722 / 984;
+  margin-top: clamp(84px, 9vw, 160px);
+  margin-left: var(--product-icons-edge-offset);
+  width: 96%;
+}
+
+.typography-media--yellow-label {
+  grid-column: 6 / 11;
+  grid-row: 6;
+  aspect-ratio: 805 / 1079;
+  margin-top: clamp(84px, 9vw, 160px);
+  justify-self: center;
+  width: 86%;
+}
+
+.typography-copy {
+  grid-column: 2 / 5;
+  grid-row: 7;
+  max-width: min(100%, 380px);
+  margin-top: clamp(-20px, -1.2vw, -8px);
+}
+
+.typography-media--book {
+  grid-column: 2 / 5;
+  grid-row: 8;
+  aspect-ratio: 479 / 717;
+  align-self: start;
+  justify-self: start;
+  margin-top: clamp(80px, 7vw, 128px);
+  width: 92%;
+  z-index: 2;
+}
+
+.typography-media--magazin {
+  grid-column: 4 / 13;
+  grid-row: 8;
+  aspect-ratio: 1367 / 1139;
+  margin-right: var(--product-icons-edge-offset);
+  justify-self: end;
+  width: 100%;
+  z-index: 1;
 }
 
 @media (max-width: 780px) {
@@ -525,7 +681,12 @@ body.page-out {
     padding: 18px 22px 68px;
   }
 
-  .wordmark-freeform {
+  .lookbook-section--product-icons {
+    padding: 18px 22px 76px;
+  }
+
+  .wordmark-freeform,
+  .product-icons-freeform {
     width: min(100%, 640px);
     grid-template-columns: 1fr;
     row-gap: 18px;
@@ -539,7 +700,18 @@ body.page-out {
   .motif-copy,
   .motif-mark,
   .wordmark-media-card--phone,
-  .wordmark-media-card--box {
+  .wordmark-media-card--box,
+  .product-icons-copy,
+  .product-icons-strip,
+  .product-icons-media--bag,
+  .product-icons-media--iphone,
+  .product-icons-media--disc,
+  .art-direction-copy,
+  .typography-media--label-pull,
+  .typography-media--yellow-label,
+  .typography-copy,
+  .typography-media--book,
+  .typography-media--magazin {
     grid-column: auto;
     grid-row: auto;
     margin-top: 0;
@@ -564,6 +736,8 @@ body.page-out {
 
   .wordmark-media-card--parfum {
     order: 5;
+    margin-left: -22px;
+    width: 80%;
   }
 
   .motif-copy {
@@ -573,14 +747,19 @@ body.page-out {
 
   .motif-mark {
     order: 7;
+    margin-top: 44px;
   }
 
   .wordmark-media-card--phone {
     order: 8;
+    margin-left: -22px;
+    width: 70%;
   }
 
   .wordmark-media-card--box {
     order: 9;
+    margin-top: 18px;
+    margin-left: -22px;
   }
 
   .wordmark-guide img {
@@ -593,5 +772,69 @@ body.page-out {
 
   .wordmark-media-card__meta {
     font-size: clamp(16px, 7vw, 38px);
+  }
+
+  .product-icons-copy {
+    order: 1;
+    max-width: 100%;
+  }
+
+  .product-icons-strip {
+    order: 2;
+    width: 100%;
+  }
+
+  .product-icons-media--bag {
+    order: 3;
+    margin-left: -22px;
+    width: 88%;
+  }
+
+  .product-icons-media--iphone {
+    order: 4;
+    margin-left: auto;
+    margin-right: -22px;
+    width: 92%;
+  }
+
+  .product-icons-media--disc {
+    order: 5;
+    width: 58%;
+  }
+
+  .art-direction-copy {
+    order: 6;
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 18px;
+  }
+
+  .typography-media--label-pull {
+    order: 7;
+    margin-left: -22px;
+    width: 82%;
+  }
+
+  .typography-media--yellow-label {
+    order: 8;
+    margin-left: auto;
+    width: 84%;
+  }
+
+  .typography-copy {
+    order: 9;
+    max-width: 100%;
+  }
+
+  .typography-media--book {
+    order: 10;
+    width: 62%;
+    z-index: 2;
+  }
+
+  .typography-media--magazin {
+    order: 11;
+    margin-right: -22px;
+    width: 96%;
   }
 }
