@@ -70,6 +70,22 @@ body {
     blur(1.8px)
     saturate(1.02)
     brightness(1.02);
+  --dark-cursor-zone-mix: 0;
+  --light-cursor-overlay-opacity: calc(0.86 * var(--dark-cursor-zone-mix));
+  --light-cursor-overlay-scale: calc(1 + (var(--dark-cursor-zone-mix) * 0.08));
+  --light-cursor-overlay-blend-mode: overlay;
+  --light-cursor-overlay-background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 247, 214, 0.74) 0%,
+      rgba(255, 208, 118, 0.43) 36%,
+      rgba(255, 165, 79, 0.16) 56%,
+      rgba(255, 165, 79, 0) 80%
+    );
+  --light-cursor-overlay-filter:
+    blur(0.8px)
+    saturate(1.24)
+    brightness(1.18);
   --site-footer-color: #FFFAF2;
   --site-footer-bg: #27160f;
   --site-footer-z: 50;
@@ -213,12 +229,10 @@ body::-webkit-scrollbar {
   transition: color 180ms ease;
 }
 
-.top-link:hover {
-  color: color-mix(
-    in srgb,
-    #ff9d00 calc((1 - var(--top-fade-video-mix)) * 100%),
-    #fff calc(var(--top-fade-video-mix) * 100%)
-  );
+.top-link:hover,
+.top-link:focus-visible {
+  color: #ff9d00;
+  outline: none;
 }
 
 .top-link--current,
@@ -304,6 +318,11 @@ body::-webkit-scrollbar {
 .lookbook-page .top-link--current,
 .lookbook-page .top-link--current:hover {
   color: #27160f;
+}
+
+.lookbook-page .top-link:hover,
+.lookbook-page .top-link:focus-visible {
+  color: #ff9d00;
 }
 
 .lookbook-shell {
@@ -877,7 +896,7 @@ body::-webkit-scrollbar {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   min-height: auto;
-  padding: clamp(92px, 9.2vw, 172px) 24px clamp(68px, 7vw, 132px);
+  padding: clamp(80px, 8vw, 144px) 24px clamp(39px, 4.9vw, 81px);
   background: #27160f;
   color: #fff;
 }
@@ -886,7 +905,7 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 clamp(74px, 8.2vw, 156px);
+  margin: 0 0 clamp(62px, 7.2vw, 118px);
   font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
   font-size: clamp(10px, 0.82vw, 15px);
   font-weight: 400;
@@ -903,7 +922,7 @@ body::-webkit-scrollbar {
   display: grid;
   gap: clamp(22px, 2vw, 38px);
   width: min(1217px, 76vw);
-  margin: 0 auto;
+  margin: 0 auto clamp(38px, 4.8vw, 76px);
 }
 
 .brand-overview__item {
@@ -952,7 +971,7 @@ body::-webkit-scrollbar {
   display: grid;
   place-items: center;
   min-height: 0;
-  padding: clamp(28px, 3.4vw, 64px) 24px clamp(48px, 6.8vw, 120px);
+  padding: clamp(20px, 2.4vw, 36px) 24px clamp(36px, 5.5vw, 84px);
   background: #27160f;
 }
 
@@ -1316,16 +1335,17 @@ body::-webkit-scrollbar {
   }
 
   .brand-overview {
-    padding: 94px 24px 62px;
+    padding: 86px 24px 44px;
   }
 
   .brand-overview__title {
-    margin-bottom: 72px;
+    margin-bottom: 62px;
   }
 
   .brand-overview__list {
     width: min(620px, 88vw);
     gap: 28px;
+    margin-bottom: 54px;
   }
 
   .brand-overview__item {
@@ -1340,7 +1360,7 @@ body::-webkit-scrollbar {
 
   .brand-action-cta {
     min-height: 0;
-    padding: 24px 20px 58px;
+    padding: 22px 20px 44px;
   }
 
   .brand-action-cta__button,

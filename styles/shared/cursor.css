@@ -25,6 +25,24 @@
   contain: layout style paint;
 }
 
+.light-cursor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--light-cursor-overlay-background, transparent);
+  mix-blend-mode: var(--light-cursor-overlay-blend-mode, overlay);
+  filter: var(--light-cursor-overlay-filter, blur(1px));
+  opacity: var(--light-cursor-overlay-opacity, 0);
+  transform: scale(var(--light-cursor-overlay-scale, 1));
+  transform-origin: 50% 50%;
+  transition:
+    opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
 .light-cursor.is-visible {
   opacity: var(--light-cursor-opacity, 1);
 }

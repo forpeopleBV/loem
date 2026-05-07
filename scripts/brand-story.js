@@ -39,6 +39,7 @@ let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
 let flowTopMaskMix = 0;
+let darkCursorZoneMix = 0;
 const FLOW_ACCENT_BY_STATE = {
   presence: "#d2d20d",
   connection: "#ece7df",
@@ -115,6 +116,15 @@ function computeFlowTopMaskTarget(vh) {
   });
 
   return clamp(target, 0, 1);
+}
+
+function computeDarkCursorZoneTarget(vh) {
+  if (!brandOverview) return 0;
+
+  const rect = getRealRect(brandOverview);
+  // Start exactly when overview top reaches viewport top, then dissolve in.
+  if (rect.top >= 0) return 0;
+  return smoothstep(clamp(-rect.top / (vh * 0.24), 0, 1));
 }
 
 function computeFlowCaptionPlacement(vh) {
@@ -341,6 +351,16 @@ function updateScenesAndParallax(now) {
   document.body.style.setProperty(
     "--top-fade-video-mix",
     flowTopMaskMix.toFixed(4),
+  );
+
+  const darkCursorTarget = computeDarkCursorZoneTarget(vh);
+  darkCursorZoneMix += (darkCursorTarget - darkCursorZoneMix) * 0.18;
+  if (Math.abs(darkCursorTarget - darkCursorZoneMix) < 0.0015) {
+    darkCursorZoneMix = darkCursorTarget;
+  }
+  document.body.style.setProperty(
+    "--dark-cursor-zone-mix",
+    darkCursorZoneMix.toFixed(4),
   );
 
   const flowCaption = computeFlowCaptionPlacement(vh);
