@@ -517,6 +517,81 @@ body::-webkit-scrollbar {
   transform: translateX(clamp(28px, 3.18vw, 61px));
 }
 
+.our-name {
+  display: grid;
+  grid-template-columns: minmax(360px, 760px) minmax(360px, 640px);
+  grid-template-areas:
+    "title title"
+    "wordmark copy";
+  gap: clamp(24px, 3.8vw, 72px);
+  align-items: center;
+  width: min(1600px, 86vw);
+  min-height: 78vh;
+  margin: 0 auto;
+  padding: clamp(14px, 2.1vw, 34px) 0 clamp(34px, 4.8vw, 92px);
+}
+
+.scene.scene-our-name {
+  margin-top: clamp(6px, 1.2vh, 16px);
+}
+
+.our-name__wordmark-wrap {
+  grid-area: wordmark;
+  display: grid;
+  place-items: center;
+}
+
+.our-name__wordmark {
+  width: min(71.3%, 570px);
+  max-width: 88vw;
+  height: auto;
+  display: block;
+}
+
+.our-name__title {
+  grid-area: title;
+  margin: 0;
+  align-self: start;
+  justify-self: center;
+  text-align: center;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(10px, 0.82vw, 15px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.our-name__copy {
+  grid-area: copy;
+  width: min(100%, 640px);
+  text-align: center;
+  color: #27160f;
+}
+
+.our-name__body {
+  margin: 0;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(13px, 1.28vw, 25px);
+  font-weight: 300;
+  line-height: 1.07;
+}
+
+.our-name__body + .our-name__body {
+  margin-top: clamp(24px, 2.5vw, 48px);
+}
+
+.our-name__meta {
+  margin: clamp(40px, 4.7vw, 90px) 0 0;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(10px, 0.82vw, 15px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 .hero {
   padding-top: 2vh;
 }
@@ -752,10 +827,12 @@ body::-webkit-scrollbar {
 
 .flow-state__title-en {
   margin-top: 0.04em;
-  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(74px, 7.99vw, 153px);
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .flow-state__copy {
@@ -800,7 +877,7 @@ body::-webkit-scrollbar {
   width: 100vw;
   margin-left: calc(50% - 50vw);
   min-height: auto;
-  padding: clamp(80px, 8vw, 144px) 24px clamp(39px, 4.9vw, 81px);
+  padding: clamp(92px, 9.2vw, 172px) 24px clamp(68px, 7vw, 132px);
   background: #27160f;
   color: #fff;
 }
@@ -809,7 +886,7 @@ body::-webkit-scrollbar {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 clamp(44px, 5vw, 86px);
+  margin: 0 0 clamp(74px, 8.2vw, 156px);
   font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
   font-size: clamp(10px, 0.82vw, 15px);
   font-weight: 400;
@@ -875,7 +952,7 @@ body::-webkit-scrollbar {
   display: grid;
   place-items: center;
   min-height: 0;
-  padding: clamp(8px, 1.3vw, 24px) 24px clamp(36px, 5.5vw, 84px);
+  padding: clamp(28px, 3.4vw, 64px) 24px clamp(48px, 6.8vw, 120px);
   background: #27160f;
 }
 
@@ -1004,6 +1081,24 @@ body::-webkit-scrollbar {
     width: min(720px, 86vw);
   }
 
+  .our-name {
+    grid-template-columns: minmax(300px, 1fr) minmax(300px, 1fr);
+    grid-template-areas:
+      "title title"
+      "wordmark copy";
+    gap: clamp(16px, 3.2vw, 46px);
+    width: min(980px, 90vw);
+    min-height: 64vh;
+  }
+
+  .our-name__wordmark {
+    width: min(80.5%, 478px);
+  }
+
+  .our-name__copy {
+    width: min(100%, 540px);
+  }
+
   .what-we-do__copy {
     width: min(560px, 86vw);
   }
@@ -1126,6 +1221,41 @@ body::-webkit-scrollbar {
     padding: 92px 0 84px;
   }
 
+  .our-name {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "wordmark"
+      "copy";
+    justify-items: center;
+    width: 88vw;
+    min-height: auto;
+    gap: 34px;
+    padding: 32px 0 64px;
+  }
+
+  .our-name__wordmark {
+    width: min(86.25%, 483px);
+  }
+
+  .our-name__title {
+    white-space: normal;
+  }
+
+  .our-name__copy {
+    width: min(100%, 620px);
+  }
+
+  .our-name__body {
+    font-size: clamp(13px, 4.4vw, 25px);
+  }
+
+  .our-name__meta {
+    margin-top: 34px;
+    font-size: clamp(10px, 3.3vw, 15px);
+    line-height: 1.2;
+  }
+
   .what-we-do__image-wrap {
     width: 100%;
   }
@@ -1186,11 +1316,11 @@ body::-webkit-scrollbar {
   }
 
   .brand-overview {
-    padding: 86px 24px 44px;
+    padding: 94px 24px 62px;
   }
 
   .brand-overview__title {
-    margin-bottom: 48px;
+    margin-bottom: 72px;
   }
 
   .brand-overview__list {
@@ -1210,7 +1340,7 @@ body::-webkit-scrollbar {
 
   .brand-action-cta {
     min-height: 0;
-    padding: 11px 20px 44px;
+    padding: 24px 20px 58px;
   }
 
   .brand-action-cta__button,
