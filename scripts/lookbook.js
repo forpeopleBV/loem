@@ -128,7 +128,17 @@ function updateParallax(vh, now) {
     const isPhone = item.classList.contains("wordmark-media-card--phone");
     const isBox = item.classList.contains("wordmark-media-card--box");
     const isMotifMark = item.classList.contains("motif-mark");
-    const isLongMedia = isRightCard || isParfum || isPhone || isBox;
+    const isEdgeAnchored =
+      isParfum ||
+      isPhone ||
+      item.classList.contains("product-icons-media--bag") ||
+      item.classList.contains("product-icons-media--iphone") ||
+      item.classList.contains("typography-media--label-pull") ||
+      item.classList.contains("typography-media--magazin") ||
+      item.classList.contains("colour-media--label") ||
+      item.classList.contains("colour-palette");
+    const isLongMedia =
+      isRightCard || isParfum || isPhone || isBox || isEdgeAnchored;
     const rect = getVirtualRect(item);
     const centerY = rect.top + rect.height * 0.5;
     const centerOffset = (centerY - vh * 0.5) / vh;
@@ -171,7 +181,7 @@ function updateParallax(vh, now) {
 
     const xFactor = isLongMedia ? 0.24 : 1;
     const yFactor = isLongMedia ? 0.72 : 1;
-    let flowX = flowXRaw * xFactor;
+    let flowX = isEdgeAnchored ? 0 : flowXRaw * xFactor;
     let flowY = (scrollShiftY + flowYRaw) * yFactor;
 
     if (isLongMedia) {
