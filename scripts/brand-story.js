@@ -11,6 +11,7 @@ const overviewItems = Array.from(
   document.querySelectorAll(".brand-overview__item"),
 );
 const brandOverview = document.querySelector(".brand-overview");
+const brandActionCta = document.querySelector(".brand-action-cta");
 const brandLockup = document.querySelector(".brand-lockup");
 const siteFooter = document.querySelector(".site-footer");
 const emWhiteVideo = document.getElementById("emWhiteVideo");
@@ -38,13 +39,13 @@ let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
 let flowTopMaskMix = 0;
-let flowCaptionOnVideo = 0;
 const FLOW_ACCENT_BY_STATE = {
   presence: "#d2d20d",
   connection: "#ece7df",
   energy: "#fdbc05",
   boundless: "#7886fa",
 };
+const FLOW_CAPTION_START_OFFSET = 34;
 
 function playEmVideoOnceWhenReady() {
   if (!emWhiteVideo || emVideoPlayedOnce || emPlayPending) return;
@@ -84,7 +85,9 @@ function smoothstep(v) {
 }
 
 function computeFlowTopMaskTarget(vh) {
-  if (!flowVideos.length && !brandOverview && !siteFooter) return 0;
+  if (!flowVideos.length && !brandOverview && !brandActionCta && !siteFooter) {
+    return 0;
+  }
   const maskHeight = topFadeMask?.offsetHeight || 220;
   const enterRange = Math.max(maskHeight * 1.6, 220);
   let target = 0;
@@ -100,8 +103,8 @@ function computeFlowTopMaskTarget(vh) {
     target = Math.max(target, Math.min(enter, exit));
   });
 
-  // Keep the top mask dark over the dark ending zone (brand overview + footer).
-  [brandOverview, siteFooter].forEach((section) => {
+  // Keep the top mask dark over the dark ending zone.
+  [brandOverview, brandActionCta, siteFooter].forEach((section) => {
     if (!section) return;
     const rect = getVirtualRect(section);
     if (rect.bottom <= 0 || rect.top >= vh) return;
@@ -114,50 +117,42 @@ function computeFlowTopMaskTarget(vh) {
   return clamp(target, 0, 1);
 }
 
-function computeActiveFlowAccent(vh) {
-  if (!flowVideoSections.length) return null;
-  let activeSection = null;
-  let bestVisibleHeight = 0;
-
-  flowVideoSections.forEach((section) => {
-    const rect = getVirtualRect(section);
-    const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
-    if (visibleHeight <= 0) return;
-    if (visibleHeight > bestVisibleHeight) {
-      bestVisibleHeight = visibleHeight;
-      activeSection = section;
-    }
-  });
-
-  if (!activeSection) return null;
-  return FLOW_ACCENT_BY_STATE[activeSection.dataset.flowState] || null;
-}
-
 function computeFlowCaptionPlacement(vh) {
   if (!topFlowCaption || !flowVideos.length) {
-    return { y: null, opacity: 0, onVideoTarget: 0 };
+    return { y: null, opacity: 0, onVideoTarget: 0, accent: null };
   }
 
-  const firstFlowVideoRect = getVirtualRect(flowVideos[0]);
-  const lastFlowVideoRect = getVirtualRect(flowVideos[flowVideos.length - 1]);
+  const firstFlowVideoRect = getRealRect(flowVideos[0]);
+  const lastFlowVideoRect = getRealRect(flowVideos[flowVideos.length - 1]);
   const lockY = (brandLockup?.getBoundingClientRect().bottom || 84) + 8;
-  const flowVideoTopY = firstFlowVideoRect.top + 10;
+  const flowVideoTopY = firstFlowVideoRect.top + FLOW_CAPTION_START_OFFSET;
   const y = Math.max(flowVideoTopY, lockY);
 
   const isFlowEnteredViewport = firstFlowVideoRect.top < vh;
   const isFlowFullyPastViewport = lastFlowVideoRect.bottom <= 0;
-  const opacity = isFlowEnteredViewport && !isFlowFullyPastViewport ? 1 : 0;
+  let opacity = isFlowEnteredViewport && !isFlowFullyPastViewport ? 1 : 0;
 
   let onVideoTarget = 0;
+  let accent = null;
   if (opacity > 0) {
-    const isCaptionOverVideo = flowVideos.some((video) => {
-      const rect = getVirtualRect(video);
-      return rect.top <= y && rect.bottom >= y;
+    const captionProbeY = y + (topFlowCaption.offsetHeight || 0) * 0.5;
+    const sectionUnderCaption = flowVideoSections.find((section) => {
+      const rect = getRealRect(section);
+      return rect.top <= captionProbeY && rect.bottom >= captionProbeY;
     });
-    onVideoTarget = isCaptionOverVideo ? 1 : 0;
+    if (sectionUnderCaption) {
+      onVideoTarget = 1;
+      accent = FLOW_ACCENT_BY_STATE[sectionUnderCaption.dataset.flowState] || null;
+    }
   }
 
-  return { y, opacity, onVideoTarget };
+  // Hide exactly when caption is no longer over a flow video
+  // (same moment it would otherwise switch to white in footer zone).
+  if (!onVideoTarget) {
+    opacity = 0;
+  }
+
+  return { y, opacity, onVideoTarget, accent };
 }
 
 function getVirtualRect(element) {
@@ -166,6 +161,15 @@ function getVirtualRect(element) {
   return {
     top: rect.top + scrollDelta,
     bottom: rect.bottom + scrollDelta,
+    height: rect.height,
+  };
+}
+
+function getRealRect(element) {
+  const rect = element.getBoundingClientRect();
+  return {
+    top: rect.top,
+    bottom: rect.bottom,
     height: rect.height,
   };
 }
@@ -339,17 +343,11 @@ function updateScenesAndParallax(now) {
     flowTopMaskMix.toFixed(4),
   );
 
-  const activeFlowAccent = computeActiveFlowAccent(vh);
+  const flowCaption = computeFlowCaptionPlacement(vh);
   document.body.style.setProperty(
     "--active-flow-accent",
-    activeFlowAccent || "var(--top-nav-color)",
+    flowCaption.accent || "var(--top-nav-color)",
   );
-
-  const flowCaption = computeFlowCaptionPlacement(vh);
-  flowCaptionOnVideo += (flowCaption.onVideoTarget - flowCaptionOnVideo) * 0.18;
-  if (Math.abs(flowCaption.onVideoTarget - flowCaptionOnVideo) < 0.0015) {
-    flowCaptionOnVideo = flowCaption.onVideoTarget;
-  }
   document.body.style.setProperty(
     "--top-flow-caption-y",
     flowCaption.y === null ? "-9999px" : `${flowCaption.y.toFixed(2)}px`,
@@ -360,7 +358,7 @@ function updateScenesAndParallax(now) {
   );
   document.body.style.setProperty(
     "--top-flow-caption-on-video",
-    flowCaptionOnVideo.toFixed(4),
+    flowCaption.onVideoTarget.toFixed(4),
   );
 
   requestAnimationFrame(updateScenesAndParallax);
@@ -401,6 +399,24 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     observer.observe(video);
   });
+
+  if (brandActionCta) {
+    if (!("IntersectionObserver" in window)) {
+      brandActionCta.classList.add("is-visible");
+    } else {
+      const ctaObserver = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            brandActionCta.classList.add("is-visible");
+            obs.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.32 },
+      );
+      ctaObserver.observe(brandActionCta);
+    }
+  }
 });
 
 window.addEventListener("scroll", scheduleScrollMotion, { passive: true });

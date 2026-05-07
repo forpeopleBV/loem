@@ -271,7 +271,7 @@ body::-webkit-scrollbar {
   text-transform: uppercase;
   text-shadow: 0 0 14px rgba(0, 0, 0, 0.22);
   opacity: var(--top-flow-caption-opacity);
-  transition: color 180ms ease, opacity 180ms ease;
+  transition: opacity 220ms ease-out;
   pointer-events: none;
 }
 
@@ -700,9 +700,8 @@ body::-webkit-scrollbar {
   position: relative;
   z-index: 4;
   opacity: 1 !important;
-  transform: translate3d(0, var(--flow-video-y, 0px), 0)
-    scale(var(--flow-video-scale, 1));
-  will-change: transform;
+  transform: none;
+  will-change: auto;
 }
 
 .flow-state {
@@ -731,16 +730,7 @@ body::-webkit-scrollbar {
 }
 
 .flow-state::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 101vw;
-  height: 29.55vh;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 100%);
-  mix-blend-mode: multiply;
-  opacity: 0.5;
-  transform: translateX(-50%);
+  content: none;
 }
 
 .flow-state__title {
@@ -809,8 +799,8 @@ body::-webkit-scrollbar {
 .brand-overview {
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  min-height: 100vh;
-  padding: clamp(80px, 8vw, 144px) 24px clamp(78px, 7.8vw, 136px);
+  min-height: auto;
+  padding: clamp(80px, 8vw, 144px) 24px clamp(39px, 4.9vw, 81px);
   background: #27160f;
   color: #fff;
 }
@@ -877,6 +867,48 @@ body::-webkit-scrollbar {
 
 .brand-overview__body em {
   font-style: italic;
+}
+
+.brand-action-cta {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: clamp(8px, 1.3vw, 24px) 24px clamp(36px, 5.5vw, 84px);
+  background: #27160f;
+}
+
+.brand-action-cta__button,
+.brand-action-cta__button:visited {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 16px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  text-decoration: none;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(12px, 1vw, 18px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(42px);
+  transition: transform 620ms cubic-bezier(0.16, 1, 0.3, 1), opacity 620ms ease;
+  will-change: transform, opacity;
+}
+
+.brand-action-cta.is-visible .brand-action-cta__button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.brand-action-cta__button:hover {
+  color: #ff9d00;
 }
 
 .philosophy {
@@ -1154,7 +1186,7 @@ body::-webkit-scrollbar {
   }
 
   .brand-overview {
-    padding: 86px 24px 76px;
+    padding: 86px 24px 44px;
   }
 
   .brand-overview__title {
@@ -1174,5 +1206,16 @@ body::-webkit-scrollbar {
   .brand-overview__label,
   .brand-overview__body {
     text-align: left;
+  }
+
+  .brand-action-cta {
+    min-height: 0;
+    padding: 11px 20px 44px;
+  }
+
+  .brand-action-cta__button,
+  .brand-action-cta__button:visited {
+    font-size: clamp(11px, 3vw, 14px);
+    transform: translateY(30px);
   }
 }
