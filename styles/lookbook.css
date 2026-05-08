@@ -804,22 +804,12 @@ img.wordmark-media-card__center-logo {
 }
 
 .colour-media--water {
-  --colour-palette-width: min(1463px, 79.270833vw);
-  grid-column: 1 / 13;
+  grid-column: 6 / 11;
   grid-row: 9;
   aspect-ratio: 637 / 814;
-  align-self: end;
-  justify-self: start;
-  margin-left: calc((var(--colour-palette-width) * 731 / 1463) - 1px);
+  justify-self: center;
   margin-top: clamp(70px, 8vw, 142px);
-  margin-bottom: calc(-1 * clamp(18px, 2vw, 38px));
-  width: calc(var(--colour-palette-width) * 637 / 1463);
-  z-index: 2;
-}
-
-.colour-media--water img {
-  height: calc(100% + 3px);
-  transform: translateY(1px);
+  width: 100%;
 }
 
 .colour-media--label {
@@ -838,7 +828,7 @@ img.wordmark-media-card__center-logo {
   grid-row: 9;
   align-self: end;
   max-width: min(100%, 430px);
-  margin-bottom: clamp(4px, 1vw, 18px);
+  margin-bottom: clamp(28px, 3vw, 56px);
 }
 
 .colour-palette {

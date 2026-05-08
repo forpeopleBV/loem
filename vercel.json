@@ -4,23 +4,5 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false,
-  "redirects": [
-    {
-      "source": "/lookbook",
-      "destination": "/brand-in-action",
-      "permanent": true
-    },
-    {
-      "source": "/lookbook/",
-      "destination": "/brand-in-action",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/brand-in-action",
-      "destination": "/lookbook.html"
-    }
-  ]
+  "trailingSlash": false
 }

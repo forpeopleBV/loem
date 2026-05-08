@@ -51,7 +51,7 @@ The nav is intentionally stable across non-home pages:
 - Center: LOEM wordmark, linked to `/`
 - Right: Lookbook
 
-Public navigation uses clean URLs: `/`, `/brand-story`, and `/brand-in-action`. Vercel serves the Brand in Action page via a rewrite to `lookbook.html`; local Vite dev and preview use the clean-route middleware in `vite.config.js`.
+Public navigation uses clean URLs: `/`, `/brand-story`, and `/lookbook`. Vercel serves these via `cleanUrls`; local Vite dev and preview use the clean-route middleware in `vite.config.js`.
 
 Do not move nav items around to indicate the current page. Use the current/selected state only.
 
