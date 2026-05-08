@@ -4,5 +4,15 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/brand-in-action",
+      "destination": "/lookbook"
+    },
+    {
+      "source": "/brand-in-action/",
+      "destination": "/lookbook"
+    }
+  ]
 }
