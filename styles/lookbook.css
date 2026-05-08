@@ -342,12 +342,11 @@ body.page-out {
 
 .lookbook-section--wordmark {
   padding: clamp(150px, 18vh, 260px) clamp(24px, 4vw, 72px)
-    clamp(84px, 10vh, 150px);
+    clamp(24px, 4vh, 60px);
 }
 
 .lookbook-section--product-icons {
-  padding: clamp(28px, 4vh, 72px) clamp(24px, 4vw, 72px)
-    clamp(86px, 11vh, 160px);
+  padding: 0 clamp(24px, 4vw, 72px) clamp(86px, 11vh, 160px);
 }
 
 .lookbook-scene {
@@ -601,11 +600,19 @@ img.wordmark-media-card__center-logo {
   width: 118%;
 }
 
-.wordmark-media-card--box {
-  grid-column: 7 / 12;
+.wordmark-box-pair {
+  grid-column: 6 / 11;
   grid-row: 6;
-  aspect-ratio: 1 / 1.16;
+  position: relative;
+  align-self: end;
   margin-top: clamp(42px, 4.3vw, 82px);
+  top: clamp(-74px, -3.9vw, -40px);
+  width: 100%;
+}
+
+.wordmark-media-card--box {
+  aspect-ratio: 1375 / 1843;
+  width: 80%;
   background: #d5d6da;
 }
 
@@ -623,7 +630,20 @@ img.wordmark-media-card__center-logo {
   grid-column: 2 / 5;
   grid-row: 1;
   align-self: start;
+  margin-top: -56px;
   max-width: min(100%, 390px);
+  top: 7px;
+}
+
+.product-icons-media--box-secondary {
+  grid-column: 9 / 13;
+  grid-row: 1;
+  aspect-ratio: 1850 / 1908;
+  justify-self: end;
+  margin-top: -56px;
+  margin-right: var(--product-icons-edge-offset);
+  top: -88px;
+  width: 99%;
 }
 
 .product-icons-strip {
@@ -647,7 +667,8 @@ img.wordmark-media-card__center-logo {
   background: #eee8df;
 }
 
-.product-icons-media img {
+.product-icons-media img,
+.product-icons-media video {
   display: block;
   width: 100%;
   height: 100%;
@@ -810,10 +831,10 @@ img.wordmark-media-card__center-logo {
 }
 
 .colour-palette {
-  --colour-palette-width: min(1522px, 79.270833vw);
+  --colour-palette-width: min(1463px, 79.270833vw);
   grid-column: 1 / 13;
   grid-row: 10;
-  margin: 0 0 0 calc(50% - 50vw);
+  margin: 0;
   width: var(--colour-palette-width);
 }
 
@@ -824,30 +845,16 @@ img.wordmark-media-card__center-logo {
 }
 
 .colour-notes {
-  --colour-palette-width: min(1522px, 79.270833vw);
+  --colour-palette-width: min(1463px, 79.270833vw);
   --colour-note-box-width: clamp(156px, 10.9375vw, 210px);
-  --colour-section-pad: clamp(24px, 4vw, 72px);
-  --colour-grid-width: min(
-    1660px,
-    calc((100vw - var(--colour-section-pad) - var(--colour-section-pad)) * 0.94)
-  );
-  --colour-grid-left: calc(
-    var(--colour-section-pad) +
-      (
-        (
-            100vw - var(--colour-section-pad) - var(--colour-section-pad) -
-              var(--colour-grid-width)
-          ) * 0.5
-      )
-  );
   grid-column: 1 / 13;
   grid-row: 11;
   width: var(--colour-palette-width);
-  margin-left: calc(50% - 50vw);
+  margin-left: 0;
   display: grid;
   grid-template-columns:
-    calc(790 / 1522 * 100%) calc(402 / 1522 * 100%)
-    calc(284 / 1522 * 100%) calc(46 / 1522 * 100%);
+    calc(731 / 1463 * 100%) calc(402 / 1463 * 100%)
+    calc(286 / 1463 * 100%) calc(44 / 1463 * 100%);
   padding: clamp(12px, 1.4vw, 24px) 0 clamp(92px, 10vw, 170px);
 }
 
@@ -862,8 +869,7 @@ img.wordmark-media-card__center-logo {
 .colour-note--cotton {
   grid-column: 1;
   grid-row: 1;
-  padding-left: var(--colour-grid-left);
-  width: calc(var(--colour-grid-left) + var(--colour-note-box-width));
+  width: var(--colour-note-box-width);
   max-width: none;
 }
 
@@ -929,6 +935,8 @@ img.wordmark-media-card__center-logo {
 
 .secondary-colour__media--blue {
   grid-column: 4;
+  margin-left: clamp(28px, 3.8vw, 74px);
+  width: calc(100% + clamp(28px, 3.8vw, 74px));
 }
 
 .secondary-colour__video,
@@ -940,7 +948,7 @@ img.wordmark-media-card__center-logo {
 }
 
 .secondary-colour__palette {
-  grid-column: 1 / 5;
+  grid-column: 2 / 4;
   grid-row: 2;
   margin: 0;
 }
@@ -1106,8 +1114,9 @@ img.wordmark-media-card__center-logo {
   .motif-copy,
   .motif-mark,
   .wordmark-media-card--phone,
-  .wordmark-media-card--box,
+  .wordmark-box-pair,
   .product-icons-copy,
+  .product-icons-media--box-secondary,
   .product-icons-strip,
   .product-icons-media--bag,
   .product-icons-media--iphone,
@@ -1183,8 +1192,9 @@ img.wordmark-media-card__center-logo {
     width: 84%;
   }
 
-  .wordmark-media-card--box {
+  .wordmark-box-pair {
     order: 10;
+    top: 0;
     margin-top: 54px;
     margin-left: -22px;
   }
@@ -1199,24 +1209,35 @@ img.wordmark-media-card__center-logo {
 
   .product-icons-copy {
     order: 1;
+    margin-top: -56px;
     max-width: 100%;
+    top: -8px;
+  }
+
+  .product-icons-media--box-secondary {
+    order: 2;
+    margin-left: auto;
+    margin-top: -56px;
+    margin-right: -22px;
+    top: -88px;
+    width: 76%;
   }
 
   .product-icons-strip {
-    order: 2;
+    order: 3;
     margin-left: -30px;
     width: 100%;
   }
 
   .product-icons-media--bag {
-    order: 3;
+    order: 4;
     margin-top: -50px;
     margin-left: -22px;
     width: calc(100% + 54px);
   }
 
   .product-icons-media--iphone {
-    order: 4;
+    order: 5;
     margin-left: auto;
     margin-top: 80px;
     margin-right: -22px;
@@ -1224,7 +1245,7 @@ img.wordmark-media-card__center-logo {
   }
 
   .product-icons-media--disc {
-    order: 5;
+    order: 6;
     margin-top: 32px;
     width: 58%;
   }
@@ -1339,8 +1360,14 @@ img.wordmark-media-card__center-logo {
     margin-top: 18px;
   }
 
+  .secondary-colour__media--blue {
+    margin-left: auto;
+    width: 92%;
+  }
+
   .secondary-colour__palette {
     margin-top: 0;
+    width: 72%;
   }
 
   .secondary-colour__use {

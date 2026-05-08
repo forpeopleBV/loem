@@ -10,14 +10,14 @@ export const SECTION_TITLES = [
 export const BASE_IMAGE_PATHS = [
     "/assets/images/landing/cards/Frame 2090055623.jpg",
     "/assets/images/landing/cards/Frame 2090055627.jpg",
-    "/assets/images/landing/cards/Frame 2090055634.jpg",
+    "/assets/images/landing/cards/Frame 2090055634.png",
     "/assets/images/landing/cards/Frame 2090055643.jpg",
     "/assets/images/landing/cards/Frame 2090055661.jpg",
     "/assets/images/landing/cards/Screenshot 2026-04-21 at 10.39.14 2.jpg",
     "/assets/images/landing/cards/e43fda12-4792-434d-8942-bc44fea8206f 2.jpg",
     "/assets/images/landing/cards/loreworld_1768413242_3810047991433109308_65923060496 9.jpg",
     "/assets/images/landing/cards/marvin-leuvrey_stills_025 4.jpg",
-    "/assets/images/landing/cards/samuelpasquier_1691943848_3168577116093411413_9420069 5.jpg",
+    "/assets/images/landing/cards/12.png",
 ];
 
 export const CENTER_VIDEO_PATH = "/assets/videos/landing/Loem-Black.mp4";

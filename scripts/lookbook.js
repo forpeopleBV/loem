@@ -109,7 +109,7 @@ function updateParallax(vh) {
     const isGuide = item.classList.contains("wordmark-guide");
     const isParfum = item.classList.contains("wordmark-media-card--parfum");
     const isPhone = item.classList.contains("wordmark-media-card--phone");
-    const isBox = item.classList.contains("wordmark-media-card--box");
+    const isBox = item.classList.contains("wordmark-box-pair");
     const isMotifMark = item.classList.contains("motif-mark");
     const isProductIconsMedia =
       item.classList.contains("product-icons-media") ||

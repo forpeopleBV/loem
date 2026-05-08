@@ -9,7 +9,6 @@
   </head>
 
   <body class="lookbook-page">
-    <div id="lightCursor" class="light-cursor" aria-hidden="true"></div>
     <div class="top-fade-mask" aria-hidden="true"></div>
 
     <header class="top-nav">
@@ -211,17 +210,19 @@
             />
           </figure>
 
-          <figure
-            class="wordmark-media-card wordmark-media-card--box lookbook-reveal lookbook-reveal--media"
+          <div
+            class="wordmark-box-pair lookbook-reveal lookbook-reveal--media"
             data-reveal="media"
             data-reveal-start="0.51"
             data-parallax="0.27"
           >
-            <img
-              src="/assets/images/lookbook/box_yellow.png"
-              alt="LOEM yellow box packaging visual."
-            />
-          </figure>
+            <figure class="wordmark-media-card wordmark-media-card--box">
+              <img
+                src="/assets/images/lookbook/box_yellow.png"
+                alt="LOEM yellow box packaging visual."
+              />
+            </figure>
+          </div>
         </div>
       </section>
 
@@ -244,10 +245,25 @@
               character. Always use them small, with lots of whitespace for a
               refined look.
             </p>
-            <a href="#" aria-label="Download Product line icons artwork pack">
+            <a
+              href="/assets/downloads/Loem%20Artwork%20Pack.zip"
+              download
+              aria-label="Download Product line icons artwork pack"
+            >
               Download Artwork Pack
             </a>
           </article>
+
+          <figure
+            class="product-icons-media product-icons-media--box-secondary lookbook-reveal lookbook-reveal--text"
+            data-reveal="text"
+            data-reveal-start="0.06"
+          >
+            <img
+              src="/assets/images/lookbook/box_yellow_2.png"
+              alt="LOEM second yellow box packaging visual."
+            />
+          </figure>
 
           <figure
             class="product-icons-strip lookbook-reveal lookbook-reveal--media"
@@ -279,10 +295,20 @@
             data-reveal-start="0.32"
             data-parallax="0.22"
           >
-            <img
-              src="/assets/images/lookbook/iphone_icons.png"
-              alt="LOEM iPhone product icons visual."
-            />
+            <video
+              class="product-icons-media__video js-autoplay-video"
+              preload="auto"
+              playsinline
+              webkit-playsinline
+              muted
+              autoplay
+              loop
+            >
+              <source
+                src="/assets/videos/brand-in-action/loem-phone-4k.mp4"
+                type="video/mp4"
+              />
+            </video>
           </figure>
 
           <figure
@@ -291,10 +317,20 @@
             data-reveal-start="0.42"
             data-parallax="0.16"
           >
-            <img
-              src="/assets/images/lookbook/disc.png"
-              alt="LOEM objects disc icon visual."
-            />
+            <video
+              class="product-icons-media__video js-autoplay-video"
+              preload="auto"
+              playsinline
+              webkit-playsinline
+              muted
+              autoplay
+              loop
+            >
+              <source
+                src="/assets/videos/brand-in-action/loēm-objects.mp4"
+                type="video/mp4"
+              />
+            </video>
           </figure>
 
           <article
