@@ -4,13 +4,23 @@ import { resolve } from "node:path";
 const cleanRouteTargets = new Map([
   ["/brand-story", "/brand-story.html"],
   ["/brand-story/", "/brand-story.html"],
-  ["/lookbook", "/lookbook.html"],
-  ["/lookbook/", "/lookbook.html"],
+  ["/brand-in-action", "/lookbook.html"],
+  ["/brand-in-action/", "/lookbook.html"],
 ]);
 
 function cleanHtmlRoutes() {
-  const rewrite = (req, _res, next) => {
+  const rewrite = (req, res, next) => {
     const [pathname, query] = (req.url || "").split("?");
+    if (pathname === "/lookbook" || pathname === "/lookbook/") {
+      res.statusCode = 308;
+      res.setHeader(
+        "Location",
+        query ? `/brand-in-action?${query}` : "/brand-in-action",
+      );
+      res.end();
+      return;
+    }
+
     const target = cleanRouteTargets.get(pathname);
     if (target) {
       req.url = query ? `${target}?${query}` : target;

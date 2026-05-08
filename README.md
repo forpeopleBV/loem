@@ -6,7 +6,7 @@ Static Vite site for the LOEM brand intro and brand story experience.
 
 - `/` - animated brand intro with scroll-driven canvas composition.
 - `/brand-story` - brand story page with parallax scenes, collection icons, and video sections.
-- `/lookbook` - lookbook shell.
+- `/brand-in-action` - brand in action page.
 
 ## Local Development
 

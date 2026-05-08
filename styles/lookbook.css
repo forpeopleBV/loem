@@ -79,6 +79,7 @@ body {
   background: #fffaf2;
   color: #27160f;
   opacity: 0;
+  overflow-x: hidden;
   transition: opacity 380ms ease;
 }
 
@@ -803,12 +804,22 @@ img.wordmark-media-card__center-logo {
 }
 
 .colour-media--water {
-  grid-column: 6 / 11;
+  --colour-palette-width: min(1463px, 79.270833vw);
+  grid-column: 1 / 13;
   grid-row: 9;
   aspect-ratio: 637 / 814;
-  justify-self: center;
+  align-self: end;
+  justify-self: start;
+  margin-left: calc((var(--colour-palette-width) * 731 / 1463) - 1px);
   margin-top: clamp(70px, 8vw, 142px);
-  width: 100%;
+  margin-bottom: calc(-1 * clamp(18px, 2vw, 38px));
+  width: calc(var(--colour-palette-width) * 637 / 1463);
+  z-index: 2;
+}
+
+.colour-media--water img {
+  height: calc(100% + 3px);
+  transform: translateY(1px);
 }
 
 .colour-media--label {
@@ -827,7 +838,7 @@ img.wordmark-media-card__center-logo {
   grid-row: 9;
   align-self: end;
   max-width: min(100%, 430px);
-  margin-bottom: clamp(28px, 3vw, 56px);
+  margin-bottom: clamp(4px, 1vw, 18px);
 }
 
 .colour-palette {
@@ -855,7 +866,7 @@ img.wordmark-media-card__center-logo {
   grid-template-columns:
     calc(731 / 1463 * 100%) calc(402 / 1463 * 100%)
     calc(286 / 1463 * 100%) calc(44 / 1463 * 100%);
-  padding: clamp(12px, 1.4vw, 24px) 0 clamp(92px, 10vw, 170px);
+  padding: clamp(12px, 1.4vw, 24px) 0 clamp(28px, 4vw, 72px);
 }
 
 .colour-note {
@@ -905,15 +916,15 @@ img.wordmark-media-card__center-logo {
   align-items: end;
   width: calc(100% / 0.94);
   margin-left: var(--product-icons-edge-offset);
-  padding: clamp(72px, 8vw, 150px) 0 clamp(86px, 9vw, 168px);
+  padding: clamp(12px, 2vw, 38px) 0 clamp(86px, 9vw, 168px);
 }
 
 .secondary-colour__intro {
   grid-column: 1;
   grid-row: 1;
   align-self: end;
-  max-width: 340px;
-  padding: 0 clamp(24px, 3.2vw, 62px) clamp(58px, 6vw, 112px);
+  max-width: 400px;
+  padding: 0 clamp(16px, 2.3vw, 44px) 0;
 }
 
 .secondary-colour__media {
@@ -936,7 +947,8 @@ img.wordmark-media-card__center-logo {
 .secondary-colour__media--blue {
   grid-column: 4;
   margin-left: clamp(28px, 3.8vw, 74px);
-  width: calc(100% + clamp(28px, 3.8vw, 74px));
+  transform: translateX(clamp(28px, 3.8vw, 74px));
+  width: 110%;
 }
 
 .secondary-colour__video,
@@ -949,8 +961,11 @@ img.wordmark-media-card__center-logo {
 
 .secondary-colour__palette {
   grid-column: 2 / 4;
-  grid-row: 2;
+  grid-row: 1;
+  align-self: end;
   margin: 0;
+  width: 85%;
+  z-index: 2;
 }
 
 .secondary-colour__palette img {
@@ -961,9 +976,9 @@ img.wordmark-media-card__center-logo {
 
 .secondary-colour__use {
   grid-column: 1;
-  grid-row: 3;
-  max-width: 360px;
-  padding: clamp(44px, 4.8vw, 82px) clamp(24px, 3.2vw, 62px) 0;
+  grid-row: 2;
+  max-width: 410px;
+  padding: clamp(18px, 1.8vw, 34px) clamp(16px, 2.3vw, 44px) 0;
 }
 
 .lookbook-section--closing-video {
@@ -1339,7 +1354,7 @@ img.wordmark-media-card__center-logo {
   .secondary-colour {
     order: 18;
     grid-template-columns: 1fr;
-    padding: 40px 0 0;
+    padding: 18px 0 0;
   }
 
   .secondary-colour__intro,
@@ -1366,6 +1381,7 @@ img.wordmark-media-card__center-logo {
   }
 
   .secondary-colour__palette {
+    align-self: auto;
     margin-top: 0;
     width: 72%;
   }
