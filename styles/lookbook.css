@@ -65,6 +65,22 @@ body {
     blur(1.8px)
     saturate(1.02)
     brightness(1.02);
+  --dark-cursor-zone-mix: 0;
+  --light-cursor-overlay-opacity: calc(0.86 * var(--dark-cursor-zone-mix));
+  --light-cursor-overlay-scale: calc(1 + (var(--dark-cursor-zone-mix) * 0.08));
+  --light-cursor-overlay-blend-mode: overlay;
+  --light-cursor-overlay-background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 247, 214, 0.74) 0%,
+      rgba(255, 208, 118, 0.43) 36%,
+      rgba(255, 165, 79, 0.16) 56%,
+      rgba(255, 165, 79, 0) 80%
+    );
+  --light-cursor-overlay-filter:
+    blur(0.8px)
+    saturate(1.24)
+    brightness(1.18);
   --site-footer-color: #fffaf2;
   --site-footer-bg: #27160f;
   --site-footer-z: 50;
@@ -804,12 +820,17 @@ img.wordmark-media-card__center-logo {
 }
 
 .colour-media--water {
-  grid-column: 6 / 11;
+  --colour-palette-width: min(1463px, 79.270833vw);
+  grid-column: 1 / 13;
   grid-row: 9;
   aspect-ratio: 637 / 814;
-  justify-self: center;
+  align-self: end;
+  justify-self: start;
+  margin-left: calc(var(--colour-palette-width) * 731 / 1463);
   margin-top: clamp(70px, 8vw, 142px);
-  width: 100%;
+  margin-bottom: -1px;
+  width: calc(var(--colour-palette-width) * 637 / 1463);
+  z-index: 2;
 }
 
 .colour-media--label {
@@ -971,6 +992,46 @@ img.wordmark-media-card__center-logo {
   padding: clamp(18px, 1.8vw, 34px) clamp(16px, 2.3vw, 44px) 0;
 }
 
+.secondary-colour__application {
+  margin: 0;
+  overflow: hidden;
+  background: #eee8df;
+}
+
+.secondary-colour__application img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.secondary-colour__application--left {
+  grid-column: 1 / 3;
+  grid-row: 4 / span 2;
+  aspect-ratio: 2624 / 3936;
+  justify-self: start;
+  width: 82%;
+  margin-top: clamp(58px, 6vw, 112px);
+}
+
+.secondary-colour__application--right {
+  grid-column: 3 / 4;
+  grid-row: 4;
+  aspect-ratio: 2451 / 3057;
+  justify-self: center;
+  width: 86%;
+  margin-top: clamp(58px, 6vw, 112px);
+}
+
+.secondary-colour__application--small {
+  grid-column: 4;
+  grid-row: 5;
+  aspect-ratio: 2485 / 3058;
+  justify-self: center;
+  width: 56%;
+  margin-top: clamp(48px, 5vw, 94px);
+}
+
 .lookbook-section--closing-video {
   width: 100%;
   min-height: clamp(620px, 86vh, 1120px);
@@ -983,7 +1044,7 @@ img.wordmark-media-card__center-logo {
 .closing-video {
   width: min(1440px, 84vw);
   margin: 0;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 2598 / 1962;
   overflow: hidden;
   background: #27160f;
 }
@@ -1350,7 +1411,8 @@ img.wordmark-media-card__center-logo {
   .secondary-colour__intro,
   .secondary-colour__media,
   .secondary-colour__palette,
-  .secondary-colour__use {
+  .secondary-colour__use,
+  .secondary-colour__application {
     grid-column: auto;
     grid-row: auto;
   }
@@ -1378,6 +1440,23 @@ img.wordmark-media-card__center-logo {
 
   .secondary-colour__use {
     padding-top: 24px;
+  }
+
+  .secondary-colour__application--left {
+    width: 86%;
+    margin-top: 42px;
+  }
+
+  .secondary-colour__application--right {
+    width: 68%;
+    margin-top: 24px;
+    margin-left: auto;
+  }
+
+  .secondary-colour__application--small {
+    width: 48%;
+    margin-top: 24px;
+    margin-left: auto;
   }
 
   .lookbook-section--closing-video {
