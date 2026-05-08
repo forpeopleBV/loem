@@ -6,6 +6,8 @@ const cleanRouteTargets = new Map([
   ["/brand-story/", "/brand-story.html"],
   ["/lookbook", "/lookbook.html"],
   ["/lookbook/", "/lookbook.html"],
+  ["/brand-in-action", "/lookbook.html"],
+  ["/brand-in-action/", "/lookbook.html"],
 ]);
 
 function cleanHtmlRoutes() {
