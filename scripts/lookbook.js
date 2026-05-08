@@ -1,7 +1,9 @@
 import { animate } from "motion";
+import { createLightCursor } from "./shared/light-cursor.js";
 
 requestAnimationFrame(() => document.body.classList.add("page-in"));
 
+const lightCursor = document.getElementById("lightCursor");
 const mapItems = Array.from(document.querySelectorAll(".js-lookbook-map-item"));
 const sceneSections = Array.from(document.querySelectorAll("[data-scene]"));
 const parallaxItems = Array.from(document.querySelectorAll("[data-parallax]"));
@@ -17,6 +19,7 @@ const autoplayVideos = Array.from(
   document.querySelectorAll(".js-autoplay-video"),
 );
 
+const lightCursorController = createLightCursor(lightCursor);
 const SCROLL_EASE = [0.16, 1, 0.3, 1];
 const SCROLL_MOTION_DURATION = 0.46;
 const SCROLL_TARGET_EPSILON = 0.5;
@@ -167,6 +170,8 @@ function updateParallax(vh) {
 }
 
 function runFrame() {
+  lightCursorController.render();
+
   const vh = window.innerHeight || 1;
   updateSceneReveal(vh);
   updateParallax(vh);
