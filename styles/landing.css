@@ -215,6 +215,10 @@ canvas {
 }
 
 .top-chrome__btn {
+  --top-link-pad-x: 14px;
+  position: relative;
+  display: block;
+  width: fit-content;
   border: 0;
   background: transparent;
   color: #131313;
@@ -224,11 +228,48 @@ canvas {
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  text-align: center;
   text-decoration: none;
-  padding: 10px 14px;
+  padding: 10px var(--top-link-pad-x);
   cursor: pointer;
   pointer-events: auto;
   transition: color 180ms ease;
+}
+
+.top-chrome__btn-main,
+.top-chrome__btn-sub,
+.final-actions__btn-main,
+.final-actions__btn-sub {
+  display: inline;
+  white-space: nowrap;
+}
+
+.top-chrome__btn-sub,
+.final-actions__btn-sub {
+  font-family:
+    "Noto Sans SC",
+    "Noto Sans",
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+  font-size: calc(0.72em + 2px);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  text-transform: none;
+  pointer-events: none;
+}
+
+.top-chrome__btn-sub {
+  position: absolute;
+  top: 80%;
+  left: var(--top-link-pad-x);
+  right: var(--top-link-pad-x);
+  text-align: left;
+}
+
+.top-chrome__slot--right .top-chrome__btn-sub {
+  text-align: right;
 }
 
 .top-chrome__btn:hover {
@@ -275,20 +316,24 @@ canvas {
 
 .final-actions__btn {
   min-width: 180px;
-  height: 48px;
+  min-height: 48px;
   border: 0;
   background: transparent;
   color: #151515;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
+  text-align: center;
   text-decoration: none;
+  padding: 10px 14px;
   cursor: pointer;
   transition: color 180ms ease;
 }
@@ -305,6 +350,7 @@ canvas {
   }
 
   .top-chrome__btn {
+    --top-link-pad-x: 10px;
     font-size: 13px;
     padding: 8px 10px;
   }
@@ -321,7 +367,9 @@ canvas {
   .final-actions__btn {
     min-width: 0;
     flex: 1 1 0;
-    height: 42px;
+    min-height: 46px;
+    height: auto;
     font-size: 15px;
+    padding: 8px 10px;
   }
 }

@@ -120,6 +120,12 @@
                 type="video/mp4"
               />
             </video>
+            <img
+              class="wordmark-media-card__center-logo"
+              src="/assets/images/lookbook/Logo_top_video.png"
+              alt=""
+              aria-hidden="true"
+            />
           </figure>
 
           <figure
@@ -135,15 +141,23 @@
           </figure>
 
           <figure
+            class="wordmark-pocket lookbook-reveal lookbook-reveal--media"
+            data-reveal="media"
+            data-reveal-start="0.28"
+            data-parallax="0.18"
+          >
+            <img
+              src="/assets/images/lookbook/pocket.png"
+              alt="LOEM pocket application."
+            />
+          </figure>
+
+          <figure
             class="wordmark-media-card wordmark-media-card--parfum lookbook-reveal lookbook-reveal--media"
             data-reveal="media"
             data-reveal-start="0.3"
             data-parallax="0.4"
           >
-            <figcaption class="wordmark-media-card__meta">
-              <span>LOĒM</span>
-              <span>LIFE IN FLOW.</span>
-            </figcaption>
             <img
               src="/assets/images/lookbook/parfum.png"
               alt="LOEM parfum visual."
@@ -158,16 +172,21 @@
           >
             <h2>MOTIF &amp; SIGNATURE</h2>
             <p>
-              Our <em>ēm</em> motif is a shorthand for the brand. Designed to
+              Our ēm motif is a shorthand for the brand. Designed to
               capture a sense of flowing energy, it brings a human quality to
-              layouts.
+              layouts. Use it where space is limited: a social avatar, a
+              garment label.
             </p>
             <p>
               The signature is our more expressive mark. Set it large, in
-              colour, or let it crop off the edge. It is meant to feel
+              colour, or let it crop off the edge. It's meant to feel
               confident and full of energy.
             </p>
-            <a href="#" aria-label="Download Motif artwork pack">
+            <a
+              href="/assets/downloads/loem-motif-signature-artwork-pack.zip"
+              download
+              aria-label="Download Motif artwork pack"
+            >
               Download Artwork Pack
             </a>
 
@@ -331,9 +350,20 @@
           >
             <h2>TYPOGRAPHY</h2>
             <p>
-              Our brand typeface is Martina Plantijn Light. For small headings
-              and buttons we use Greed Condensed Bold. Type is always set small
-              and surrounded by plenty of whitespace.
+              Our brand typeface is
+              <a
+                href="https://klim.co.nz/fonts/martina-plantijn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Martina Plantijn Light</a
+              >. For small headings and buttons we use
+              <a
+                href="https://displaay.net/typeface/greed#condensed"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Greed Condensed Bold</a
+              >. Type is always set small and surrounded by plenty of
+              whitespace.
             </p>
           </article>
 
@@ -553,7 +583,23 @@
           </video>
         </figure>
       </section>
+
+      <section class="brand-action-cta is-active is-visible" aria-label="Brand actions">
+        <div class="brand-action-cta__actions" aria-hidden="false">
+          <a class="brand-action-cta__button js-nav" href="/">
+            BRAND INTRO
+          </a>
+          <a class="brand-action-cta__button js-nav" href="/lookbook">
+            BRAND IN ACTION
+          </a>
+        </div>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <span class="site-footer__year">ESTABLISHED 2026</span>
+      <small class="site-footer__disclaimer">INTERNAL USE ONLY</small>
+    </footer>
     <script type="module" src="/scripts/lookbook.js"></script>
   </body>
 </html>

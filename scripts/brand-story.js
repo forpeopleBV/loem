@@ -12,7 +12,6 @@ const overviewItems = Array.from(
 );
 const brandOverview = document.querySelector(".brand-overview");
 const brandActionCta = document.querySelector(".brand-action-cta");
-const brandActionVideo = document.getElementById("brandActionVideo");
 const brandActionActions = document.querySelector(".brand-action-cta__actions");
 const siteFooter = document.querySelector(".site-footer");
 const emWhiteVideo = document.getElementById("emWhiteVideo");
@@ -39,7 +38,6 @@ let lastScrollTarget = scrollState.y;
 let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
-let brandActionVideoPlayedOnce = false;
 let brandActionInZone = false;
 let brandActionDelayReady = false;
 let brandActionDelayStarted = false;
@@ -83,31 +81,6 @@ function playEmVideoOnceWhenReady() {
     };
     emWhiteVideo.addEventListener("loadeddata", onReady, { once: true });
     emWhiteVideo.load();
-  }
-}
-
-function playBrandActionVideoOnceWhenReady() {
-  if (!brandActionVideo || brandActionVideoPlayedOnce) return;
-
-  const doPlay = () => {
-    brandActionVideo.currentTime = 0;
-    brandActionVideo
-      .play()
-      .then(() => {
-        brandActionVideoPlayedOnce = true;
-      })
-      .catch(() => {});
-  };
-
-  if (brandActionVideo.readyState >= 2) {
-    doPlay();
-  } else {
-    const onReady = () => {
-      brandActionVideo.removeEventListener("loadeddata", onReady);
-      doPlay();
-    };
-    brandActionVideo.addEventListener("loadeddata", onReady, { once: true });
-    brandActionVideo.load();
   }
 }
 
@@ -265,7 +238,7 @@ function setBrandActionVisibility(isInZone) {
         brandActionDelayReady = true;
         brandActionDelayConsumed = true;
         setBrandActionVisibility(brandActionInZone);
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -497,25 +470,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (brandActionCta) {
-    if (brandActionVideo) {
-      brandActionVideo.muted = true;
-      brandActionVideo.defaultMuted = true;
-      brandActionVideo.playsInline = true;
-      brandActionVideo.loop = false;
-      brandActionVideo.preload = "auto";
-      brandActionVideo.load();
-    }
-
     if (!("IntersectionObserver" in window)) {
       setBrandActionVisibility(true);
-      playBrandActionVideoOnceWhenReady();
     } else {
       const ctaObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const isInZone = entry.isIntersecting && entry.intersectionRatio > 0.28;
             setBrandActionVisibility(isInZone);
-            if (isInZone) playBrandActionVideoOnceWhenReady();
           });
         },
         { threshold: [0.28, 0.35, 0.5] },

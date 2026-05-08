@@ -2,7 +2,6 @@ import { animate } from "motion";
 
 requestAnimationFrame(() => document.body.classList.add("page-in"));
 
-const mapRevealSection = document.querySelector(".lookbook-section--map");
 const mapItems = Array.from(document.querySelectorAll(".js-lookbook-map-item"));
 const sceneSections = Array.from(document.querySelectorAll("[data-scene]"));
 const parallaxItems = Array.from(document.querySelectorAll("[data-parallax]"));
@@ -71,23 +70,6 @@ function scheduleScrollMotion() {
   });
 }
 
-function updateMapReveal(vh) {
-  if (!mapRevealSection || !mapItems.length) return;
-
-  const rect = getVirtualRect(mapRevealSection);
-  const local = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
-  const revealProgress = smoothstep((local - 0.03) / 0.34);
-
-  mapItems.forEach((item, index) => {
-    const threshold =
-      0.06 + (index / Math.max(1, mapItems.length - 1)) * 0.34;
-    const itemProgress = smoothstep((revealProgress - threshold) / 0.14);
-    const itemY = (1 - itemProgress) * 22;
-    item.style.setProperty("--map-o", itemProgress.toFixed(3));
-    item.style.setProperty("--map-y", `${itemY.toFixed(2)}px`);
-  });
-}
-
 function updateSceneReveal(vh) {
   sceneSections.forEach((scene) => {
     const rect = getVirtualRect(scene);
@@ -116,10 +98,8 @@ function updateSceneReveal(vh) {
   });
 }
 
-function updateParallax(vh, now) {
-  const t = now * 0.001;
-
-  parallaxItems.forEach((item, index) => {
+function updateParallax(vh) {
+  parallaxItems.forEach((item) => {
     const depth = Number(item.dataset.parallax || 0.24);
     const isLeftCard = item.classList.contains("wordmark-media-card--left");
     const isRightCard = item.classList.contains("wordmark-media-card--right");
@@ -128,6 +108,13 @@ function updateParallax(vh, now) {
     const isPhone = item.classList.contains("wordmark-media-card--phone");
     const isBox = item.classList.contains("wordmark-media-card--box");
     const isMotifMark = item.classList.contains("motif-mark");
+    const isProductIconsMedia =
+      item.classList.contains("product-icons-media") ||
+      item.classList.contains("product-icons-strip");
+    const isTypographyMedia = item.classList.contains("typography-media");
+    const isColourMedia =
+      item.classList.contains("colour-media") ||
+      item.classList.contains("colour-palette");
     const isEdgeAnchored =
       isParfum ||
       isPhone ||
@@ -152,37 +139,22 @@ function updateParallax(vh, now) {
             ? 1.1
             : isMotifMark
               ? 0.75
-          : isGuide
-            ? 0.85
-            : isLeftCard
-              ? 0.68
-              : 1;
-    const flowBoost = isParfum
-      ? 1.75
-      : isRightCard
-        ? 1.35
-        : isPhone
-          ? 1.05
-          : isBox
-            ? 0.92
-            : isMotifMark
-              ? 0.66
-          : isGuide
-            ? 0.72
-            : isLeftCard
-              ? 0.62
-              : 1;
-    const xDir = isParfum || isRightCard || isBox ? 1 : -1;
+              : isColourMedia
+                ? 1.45
+                : isTypographyMedia
+                  ? 1.5
+                  : isProductIconsMedia
+                    ? 1.55
+                    : isGuide
+                      ? 0.85
+                      : isLeftCard
+                        ? 0.68
+                        : 1;
     const scrollShiftY = -centerOffset * depth * 130 * moveBoost;
-    const flowXRaw =
-      Math.sin(t * 0.6 + index * 1.37) * depth * 5.5 * flowBoost * xDir;
-    const flowYRaw =
-      Math.cos(t * 0.73 + index * 1.11) * depth * 7.5 * flowBoost;
 
-    const xFactor = isLongMedia ? 0.24 : 1;
-    const yFactor = isLongMedia ? 0.72 : 1;
-    let flowX = isEdgeAnchored ? 0 : flowXRaw * xFactor;
-    let flowY = (scrollShiftY + flowYRaw) * yFactor;
+    const yFactor = isEdgeAnchored ? 1 : isLongMedia ? 0.72 : 1;
+    let flowX = 0;
+    let flowY = scrollShiftY * yFactor;
 
     if (isLongMedia) {
       flowX = Math.round(flowX);
@@ -194,11 +166,10 @@ function updateParallax(vh, now) {
   });
 }
 
-function runFrame(now) {
+function runFrame() {
   const vh = window.innerHeight || 1;
-  updateMapReveal(vh);
   updateSceneReveal(vh);
-  updateParallax(vh, now);
+  updateParallax(vh);
   requestAnimationFrame(runFrame);
 }
 
