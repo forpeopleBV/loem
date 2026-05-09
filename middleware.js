@@ -41,6 +41,10 @@ export default function middleware(request) {
     return next();
   }
 
+  if (process.env.SITE_AUTH_ENABLED !== "true") {
+    return next();
+  }
+
   const expectedUsername = process.env.SITE_USERNAME || "admin";
   const expectedPassword = process.env.SITE_PASSWORD;
 
