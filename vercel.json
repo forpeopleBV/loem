@@ -7,27 +7,7 @@
   "trailingSlash": false,
   "rewrites": [
     {
-      "source": "/brand-story",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/brand-story/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/lookbook",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/lookbook/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/brand-in-action",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/brand-in-action/",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],

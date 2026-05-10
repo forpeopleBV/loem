@@ -8,6 +8,10 @@ const spaRoutes = new Set([
   "/lookbook/",
   "/brand-in-action",
   "/brand-in-action/",
+  "/brand-assets",
+  "/brand-assets/",
+  "/assets-downloads",
+  "/assets-downloads/",
 ]);
 
 function spaCleanRoutes() {
