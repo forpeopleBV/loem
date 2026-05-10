@@ -356,6 +356,14 @@ export function MusicPlayer() {
             </span>
           </button>
         ))}
+        <a
+          className="music-player__spotify-link"
+          href="https://open.spotify.com/playlist/5JPvs7Jf0mZwDbqUfXFtoI?si=6baaafc5c63543c5"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open in Spotify
+        </a>
       </div>
     </aside>
   );

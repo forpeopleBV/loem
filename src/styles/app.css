@@ -529,6 +529,29 @@ body.lookbook-page {
   color: #ffffff;
 }
 
+.music-player__spotify-link,
+.music-player__spotify-link:visited {
+  display: inline-flex;
+  width: max-content;
+  margin: 6px auto 2px;
+  color: #b3b3b3;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-transform: uppercase;
+  text-underline-offset: 0.18em;
+  transition: color 180ms ease;
+}
+
+.music-player__spotify-link:hover,
+.music-player__spotify-link:focus-visible {
+  color: #ffffff;
+  outline: none;
+}
+
 @media (max-width: 720px) {
   .music-player {
     left: 12px;

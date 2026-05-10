@@ -72,6 +72,13 @@ export const musicTracks = [
     artwork: "/assets/songs/artwork/seven-sisters---pianika.jpg",
   },
   {
+    title: "Temperament",
+    artist: "nikosf.",
+    album: "Temperament",
+    src: "/assets/songs/Temperament%20-%20nikosf.mp3",
+    artwork: "/assets/songs/artwork/temperament---nikosf.jpg",
+  },
+  {
     title: "wind, chime in",
     artist: "Kaisaku",
     album: "wind, chime in",
