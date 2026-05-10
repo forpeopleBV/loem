@@ -4,6 +4,10 @@ import {
   BASE_IMAGE_PATHS,
   BG_MOTION_DURATION,
   BG_SCENES,
+  CARD_REVEAL_EASE,
+  CARD_REVEAL_ROTATION,
+  CARD_REVEAL_STAGGER,
+  CARD_REVEAL_WINDOW,
   CAMERA_WOBBLE_SPIN,
   CAMERA_WOBBLE_X_RATIO,
   CAMERA_WOBBLE_Y_RATIO,
@@ -44,6 +48,9 @@ import {
   smoothstep,
 } from "./landing/utils.js";
 
+export function mountLandingPage(options = {}) {
+const { navigate } = options;
+
 const canvas = document.getElementById("c");
 const lightCursor = document.getElementById("lightCursor");
 const scrollSnap = document.getElementById("scrollSnap");
@@ -51,12 +58,20 @@ const topChrome = document.getElementById("topChrome");
 const finalActions = document.getElementById("finalActions");
 const loadingProgress = document.getElementById("loadingProgress");
 const ctx = canvas.getContext("2d", { desynchronized: true });
+let disposed = false;
+let frameId = 0;
 
 function navigateWithDissolve(href) {
-  if (href === window.location.pathname) return;
+  const target = href.replace(/\.html$/, "") || "/";
+  if (target === window.location.pathname) return;
   document.body.classList.add("page-out");
   setTimeout(() => {
-    window.location.href = href;
+    if (disposed) return;
+    if (navigate) {
+      navigate(target);
+    } else {
+      window.location.href = target;
+    }
   }, 520);
 }
 
@@ -164,8 +179,10 @@ function trackInitialAsset(promise) {
 
 function revealLandingWhenReady() {
   Promise.all(initialAssetPromises).finally(() => {
+    if (disposed) return;
     document.body.classList.add("page-in");
     requestAnimationFrame(() => {
+      if (disposed) return;
       document.body.classList.remove("page-loading");
       cardRevealAnimation?.stop();
       cardRevealState.progress = 0;
@@ -174,7 +191,7 @@ function revealLandingWhenReady() {
         { progress: 1 },
         {
           duration: CARD_REVEAL_DURATION,
-          ease: SCROLL_EASE,
+          ease: CARD_REVEAL_EASE,
         },
       );
     });
@@ -226,6 +243,7 @@ function scheduleScrollMotion() {
   if (scrollMotionFrame !== null) return;
 
   scrollMotionFrame = requestAnimationFrame(() => {
+    if (disposed) return;
     scrollMotionFrame = null;
     animateScrollStateToProgress();
   });
@@ -233,6 +251,16 @@ function scheduleScrollMotion() {
 
 function sectionPhase(index) {
   return index * PHASE_PER_SECTION;
+}
+
+function getResponsiveCardScale() {
+  if (W >= 760) return 1;
+  return clamp(W / 760, 0.48, 1);
+}
+
+function getResponsiveCardOffsetScale() {
+  if (W >= 760) return 1;
+  return clamp(W / 760, 0.38, 1);
 }
 
 function updateFinalActions(sectionFloat) {
@@ -473,15 +501,28 @@ function projectLayer(
   phaseOffset,
   layerAlpha,
   idleAmount,
+  revealProgress = 1,
 ) {
+  const responsiveCardScale = getResponsiveCardScale();
+  const responsiveOffsetScale = getResponsiveCardOffsetScale();
   const wobbleSpin = cameraWobble.x * CAMERA_WOBBLE_SPIN;
-  const cosS = Math.cos(spinRad + phaseOffset + wobbleSpin);
-  const sinS = Math.sin(spinRad + phaseOffset + wobbleSpin);
+  const baseSpin = spinRad + phaseOffset + wobbleSpin;
   const R = Math.min(W, H) * WORLD_RADIUS;
   const wobbleX = cameraWobble.x * clamp(W * CAMERA_WOBBLE_X_RATIO, 10, 34);
   const wobbleY = cameraWobble.y * clamp(H * CAMERA_WOBBLE_Y_RATIO, 8, 26);
+  const revealBase = clamp(revealProgress, 0, 1);
+  const revealMotionT = smoothstep(revealBase);
+  const revealSpinBase = baseSpin + CARD_REVEAL_ROTATION * (1 - revealMotionT);
+  const revealLift = clamp(H * 0.04, 18, 46);
+  const revealYOffset = revealLift * (1 - revealMotionT);
+  const cosS = Math.cos(revealSpinBase);
+  const sinS = Math.sin(revealSpinBase);
 
   return particles.map((p) => {
+    const revealDelay = p.slot * CARD_REVEAL_STAGGER;
+    const revealT = smoothstep(
+      clamp((revealBase - revealDelay) / CARD_REVEAL_WINDOW, 0, 1),
+    );
     const rx = p.x * cosS - p.z * sinS;
     const ry = p.y;
     const rz = p.x * sinS + p.z * cosS;
@@ -492,12 +533,16 @@ function projectLayer(
     const rawSy = cy + fy * R * p.orbitY;
     const depth = (fz + 1) / 2;
     const media = sectionMedia[sectionIndex][p.slot];
-    const shiftX = (media.shiftXRatio || 0) * W + (media.shiftXPx || 0);
-    const shiftY = (media.shiftYRatio || 0) * H + (media.shiftYPx || 0);
+    const shiftX =
+      ((media.shiftXRatio || 0) * W + (media.shiftXPx || 0)) *
+      responsiveOffsetScale;
+    const shiftY =
+      ((media.shiftYRatio || 0) * H + (media.shiftYPx || 0)) *
+      responsiveOffsetScale;
     const mediaScale = media.scale || 1;
     const sizeF = (0.38 + depth * 0.95) * CARD_SIZE_BOOST;
-    const w = p.baseW * sizeF * mediaScale;
-    const h = p.baseH * sizeF * mediaScale;
+    const w = p.baseW * sizeF * mediaScale * responsiveCardScale;
+    const h = p.baseH * sizeF * mediaScale * responsiveCardScale;
     const slotSeed = p.slot * 0.91 + 0.37;
     const idleWaveX =
       Math.sin(idleTime * 0.36 + slotSeed) *
@@ -509,12 +554,13 @@ function projectLayer(
       idleAmount;
     const depthWobble = 0.38 + depth * 0.72;
     const sx = rawSx + shiftX + idleWaveX - wobbleX * depthWobble;
-    const sy = rawSy + shiftY + idleWaveY - wobbleY * depthWobble;
+    const sy =
+      rawSy + shiftY + idleWaveY - wobbleY * depthWobble + revealYOffset;
 
     const boostedDepth = clamp(depth + (media.layerBoost || 0), 0, 1);
     const renderDepth = media.forceFront ? 2 + boostedDepth : boostedDepth;
     const nt = smoothstep(boostedDepth);
-    const opacity = clamp((media.forceOpacity ?? 1) * layerAlpha, 0, 1);
+    let opacity = clamp((media.forceOpacity ?? 1) * layerAlpha * revealT, 0, 1);
     const blur = 0;
 
     return {
@@ -537,6 +583,7 @@ function onScroll() {
 
 function onWheel() {
   requestAnimationFrame(() => {
+    if (disposed) return;
     updateScrollProgress();
     scheduleScrollMotion();
   });
@@ -555,14 +602,24 @@ function renderLightCursor() {
   cameraWobble.y += (cameraWobble.targetY - cameraWobble.y) * 0.08;
 }
 
-document.querySelectorAll(".js-nav").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    const href = link.getAttribute("href");
-    if (!href) return;
-    event.preventDefault();
-    navigateWithDissolve(href);
-  });
-});
+if (finalActions && !finalActions.querySelector('[href="/brand-assets"]')) {
+  finalActions.insertAdjacentHTML(
+    "beforeend",
+    `<a class="final-actions__btn js-nav" href="/brand-assets">
+      <span class="final-actions__btn-main">BRAND ASSETS</span>
+      <span class="final-actions__btn-sub">品牌素材</span>
+    </a>`,
+  );
+}
+
+const navLinks = Array.from(document.querySelectorAll(".js-nav"));
+const onNavClick = (event) => {
+  const href = event.currentTarget.getAttribute("href");
+  if (!href) return;
+  event.preventDefault();
+  navigateWithDissolve(href);
+};
+navLinks.forEach((link) => link.addEventListener("click", onNavClick));
 
 function buildCenteredLines(text, maxWidth) {
   const words = text.split(/\s+/);
@@ -583,7 +640,7 @@ function buildCenteredLines(text, maxWidth) {
   return lines;
 }
 
-function drawCenterStep(step, centerX, alpha) {
+function drawCenterStep(step, centerX, alpha, yOffset = 0) {
   if (!step || alpha < 0.01) return;
   ctx.save();
   ctx.globalAlpha = clamp(alpha, 0, 1);
@@ -641,7 +698,7 @@ function drawCenterStep(step, centerX, alpha) {
       ctx.drawImage(
         videoKeyCanvas,
         centerX - drawW / 2,
-        cy - drawH / 2,
+        cy + yOffset - drawH / 2,
         drawW,
         drawH,
       );
@@ -656,25 +713,28 @@ function drawCenterStep(step, centerX, alpha) {
   const maxWidth = clamp(W * 0.72, 320, 1060);
   ctx.font = `300 ${fontSize}px "Test Martina Plantijn", Georgia, "Times New Roman", serif`;
   const lines = buildCenteredLines(text, maxWidth);
-  const startY = cy - ((lines.length - 1) * lineHeight) / 2;
+  const startY = cy + yOffset - ((lines.length - 1) * lineHeight) / 2;
   lines.forEach((line, idx) => {
     ctx.fillText(line, centerX, startY + idx * lineHeight);
   });
   ctx.restore();
 }
 
-function drawCenterTransition(currentIndex, nextIndex, mix) {
+function drawCenterTransition(currentIndex, nextIndex, mix, revealProgress = 1) {
   const currentStep = CENTER_STEPS[currentIndex];
   const nextStep = CENTER_STEPS[nextIndex];
+  const revealT = smoothstep(revealProgress);
+  const revealYOffset = (1 - revealT) * clamp(H * 0.045, 22, 58);
   const slideDistance = clamp(W * CENTER_SLIDE_DISTANCE_RATIO, 180, 460);
+  const revealXOffset = (1 - revealT) * slideDistance;
   const inShift = slideDistance * (1 - mix);
   const outShift = slideDistance * mix;
-  const currentX = cx - outShift;
-  const nextX = cx + inShift;
+  const currentX = cx - outShift + revealXOffset;
+  const nextX = cx + inShift + revealXOffset;
 
-  drawCenterStep(currentStep, currentX, 1 - mix);
+  drawCenterStep(currentStep, currentX, (1 - mix) * revealT, revealYOffset);
   if (nextIndex !== currentIndex) {
-    drawCenterStep(nextStep, nextX, mix);
+    drawCenterStep(nextStep, nextX, mix * revealT, revealYOffset);
   }
 }
 
@@ -772,6 +832,7 @@ function drawCardPass(cards, exitProgress, drawFront) {
 
 let lastTime = performance.now();
 function frame(now) {
+  if (disposed) return;
   const dt = Math.min(now - lastTime, 50);
   lastTime = now;
 
@@ -796,8 +857,8 @@ function frame(now) {
     1 -
     CARD_TRANSITION_OPACITY_DROP *
       Math.sin(Math.PI * clamp(sectionFloat - currentIndex, 0, 1));
-  const cardLayerAlpha =
-    smoothstep(cardRevealState.progress) * transitionOpacity;
+  const revealProgress = clamp(cardRevealState.progress, 0, 1);
+  const cardLayerAlpha = transitionOpacity;
   updateFinalActions(sectionFloat);
   updateFinalActionsPosition();
   updateTopChrome(sectionFloat);
@@ -812,6 +873,7 @@ function frame(now) {
     blendedPhase,
     cardLayerAlpha,
     idleAmount,
+    revealProgress,
   ).sort((a, b) => a.depth - b.depth);
   const finalCardsExit = getFinalCardsExitProgress(sectionFloat);
 
@@ -819,12 +881,12 @@ function frame(now) {
 
   drawCardPass(allCards, finalCardsExit, false);
 
-  drawCenterTransition(currentIndex, nextIndex, mix);
+  drawCenterTransition(currentIndex, nextIndex, mix, revealProgress);
   drawCenterStepper(sectionFloat);
 
   drawCardPass(allCards, finalCardsExit, true);
 
-  requestAnimationFrame(frame);
+  frameId = requestAnimationFrame(frame);
 }
 
 resize();
@@ -832,14 +894,33 @@ updateScrollProgress();
 syncScrollStateToProgress();
 scrollSnap.addEventListener("scroll", onScroll, { passive: true });
 scrollSnap.addEventListener("wheel", onWheel, { passive: true });
-window.addEventListener("resize", () => {
+const onResize = () => {
   resize();
   updateScrollProgress();
   syncScrollStateToProgress();
-});
+};
+window.addEventListener("resize", onResize);
 requestAnimationFrame(() => {
+  if (disposed) return;
   updateScrollProgress();
   syncScrollStateToProgress();
 });
 revealLandingWhenReady();
-requestAnimationFrame(frame);
+frameId = requestAnimationFrame(frame);
+
+return () => {
+  disposed = true;
+  cancelAnimationFrame(frameId);
+  scrollMotionAnimation?.stop();
+  backgroundMotionAnimation?.stop();
+  cardRevealAnimation?.stop();
+  scrollSnap.removeEventListener("scroll", onScroll);
+  scrollSnap.removeEventListener("wheel", onWheel);
+  window.removeEventListener("resize", onResize);
+  navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
+  lightCursorController.destroy?.();
+  centerVideoAsset.pause();
+  document.body.style.background = "";
+  document.body.classList.remove("page-loading", "page-in", "page-out");
+};
+}

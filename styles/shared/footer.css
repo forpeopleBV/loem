@@ -1,8 +1,8 @@
 .site-footer {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 48px clamp(20px, 4.8vw, 92px) 28px;
   background: var(--site-footer-bg, transparent);
   z-index: var(--site-footer-z, 6);
@@ -20,6 +20,13 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.site-footer__year::after {
+  content: "|";
+  display: inline-block;
+  margin-left: 10px;
+  color: currentColor;
 }
 
 @media (max-width: 780px) {

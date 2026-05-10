@@ -1,0 +1,285 @@
+@import url("./shared/footer.css");
+@import url("./shared/cursor.css");
+
+.asset-downloads-page {
+  --light-cursor-size: clamp(220px, 18vw, 290px);
+  --light-cursor-z: 60;
+  --light-cursor-opacity: 1;
+  --light-cursor-opacity-duration: 220ms;
+  --light-cursor-blend-mode: multiply;
+  --site-footer-color: #27160f;
+  --site-footer-bg: #fffaf2;
+  --site-footer-z: 50;
+  min-height: 100%;
+  background: #fffaf2;
+  color: #27160f;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: "Test Martina Plantijn", Georgia, serif;
+}
+
+.asset-downloads .site-footer {
+  border-top: 1px solid rgba(39, 22, 15, 0);
+}
+
+.asset-downloads {
+  min-height: 100vh;
+  background:
+    linear-gradient(180deg, rgba(255, 250, 242, 0.92) 0%, rgba(255, 250, 242, 0) 34%),
+    #fffaf2;
+}
+
+.asset-downloads__main {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+  padding: clamp(122px, 13vw, 172px) clamp(18px, 5vw, 88px) 96px;
+}
+
+.asset-downloads__table-wrap {
+  margin-top: clamp(120px, 24vh, 260px);
+  overflow-x: auto;
+}
+
+.asset-downloads__table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+}
+
+.asset-downloads__table th,
+.asset-downloads__table td {
+  border-bottom: 1px solid rgba(39, 22, 15, 0.18);
+  padding: 24px 20px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.asset-downloads__table thead th {
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.asset-downloads__table tbody th {
+  width: 22%;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(18px, 1.76vw, 27px);
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.asset-downloads__table tbody th span,
+.asset-downloads__table small {
+  display: block;
+}
+
+.asset-downloads__table small {
+  margin-top: 10px;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: rgba(39, 22, 15, 0.58);
+}
+
+.asset-downloads__table td {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.28;
+}
+
+.asset-downloads__table td:nth-child(3),
+.asset-downloads__table td:nth-child(4) {
+  white-space: nowrap;
+}
+
+.asset-downloads__table a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.asset-downloads__palette-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(118px, 1fr));
+  gap: 0;
+}
+
+.asset-downloads__colour-chip {
+  display: grid;
+  grid-template-rows: 44px auto;
+  min-height: 100px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.asset-downloads__colour-copy {
+  display: grid;
+  gap: 7px;
+  padding: 13px 18px 4px 0;
+}
+
+.asset-downloads__colour-name,
+.asset-downloads__colour-hex,
+.asset-downloads__colour-pantone {
+  display: block;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.asset-downloads__colour-name {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.asset-downloads__colour-hex,
+.asset-downloads__colour-pantone {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #171a20;
+}
+
+.asset-downloads__colour-chip:hover .asset-downloads__colour-hex,
+.asset-downloads__colour-chip:focus-visible .asset-downloads__colour-hex {
+  color: #27160f;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+.asset-downloads__swatch {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--asset-colour);
+}
+
+.asset-downloads__colour-chip:first-child .asset-downloads__swatch {
+  border: 1px solid rgba(39, 22, 15, 0.24);
+}
+
+.asset-downloads__colour-chip:last-child .asset-downloads__swatch {
+  border-right: 1px solid rgba(39, 22, 15, 0.2);
+}
+
+.asset-downloads__download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 10px 16px;
+  border: 1px solid currentColor;
+  color: inherit;
+  background: transparent;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  cursor: pointer;
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.asset-downloads__download:hover,
+.asset-downloads__download:focus-visible {
+  background: #27160f;
+  color: #fffaf2;
+}
+
+@media (max-width: 820px) {
+  .asset-downloads__main {
+    padding-top: 106px;
+  }
+
+  .asset-downloads__table-wrap {
+    margin-top: clamp(72px, 16vh, 140px);
+    overflow-x: visible;
+  }
+
+  .asset-downloads__table,
+  .asset-downloads__table thead,
+  .asset-downloads__table tbody,
+  .asset-downloads__table tr,
+  .asset-downloads__table th,
+  .asset-downloads__table td {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .asset-downloads__table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .asset-downloads__table tbody tr {
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(39, 22, 15, 0.2);
+  }
+
+  .asset-downloads__table th,
+  .asset-downloads__table td {
+    border-bottom: 0;
+    padding: 14px 0;
+  }
+
+  .asset-downloads__table th::before,
+  .asset-downloads__table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 10px;
+    font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+    color: rgba(39, 22, 15, 0.58);
+  }
+
+  .asset-downloads__table [data-label="Asset"]::before {
+    font-family: "Test Martina Plantijn", Georgia, serif;
+    font-size: 9px;
+    font-weight: 300;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .asset-downloads__table tbody th {
+    font-size: 19px;
+  }
+
+  .asset-downloads__download {
+    width: 100%;
+  }
+
+  .asset-downloads__palette-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .asset-downloads__colour-chip {
+    min-height: 98px;
+    grid-template-rows: 34px auto;
+  }
+}

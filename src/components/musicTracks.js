@@ -1,0 +1,81 @@
+export const FAVICON_ARTWORK = "/assets/brand/favicon.svg";
+
+export const musicTracks = [
+  {
+    title: "Episode V",
+    artist: "sun electric",
+    album: "Episodes",
+    src: "/assets/songs/Episode%20V%20-%20sun%20electric.mp3",
+    artwork: "/assets/songs/artwork/episode-v---sun-electric.jpg",
+  },
+  {
+    title: "Flower Of Life",
+    artist: "SYEYL",
+    album: "Flower Of Life",
+    src: "/assets/songs/Flower%20Of%20Life%20-%20SYEYL.mp3",
+    artwork: "/assets/songs/artwork/flower-of-life---syeyl.jpg",
+  },
+  {
+    title: "Galapagos",
+    artist: "Saphileaum",
+    album: "Tamalungma",
+    src: "/assets/songs/Galapagos%20-%20Saphileaum.mp3",
+    artwork: "/assets/songs/artwork/galapagos---saphileaum.jpg",
+  },
+  {
+    title: "Height",
+    artist: "Attom",
+    album: "Balance",
+    src: "/assets/songs/Height%20-%20Attom.mp3",
+    artwork: "/assets/songs/artwork/height---attom.jpg",
+  },
+  {
+    title: "Just Sine Waves",
+    artist: "Martin Roth",
+    album: "Mono No Aware",
+    src: "/assets/songs/Just%20Sine%20Waves%20-%20Martin%20Roth.mp3",
+    artwork: "/assets/songs/artwork/just-sine-waves---martin-roth.jpg",
+  },
+  {
+    title: "Lotus",
+    artist: "SYEYL",
+    album: "Dawn Chorus",
+    src: "/assets/songs/Lotus%20-%20SYEYL.mp3",
+    artwork: "/assets/songs/artwork/lotus---syeyl.jpg",
+  },
+  {
+    title: "Lune - Ambient Edit",
+    artist: "PIANIKA",
+    album: "Lune (Ambient Edit)",
+    src: "/assets/songs/Lune%20-%20Ambient%20Edit%20-%20PIANIKA.mp3",
+    artwork: "/assets/songs/artwork/lune---ambient-edit---pianika.jpg",
+  },
+  {
+    title: "Phantasia",
+    artist: "PIANIKA",
+    album: "Moirai / Phantasia",
+    src: "/assets/songs/Phantasia%20-%20PIANIKA.mp3",
+    artwork: "/assets/songs/artwork/phantasia---pianika.jpg",
+  },
+  {
+    title: "Pisces",
+    artist: "PIANIKA",
+    album: "Pisces",
+    src: "/assets/songs/Pisces%20-%20PIANIKA.mp3",
+    artwork: "/assets/songs/artwork/pisces---pianika.jpg",
+  },
+  {
+    title: "Seven Sisters",
+    artist: "PIANIKA",
+    album: "Lune",
+    src: "/assets/songs/Seven%20Sisters%20-%20PIANIKA.mp3",
+    artwork: "/assets/songs/artwork/seven-sisters---pianika.jpg",
+  },
+  {
+    title: "wind, chime in",
+    artist: "Kaisaku",
+    album: "wind, chime in",
+    src: "/assets/songs/wind_%20chime%20in%20-%20Kaisaku.mp3",
+    artwork: "/assets/songs/artwork/wind--chime-in---kaisaku.jpg",
+  },
+];

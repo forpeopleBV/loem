@@ -1,6 +1,9 @@
 import { animate } from "motion";
 import { createLightCursor } from "./shared/light-cursor.js";
 
+export function mountBrandStoryPage(options = {}) {
+const { navigate } = options;
+
 const lightCursor = document.getElementById("lightCursor");
 const scenes = Array.from(document.querySelectorAll("[data-scene]"));
 const parallaxImages = Array.from(document.querySelectorAll("[data-parallax]"));
@@ -24,6 +27,41 @@ const flowVideos = Array.from(document.querySelectorAll(".js-flow-video"));
 const flowVideoSections = Array.from(
   document.querySelectorAll(".flow-video-section"),
 );
+
+const navLabelMap = {
+  "BRAND INTRO": "品牌概述",
+  "BRAND STORY": "品牌故事",
+  "BRAND IN ACTION": "品牌应用",
+  "BRAND ASSETS": "品牌素材",
+};
+
+function ensureBrandAssetsAction() {
+  if (!brandActionActions || brandActionActions.querySelector('[href="/brand-assets"]')) {
+    return;
+  }
+
+  brandActionActions.insertAdjacentHTML(
+    "beforeend",
+    `<a class="brand-action-cta__button js-nav" href="/brand-assets">
+      BRAND ASSETS
+    </a>`,
+  );
+}
+
+function enhanceNavigationLabels() {
+  document.querySelectorAll(".brand-action-cta__button").forEach((button) => {
+    if (button.querySelector(".brand-action-cta__button-main")) return;
+
+    const label = button.textContent.trim().replace(/\s+/g, " ");
+    const subLabel = navLabelMap[label.toUpperCase()];
+    if (!subLabel) return;
+
+    button.innerHTML = `<span class="brand-action-cta__button-main">${label}</span><span class="brand-action-cta__button-sub">${subLabel}</span>`;
+  });
+}
+
+ensureBrandAssetsAction();
+enhanceNavigationLabels();
 const topFadeMask = document.querySelector(".top-fade-mask");
 const lightCursorController = createLightCursor(lightCursor);
 const SCROLL_EASE = [0.16, 1, 0.3, 1];
@@ -38,11 +76,6 @@ let lastScrollTarget = scrollState.y;
 let emVideoPlayedOnce = false;
 let emWasInSection = false;
 let emPlayPending = false;
-let brandActionInZone = false;
-let brandActionDelayReady = false;
-let brandActionDelayStarted = false;
-let brandActionDelayConsumed = false;
-let brandActionDelayTimer = null;
 let flowTopMaskMix = 0;
 let darkCursorZoneMix = 0;
 const FLOW_ACCENT_BY_STATE = {
@@ -54,6 +87,10 @@ const FLOW_ACCENT_BY_STATE = {
 const FLOW_CAPTION_STICKY_TOP = 68;
 const FLOW_CAPTION_START_OFFSET = 52;
 let lastFlowCaptionAccent = FLOW_ACCENT_BY_STATE.presence;
+let disposed = false;
+let frameId = 0;
+const videoObservers = [];
+let ctaObserver = null;
 
 function playEmVideoOnceWhenReady() {
   if (!emWhiteVideo || emVideoPlayedOnce || emPlayPending) return;
@@ -220,6 +257,7 @@ function animateScrollMotion() {
 function scheduleScrollMotion() {
   if (scrollMotionFrame !== null) return;
   scrollMotionFrame = requestAnimationFrame(() => {
+    if (disposed) return;
     scrollMotionFrame = null;
     animateScrollMotion();
   });
@@ -227,59 +265,33 @@ function scheduleScrollMotion() {
 
 function setBrandActionVisibility(isInZone) {
   if (!brandActionCta) return;
-  brandActionInZone = isInZone;
 
-  if (isInZone && !brandActionDelayReady) {
-    if (brandActionDelayConsumed) {
-      brandActionDelayReady = true;
-    } else if (!brandActionDelayStarted) {
-      brandActionDelayStarted = true;
-      brandActionDelayTimer = setTimeout(() => {
-        brandActionDelayReady = true;
-        brandActionDelayConsumed = true;
-        setBrandActionVisibility(brandActionInZone);
-      }, 1000);
-    }
-  }
-
-  if (!isInZone) {
-    brandActionDelayReady = false;
-    brandActionDelayStarted = false;
-    if (brandActionDelayTimer) {
-      clearTimeout(brandActionDelayTimer);
-      brandActionDelayTimer = null;
-    }
-  }
-
-  const isVisible = isInZone && brandActionDelayReady;
-  brandActionCta.classList.toggle("is-visible", isVisible);
+  brandActionCta.classList.toggle("is-visible", isInZone);
   brandActionCta.classList.toggle("is-active", isInZone);
-  brandActionActions?.setAttribute("aria-hidden", isVisible ? "false" : "true");
+  brandActionActions?.setAttribute("aria-hidden", isInZone ? "false" : "true");
 }
 
 function updateScenesAndParallax(now) {
+  if (disposed) return;
   lightCursorController.render();
 
   const vh = window.innerHeight || 1;
-  const t = now * 0.001;
-
   scenes.forEach((scene, sceneIndex) => {
     const rect = getVirtualRect(scene);
     const local = clamp((vh - rect.top) / (vh + rect.height), 0, 1);
 
-    // Text arrives earlier than image.
-    const textIn = smoothstep((local - 0.07) / 0.36);
-    const textOut = smoothstep((local - 0.62) / 0.34);
+    const textIn = smoothstep((local - 0.04) / 0.28);
+    const textOut = smoothstep((local - 0.9) / 0.16);
     const textVisible = textIn * (1 - textOut);
-    const textEntryStart = sceneIndex === 0 ? 320 : 220;
-    const textY = (1 - textIn) * textEntryStart - textOut * 210;
+    const textEntryStart = sceneIndex === 0 ? 34 : 24;
+    const textY = (1 - textIn) * textEntryStart - textOut * 70;
 
-    const imgIn = smoothstep((local - 0.18) / 0.38);
-    const imgOut = smoothstep((local - 0.62) / 0.32);
+    const imgIn = smoothstep((local - 0.12) / 0.32);
+    const imgOut = smoothstep((local - 0.9) / 0.16);
     const imgVisible = imgIn * (1 - imgOut);
-    const imgY = (1 - imgIn) * 300 - imgOut * 260;
-    const flowVideoY = (0.5 - local) * 22;
-    const flowVideoScale = 1.022 - Math.abs(local - 0.5) * 0.012;
+    const imgY = (1 - imgIn) * 62 - imgOut * 70;
+    const flowVideoY = (0.5 - local) * 12;
+    const flowVideoScale = 1.012 - Math.abs(local - 0.5) * 0.006;
 
     scene.style.setProperty("--text-y", `${textY.toFixed(2)}px`);
     scene.style.setProperty("--text-o", `${textVisible.toFixed(3)}`);
@@ -322,63 +334,33 @@ function updateScenesAndParallax(now) {
     });
   }
 
-  parallaxImages.forEach((img, idx) => {
+  parallaxImages.forEach((img) => {
     const depth = Number(img.dataset.parallax || 0.2);
     const isWhatWeDo = img.classList.contains("what-we-do__image-wrap");
-    const isHeroLeft = img.classList.contains("hero-left");
-    const isHeroCenter = img.classList.contains("hero-center");
     const isPhiloMain = img.classList.contains("philo-main");
     const isPhiloSide = img.classList.contains("philo-side");
+    const isLongMedia = isWhatWeDo || isPhiloMain || isPhiloSide;
     const rect = getVirtualRect(img);
     const centerY = rect.top + rect.height * 0.5;
     const centerOffset = (centerY - vh * 0.5) / vh;
 
     const moveBoost = isPhiloSide
-      ? 2.8
-      : isWhatWeDo
-        ? 0.68
-        : isPhiloMain
-        ? 1.45
-        : isHeroCenter
-          ? 2.2
-          : isHeroLeft
-            ? 0.45
-            : 1;
-    const flowBoost = isPhiloSide
-      ? 2.5
-      : isWhatWeDo
-        ? 0.55
-        : isPhiloMain
-        ? 1.35
-        : isHeroCenter
-          ? 2.4
-          : isHeroLeft
-            ? 0.4
-            : 1;
-    const xDir = isPhiloSide
-      ? 1
-      : isWhatWeDo
-        ? -1
-        : isPhiloMain
-        ? -1
-        : isHeroCenter
-          ? 1
-          : isHeroLeft
-            ? -1
-            : 1;
-
+      ? 1.35
+      : isPhiloMain
+        ? 1.15
+        : isWhatWeDo
+          ? 0.72
+          : 1;
     const scrollShiftY = -centerOffset * depth * 130 * moveBoost;
-    const mouseShiftX = 0;
-    const mouseShiftY = 0;
-    const flowX =
-      Math.sin(t * 0.6 + idx * 1.37) * depth * 5.5 * flowBoost * xDir;
-    const flowY = Math.cos(t * 0.73 + idx * 1.11) * depth * 7.5 * flowBoost;
+    const flowX = 0;
+    let flowY = scrollShiftY * (isLongMedia ? 0.72 : 1);
 
-    img.style.setProperty("--px", `${(mouseShiftX + flowX).toFixed(2)}px`);
-    img.style.setProperty(
-      "--py",
-      `${(scrollShiftY + mouseShiftY + flowY).toFixed(2)}px`,
-    );
+    if (isLongMedia) {
+      flowY = Math.round(flowY);
+    }
+
+    img.style.setProperty("--px", `${flowX.toFixed(2)}px`);
+    img.style.setProperty("--py", `${flowY.toFixed(2)}px`);
   });
 
   if (emWhiteVideo && emVideoSection) {
@@ -430,14 +412,15 @@ function updateScenesAndParallax(now) {
     flowCaption.onVideoTarget.toFixed(4),
   );
 
-  requestAnimationFrame(updateScenesAndParallax);
+  frameId = requestAnimationFrame(updateScenesAndParallax);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  requestAnimationFrame(() => document.body.classList.add("page-in"));
+  requestAnimationFrame(() => {
+    if (!disposed) document.body.classList.add("page-in");
+  });
   scrollState.y = window.scrollY || 0;
   lastScrollTarget = scrollState.y;
-  requestAnimationFrame(updateScenesAndParallax);
+  frameId = requestAnimationFrame(updateScenesAndParallax);
 
   if (emWhiteVideo) {
     emWhiteVideo.load();
@@ -467,13 +450,14 @@ document.addEventListener("DOMContentLoaded", () => {
       { threshold: 0.35 },
     );
     observer.observe(video);
+    videoObservers.push(observer);
   });
 
   if (brandActionCta) {
     if (!("IntersectionObserver" in window)) {
       setBrandActionVisibility(true);
     } else {
-      const ctaObserver = new IntersectionObserver(
+      ctaObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const isInZone = entry.isIntersecting && entry.intersectionRatio > 0.28;
@@ -485,28 +469,54 @@ document.addEventListener("DOMContentLoaded", () => {
       ctaObserver.observe(brandActionCta);
     }
   }
-});
+;
 
 window.addEventListener("scroll", scheduleScrollMotion, { passive: true });
-window.addEventListener(
-  "resize",
-  () => {
+const onResize = () => {
     scrollMotionAnimation?.stop();
     scrollState.y = window.scrollY || 0;
     lastScrollTarget = scrollState.y;
-  },
-  { passive: true },
-);
+  };
+window.addEventListener("resize", onResize, { passive: true });
 
-document.querySelectorAll(".js-nav").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    const href = link.getAttribute("href") || link.getAttribute("data-href");
-    if (!href) return;
-    event.preventDefault();
-    if (href === window.location.pathname) return;
-    document.body.classList.add("page-out");
-    setTimeout(() => {
-      window.location.href = href;
-    }, 520);
-  });
-});
+const navLinks = Array.from(document.querySelectorAll(".js-nav"));
+const onNavClick = (event) => {
+  const href =
+    event.currentTarget.getAttribute("href") ||
+    event.currentTarget.getAttribute("data-href");
+  if (!href) return;
+  const target = href.replace(/\.html$/, "") || "/";
+  event.preventDefault();
+  if (target === window.location.pathname) return;
+  document.body.classList.add("page-out");
+  setTimeout(() => {
+    if (disposed) return;
+    if (navigate) {
+      navigate(target);
+    } else {
+      window.location.href = target;
+    }
+  }, 520);
+};
+navLinks.forEach((link) => link.addEventListener("click", onNavClick));
+
+return () => {
+  disposed = true;
+  cancelAnimationFrame(frameId);
+  cancelAnimationFrame(scrollMotionFrame);
+  scrollMotionAnimation?.stop();
+  window.removeEventListener("scroll", scheduleScrollMotion);
+  window.removeEventListener("resize", onResize);
+  navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
+  lightCursorController.destroy?.();
+  videoObservers.forEach((observer) => observer.disconnect());
+  ctaObserver?.disconnect();
+  [...autoplayVideos, ...flowVideos].forEach((video) => video.pause());
+  document.body.classList.remove("page-in", "page-out");
+  document.body.style.removeProperty("--top-fade-video-mix");
+  document.body.style.removeProperty("--dark-cursor-zone-mix");
+  document.body.style.removeProperty("--top-flow-caption-y");
+  document.body.style.removeProperty("--top-flow-caption-opacity");
+  document.body.style.removeProperty("--top-flow-caption-on-video");
+};
+}

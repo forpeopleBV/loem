@@ -322,7 +322,6 @@ body::-webkit-scrollbar {
 }
 
 .lookbook-page {
-  --light-cursor-opacity: 0;
   --site-footer-color: rgba(39, 22, 15, 0.62);
   --site-footer-bg: transparent;
   --top-fade-mask-rgb: 237, 229, 218;
@@ -338,7 +337,6 @@ body::-webkit-scrollbar {
 }
 
 .lookbook-page .grain-overlay,
-.lookbook-page .light-cursor,
 .lookbook-page .top-fade-mask {
   display: none;
 }
@@ -818,7 +816,7 @@ body::-webkit-scrollbar {
 }
 
 .what-we-do__eyebrow {
-  margin: 0 0 clamp(50px, 6.2vw, 119px);
+  margin: 0 0 54px;
   font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
   font-size: clamp(10px, 0.82vw, 15px);
   font-weight: 400;
@@ -1199,6 +1197,8 @@ body::-webkit-scrollbar {
   min-height: auto;
   padding: clamp(80px, 8vw, 144px) 24px clamp(39px, 4.9vw, 81px);
   background: #27160f;
+  box-shadow: 0 0 0 100vmax #27160f;
+  clip-path: inset(0 -100vmax);
   color: #fff;
 }
 
@@ -1267,19 +1267,26 @@ body::-webkit-scrollbar {
 }
 
 .brand-action-cta {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
+  margin-left: 0;
   position: relative;
   display: grid;
   place-items: center;
   min-height: clamp(360px, 63vh, 760px);
   padding: clamp(20px, 2.4vw, 36px) 24px clamp(40px, 6vw, 96px);
   background: #27160f;
+  box-shadow: 0 0 0 100vmax #27160f;
+  clip-path: inset(0 -100vmax);
   overflow: hidden;
 }
 
 .brand-action-cta__actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-content: center;
+  justify-items: center;
+  width: min(660px, calc(100vw - 48px));
+  margin: 0 auto;
   gap: clamp(10px, 1.6vw, 26px);
   opacity: 0;
   transform: translateY(22px);
@@ -1298,10 +1305,13 @@ body::-webkit-scrollbar {
 .brand-action-cta__button,
 .brand-action-cta__button:visited {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 180px;
-  height: 48px;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
   padding: 0 16px;
   border: 0;
   background: transparent;
@@ -1310,14 +1320,34 @@ body::-webkit-scrollbar {
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(12px, 1.02vw, 18px);
   font-weight: 700;
-  line-height: 1;
   letter-spacing: 0.02em;
   text-transform: none;
+  text-align: center;
   transition: color 180ms ease;
 }
 
 .brand-action-cta__button:hover {
   color: #ff9d00;
+}
+
+.brand-action-cta__button-main,
+.brand-action-cta__button-sub {
+  display: block;
+  line-height: 1;
+}
+
+.brand-action-cta__button-main {
+  white-space: nowrap;
+}
+
+.brand-action-cta__button-sub {
+  font-size: 0.64em;
+  letter-spacing: 0;
+}
+
+.brand-story-page .site-footer {
+  box-shadow: 0 0 0 100vmax #27160f;
+  clip-path: inset(0 -100vmax);
 }
 
 .philosophy {
@@ -1723,6 +1753,49 @@ body::-webkit-scrollbar {
     transform: translateY(var(--text-y));
   }
 
+  .flow-video-section {
+    min-height: 100svh;
+    height: 100svh;
+    margin-top: 0;
+  }
+
+  .flow-video {
+    height: 100svh;
+  }
+
+  .flow-state__title-cn {
+    font-size: clamp(38px, 11vw, 52px);
+  }
+
+  .flow-state__title-en {
+    font-size: clamp(52px, 14vw, 72px);
+  }
+
+  .flow-state__copy,
+  .flow-state__copy--wide {
+    bottom: clamp(52px, 12vh, 96px);
+    width: min(36vw, 150px);
+  }
+
+  .flow-state__copy--left {
+    left: clamp(16px, 5vw, 28px);
+  }
+
+  .flow-state__copy--right {
+    right: clamp(16px, 5vw, 28px);
+  }
+
+  .flow-state__eyebrow {
+    margin-bottom: 12px;
+    font-size: clamp(11px, 3.25vw, 13px);
+  }
+
+  .flow-state__body {
+    min-height: 0;
+    font-size: clamp(11px, 3.45vw, 15px);
+    line-height: 1.06;
+  }
+
   .brand-overview {
     padding: 86px 24px 44px;
   }
@@ -1759,8 +1832,8 @@ body::-webkit-scrollbar {
   .brand-action-cta__button,
   .brand-action-cta__button:visited {
     min-width: 0;
-    flex: 1 1 0;
-    height: 42px;
+    min-height: 46px;
+    padding: 0 14px;
     font-size: clamp(11px, 3vw, 14px);
   }
 }

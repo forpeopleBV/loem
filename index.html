@@ -1,68 +1,36 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Loēm – A modern living practice. Brand Lookbook 2026. Internal Use Only."
+    />
+    <meta name="theme-color" content="#fffaf2" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Loēm Brand Lookbook" />
+    <meta
+      property="og:description"
+      content="Loēm – A modern living practice. Brand Lookbook 2026. Internal Use Only."
+    />
+    <meta property="og:image" content="/assets/brand/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Loēm Brand Lookbook" />
+    <meta
+      name="twitter:description"
+      content="Loēm – A modern living practice. Brand Lookbook 2026. Internal Use Only."
+    />
+    <meta name="twitter:image" content="/assets/brand/og-image.jpg" />
     <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg" />
     <title>Loēm Brand Lookbook</title>
-    <link rel="stylesheet" href="/styles/landing.css" />
   </head>
 
-  <body class="page-loading">
-    <canvas id="c"></canvas>
-    <div id="loadingScreen" class="loading-screen" aria-hidden="true">
-      <div class="loading-screen__progress">
-        <div id="loadingProgress" class="loading-screen__bar"></div>
-      </div>
-    </div>
-    <div class="grain-overlay" aria-hidden="true"></div>
-    <div id="lightCursor" class="light-cursor" aria-hidden="true"></div>
-    <div id="topChrome" class="top-chrome" aria-hidden="false">
-      <div class="top-chrome__slot top-chrome__slot--left">
-        <a class="top-chrome__btn js-nav" href="/brand-story">
-          <span class="top-chrome__btn-main">Brand Story</span>
-          <span class="top-chrome__btn-sub">品牌故事</span>
-        </a>
-      </div>
-      <div class="top-chrome__slot top-chrome__slot--center">
-        <a
-          class="top-chrome__brand js-nav"
-          href="/"
-          aria-label="LOEM home"
-        >
-          <img
-            class="top-chrome__logo"
-            src="/assets/brand/Wordmark.svg"
-            alt="Loem wordmark"
-          />
-        </a>
-      </div>
-      <div class="top-chrome__slot top-chrome__slot--right">
-        <a class="top-chrome__btn js-nav" href="/lookbook.html">
-          <span class="top-chrome__btn-main">BRAND IN ACTION</span>
-          <span class="top-chrome__btn-sub">品牌应用</span>
-        </a>
-      </div>
-    </div>
-    <div id="finalActions" class="final-actions" aria-hidden="true">
-      <a class="final-actions__btn js-nav" href="/brand-story">
-        <span class="final-actions__btn-main">Brand Story</span>
-        <span class="final-actions__btn-sub">品牌故事</span>
-      </a>
-      <a class="final-actions__btn js-nav" href="/lookbook.html">
-        <span class="final-actions__btn-main">BRAND IN ACTION</span>
-        <span class="final-actions__btn-sub">品牌应用</span>
-      </a>
-    </div>
-    <div id="scrollSnap" class="scroll-snap" aria-hidden="true">
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-      <section class="snap-section"></section>
-    </div>
-    <script type="module" src="/scripts/landing.js"></script>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

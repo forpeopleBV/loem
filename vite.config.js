@@ -1,27 +1,26 @@
 import { defineConfig } from "vite";
-import { resolve } from "node:path";
+import react from "@vitejs/plugin-react";
 
-const cleanRouteTargets = new Map([
-  ["/brand-story", "/brand-story.html"],
-  ["/brand-story/", "/brand-story.html"],
-  ["/lookbook", "/lookbook.html"],
-  ["/lookbook/", "/lookbook.html"],
-  ["/brand-in-action", "/lookbook.html"],
-  ["/brand-in-action/", "/lookbook.html"],
+const spaRoutes = new Set([
+  "/brand-story",
+  "/brand-story/",
+  "/lookbook",
+  "/lookbook/",
+  "/brand-in-action",
+  "/brand-in-action/",
 ]);
 
-function cleanHtmlRoutes() {
-  const rewrite = (req, res, next) => {
+function spaCleanRoutes() {
+  const rewrite = (req, _res, next) => {
     const [pathname, query] = (req.url || "").split("?");
-    const target = cleanRouteTargets.get(pathname);
-    if (target) {
-      req.url = query ? `${target}?${query}` : target;
+    if (spaRoutes.has(pathname)) {
+      req.url = query ? `/index.html?${query}` : "/index.html";
     }
     next();
   };
 
   return {
-    name: "clean-html-routes",
+    name: "spa-clean-routes",
     configureServer(server) {
       server.middlewares.use(rewrite);
     },
@@ -32,14 +31,5 @@ function cleanHtmlRoutes() {
 }
 
 export default defineConfig({
-  plugins: [cleanHtmlRoutes()],
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        brandStory: resolve(__dirname, "brand-story.html"),
-        lookbook: resolve(__dirname, "lookbook.html"),
-      },
-    },
-  },
+  plugins: [react(), spaCleanRoutes()],
 });

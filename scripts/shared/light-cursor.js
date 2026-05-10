@@ -2,7 +2,7 @@ export function createLightCursor(element, options = {}) {
   const {
     initialScale = 0.9,
     visibleScale = 1,
-    followEase = 0.16,
+    followEase = 0.085,
     scaleEase = 0.12,
     onMove,
     onRender,
@@ -41,35 +41,31 @@ export function createLightCursor(element, options = {}) {
     return state;
   }
 
-  window.addEventListener(
-    "mousemove",
-    (event) => {
-      updateTarget(event.clientX, event.clientY);
-      element?.classList.add("is-visible");
-    },
-    { passive: true },
-  );
+  const onMouseMove = (event) => {
+    updateTarget(event.clientX, event.clientY);
+    element?.classList.add("is-visible");
+  };
+  const onMouseEnter = (event) => {
+    updateTarget(event.clientX, event.clientY);
+    element?.classList.add("is-visible");
+  };
+  const onMouseLeave = () => {
+    state.targetScale = initialScale;
+    element?.classList.remove("is-visible");
+  };
 
-  window.addEventListener(
-    "mouseenter",
-    (event) => {
-      updateTarget(event.clientX, event.clientY);
-      element?.classList.add("is-visible");
-    },
-    { passive: true },
-  );
-
-  window.addEventListener(
-    "mouseleave",
-    () => {
-      state.targetScale = initialScale;
-      element?.classList.remove("is-visible");
-    },
-    { passive: true },
-  );
+  window.addEventListener("mousemove", onMouseMove, { passive: true });
+  window.addEventListener("mouseenter", onMouseEnter, { passive: true });
+  window.addEventListener("mouseleave", onMouseLeave, { passive: true });
 
   return {
     state,
     render,
+    destroy() {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseenter", onMouseEnter);
+      window.removeEventListener("mouseleave", onMouseLeave);
+      element?.classList.remove("is-visible");
+    },
   };
 }

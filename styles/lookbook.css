@@ -247,7 +247,9 @@ body.page-out {
 }
 
 .lookbook-root {
+  width: 100%;
   min-height: 100vh;
+  background: #fffaf2;
 }
 
 .lookbook-section {
@@ -386,6 +388,11 @@ body.page-out {
   transform: translate(var(--px, 0px), calc(var(--py, 0px) + var(--media-y)));
 }
 
+.lookbook-parallax-asset {
+  transform: translate(var(--px, 0px), var(--py, 0px));
+  will-change: transform;
+}
+
 .wordmark-freeform {
   --lookbook-edge-offset: calc(100% * -0.0319148936);
   width: min(1660px, 94%);
@@ -511,21 +518,53 @@ body.page-out {
 }
 
 .wordmark-media-card--right {
+  --wordmark-overlay-width: 62%;
+  --wordmark-overlay-edge: calc((100% - var(--wordmark-overlay-width)) / 2);
   grid-column: 6 / 13;
   grid-row: 1 / span 2;
   aspect-ratio: 1 / 1.18;
 }
 
-img.wordmark-media-card__center-logo {
+.wordmark-media-card__wordmark {
   position: absolute;
-  top: 53%;
   left: 50%;
+  top: 53.6%;
   z-index: 2;
-  width: min(45.6%, 432px);
-  height: auto;
-  object-fit: contain;
-  pointer-events: none;
+  width: var(--wordmark-overlay-width);
+  height: 13%;
+  background: #ffbf00;
+  mask: url("/assets/brand/Wordmark.svg") center / contain no-repeat;
+  -webkit-mask: url("/assets/brand/Wordmark.svg") center / contain no-repeat;
   transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.wordmark-media-card__meta {
+  position: absolute;
+  z-index: 2;
+  margin: 0;
+  color: #ffbf00;
+  font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+  font-size: clamp(11px, 1.18vw, 24px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.wordmark-media-card__meta--left {
+  left: var(--wordmark-overlay-edge);
+  top: 61.2%;
+  width: var(--wordmark-overlay-width);
+  text-align: left;
+}
+
+.wordmark-media-card__meta--right {
+  right: var(--wordmark-overlay-edge);
+  top: 61.2%;
+  text-align: right;
 }
 
 .wordmark-guide {
@@ -842,6 +881,7 @@ img.wordmark-media-card__center-logo {
   margin-right: var(--product-icons-edge-offset);
   margin-bottom: clamp(0px, 2.2vw, 42px);
   width: calc(120% - var(--product-icons-edge-offset));
+  z-index: 4;
 }
 
 .colour-palette-copy {
@@ -888,6 +928,35 @@ img.wordmark-media-card__center-logo {
   margin-bottom: 12px;
 }
 
+.colour-copy-link {
+  display: inline-block;
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgba(39, 22, 15, 0.66);
+  cursor: pointer;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(8px, 0.52vw, 10px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: left;
+  text-decoration: underline;
+  text-transform: uppercase;
+  text-underline-offset: 0.18em;
+}
+
+.colour-copy-link:hover,
+.colour-copy-link:focus-visible {
+  color: #ff9d00;
+  outline: none;
+}
+
+.colour-copy-link.is-copied {
+  color: #27160f;
+}
+
 .colour-note--cotton {
   grid-column: 1;
   grid-row: 1;
@@ -919,12 +988,13 @@ img.wordmark-media-card__center-logo {
 }
 
 .secondary-colour {
+  --secondary-colour-media-height: clamp(330px, 30vw, 590px);
   grid-column: 1 / 13;
   grid-row: 12;
   display: grid;
   grid-template-columns: 25.013% 24.283% 25.43% 25.274%;
-  grid-template-rows: auto auto auto;
-  align-items: end;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
   width: calc(100% / 0.94);
   margin-left: var(--product-icons-edge-offset);
   padding: clamp(12px, 2vw, 38px) 0 clamp(86px, 9vw, 168px);
@@ -933,15 +1003,15 @@ img.wordmark-media-card__center-logo {
 .secondary-colour__intro {
   grid-column: 1;
   grid-row: 1;
-  align-self: end;
+  align-self: start;
   max-width: 400px;
   padding: 0 clamp(16px, 2.3vw, 44px) 0;
 }
 
 .secondary-colour__media {
-  grid-row: 1;
-  align-self: end;
-  aspect-ratio: 1 / 1.28;
+  grid-row: 1 / 3;
+  align-self: start;
+  height: var(--secondary-colour-media-height);
   margin: 0;
   overflow: hidden;
   background: #eee8df;
@@ -953,13 +1023,30 @@ img.wordmark-media-card__center-logo {
 
 .secondary-colour__media--middle {
   grid-column: 3;
+  margin-left: -1px;
+  width: calc(100% + 1px);
 }
 
 .secondary-colour__media--blue {
+  --secondary-media-x: clamp(28px, 3.8vw, 74px);
   grid-column: 4;
   margin-left: clamp(28px, 3.8vw, 74px);
-  transform: translateX(clamp(28px, 3.8vw, 74px));
+  transform: translateX(var(--secondary-media-x));
   width: 110%;
+}
+
+.secondary-colour__media.lookbook-parallax-asset,
+.secondary-colour__palette.lookbook-parallax-asset,
+.secondary-colour__application.lookbook-parallax-asset,
+.closing-video.lookbook-parallax-asset {
+  transform: translate(var(--px, 0px), var(--py, 0px));
+}
+
+.secondary-colour__media--blue.lookbook-parallax-asset {
+  transform: translate(
+    calc(var(--secondary-media-x, 0px) + var(--px, 0px)),
+    var(--py, 0px)
+  );
 }
 
 .secondary-colour__video,
@@ -972,9 +1059,9 @@ img.wordmark-media-card__center-logo {
 
 .secondary-colour__palette {
   grid-column: 2 / 4;
-  grid-row: 1;
+  grid-row: 1 / 3;
   align-self: end;
-  margin: 0;
+  margin: 0 0 -1px;
   width: 85%;
   z-index: 2;
 }
@@ -989,7 +1076,8 @@ img.wordmark-media-card__center-logo {
   grid-column: 1;
   grid-row: 2;
   max-width: 410px;
-  padding: clamp(18px, 1.8vw, 34px) clamp(16px, 2.3vw, 44px) 0;
+  align-self: start;
+  padding: clamp(20px, 2vw, 38px) clamp(16px, 2.3vw, 44px) 0;
 }
 
 .secondary-colour__application {
@@ -1028,7 +1116,7 @@ img.wordmark-media-card__center-logo {
   grid-row: 5;
   aspect-ratio: 2485 / 3058;
   justify-self: center;
-  width: 56%;
+  width: 78%;
   margin-top: clamp(48px, 5vw, 94px);
 }
 
@@ -1064,11 +1152,18 @@ img.wordmark-media-card__center-logo {
   min-height: clamp(300px, 48vh, 620px);
   padding: clamp(20px, 2.4vw, 36px) 24px clamp(40px, 6vw, 96px);
   background: #27160f;
+  box-shadow: 0 0 0 100vmax #27160f;
+  clip-path: inset(0 -100vmax);
   overflow: hidden;
 }
 
 .brand-action-cta__actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-content: center;
+  justify-items: center;
+  width: min(660px, calc(100vw - 48px));
+  margin: 0 auto;
   gap: clamp(10px, 1.6vw, 26px);
   opacity: 0;
   transform: translateY(22px);
@@ -1087,10 +1182,13 @@ img.wordmark-media-card__center-logo {
 .brand-action-cta__button,
 .brand-action-cta__button:visited {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 180px;
-  height: 48px;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
   padding: 0 16px;
   border: 0;
   background: transparent;
@@ -1099,9 +1197,9 @@ img.wordmark-media-card__center-logo {
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(12px, 1.02vw, 18px);
   font-weight: 700;
-  line-height: 1;
   letter-spacing: 0.02em;
   text-transform: none;
+  text-align: center;
   transition: color 180ms ease;
 }
 
@@ -1109,11 +1207,51 @@ img.wordmark-media-card__center-logo {
   color: #ff9d00;
 }
 
+.brand-action-cta__button-main,
+.brand-action-cta__button-sub {
+  display: block;
+  line-height: 1;
+}
+
+.brand-action-cta__button-main {
+  white-space: nowrap;
+}
+
+.brand-action-cta__button-sub {
+  font-size: 0.64em;
+  letter-spacing: 0;
+}
+
+.lookbook-page .site-footer {
+  --site-footer-bg: #27160f;
+  --site-footer-color: #fffaf2;
+  box-shadow: 0 0 0 100vmax #27160f;
+  clip-path: inset(0 -100vmax);
+}
+
 @media (max-width: 780px) {
+  body.lookbook-page,
+  body.lookbook-page #root,
+  body.lookbook-page .route-page,
+  body.lookbook-page .lookbook-root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    background: #fffaf2;
+  }
+
+  .lookbook-page .lookbook-section {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .top-nav {
     top: 12px;
     left: 12px;
     right: 12px;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     row-gap: 4px;
   }
 
@@ -1133,12 +1271,18 @@ img.wordmark-media-card__center-logo {
   .lookbook-section__copy-grid {
     grid-template-columns: 1fr;
     gap: 34px;
-    width: min(100%, 640px);
+    width: 100%;
+    max-width: calc(100vw - 64px);
+    min-width: 0;
   }
 
   .lookbook-section__copy {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
     text-align: left;
-    font-size: clamp(13px, 4.4vw, 25px);
+    font-size: clamp(13px, 4vw, 21px);
+    overflow-wrap: break-word;
   }
 
   .lookbook-section--map {
@@ -1147,13 +1291,18 @@ img.wordmark-media-card__center-logo {
   }
 
   .lookbook-map {
-    justify-content: flex-start;
-    gap: 14px 20px;
-    width: min(100%, 640px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+    width: 100%;
+    max-width: calc(100vw - 44px);
   }
 
   .lookbook-map__item {
-    font-size: 13px;
+    min-width: 0;
+    text-align: left;
+    font-size: 12px;
+    white-space: normal;
   }
 
   .lookbook-section--wordmark {
@@ -1169,6 +1318,22 @@ img.wordmark-media-card__center-logo {
     width: min(100%, 640px);
     grid-template-columns: 1fr;
     row-gap: 18px;
+  }
+
+  .lookbook-reveal--media {
+    transform: none;
+  }
+
+  .lookbook-parallax-asset,
+  .secondary-colour__media.lookbook-parallax-asset,
+  .secondary-colour__palette.lookbook-parallax-asset,
+  .secondary-colour__application.lookbook-parallax-asset,
+  .closing-video.lookbook-parallax-asset {
+    transform: none;
+  }
+
+  .lookbook-reveal--text {
+    transform: translateY(calc(var(--text-y) * 0.35));
   }
 
   .wordmark-copy,
@@ -1203,6 +1368,7 @@ img.wordmark-media-card__center-logo {
     grid-column: auto;
     grid-row: auto;
     margin-top: 0;
+    top: auto;
   }
 
   .wordmark-copy {
@@ -1212,6 +1378,10 @@ img.wordmark-media-card__center-logo {
 
   .wordmark-media-card--right {
     order: 2;
+  }
+
+  .wordmark-media-card__meta {
+    font-size: clamp(9px, 2.35vw, 13px);
   }
 
   .wordmark-media-card--left {
@@ -1247,6 +1417,7 @@ img.wordmark-media-card__center-logo {
 
   .motif-mark {
     order: 8;
+    width: min(56vw, 220px);
     margin-top: 62px;
   }
 
@@ -1270,22 +1441,20 @@ img.wordmark-media-card__center-logo {
   }
 
   .motif-mark img {
-    width: min(100%, 360px);
+    width: 100%;
   }
 
   .product-icons-copy {
     order: 1;
-    margin-top: -56px;
+    margin-top: 0;
     max-width: 100%;
-    top: -8px;
   }
 
   .product-icons-media--box-secondary {
     order: 2;
     margin-left: auto;
-    margin-top: -56px;
+    margin-top: 34px;
     margin-right: -22px;
-    top: -88px;
     width: 76%;
   }
 
@@ -1297,7 +1466,7 @@ img.wordmark-media-card__center-logo {
 
   .product-icons-media--bag {
     order: 4;
-    margin-top: -50px;
+    margin-top: 34px;
     margin-left: -22px;
     width: calc(100% + 54px);
   }
@@ -1404,6 +1573,7 @@ img.wordmark-media-card__center-logo {
 
   .secondary-colour {
     order: 18;
+    --secondary-colour-media-height: auto;
     grid-template-columns: 1fr;
     padding: 18px 0 0;
   }
@@ -1424,6 +1594,8 @@ img.wordmark-media-card__center-logo {
   }
 
   .secondary-colour__media {
+    height: auto;
+    aspect-ratio: 1 / 1.28;
     margin-top: 18px;
   }
 
@@ -1434,7 +1606,7 @@ img.wordmark-media-card__center-logo {
 
   .secondary-colour__palette {
     align-self: auto;
-    margin-top: 0;
+    margin: 0;
     width: 72%;
   }
 
@@ -1480,8 +1652,9 @@ img.wordmark-media-card__center-logo {
   .brand-action-cta__button,
   .brand-action-cta__button:visited {
     min-width: 0;
-    width: 50%;
-    padding: 0 8px;
+    width: 100%;
+    padding: 0 14px;
+    min-height: 46px;
     font-size: 12px;
   }
 }
