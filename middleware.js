@@ -1,4 +1,18 @@
 const REALM = "LOEM";
+const SPA_PATHS = new Set([
+  "/brand-story",
+  "/brand-story/",
+  "/brand-in-action",
+  "/brand-in-action/",
+  "/lookbook",
+  "/lookbook/",
+  "/brand-assets",
+  "/brand-assets/",
+  "/assets",
+  "/assets/",
+  "/assets-downloads",
+  "/assets-downloads/",
+]);
 
 function next() {
   return new Response(null, {
@@ -13,6 +27,17 @@ function unauthorized() {
     status: 401,
     headers: {
       "WWW-Authenticate": `Basic realm="${REALM}", charset="UTF-8"`,
+    },
+  });
+}
+
+function rewriteToAppShell(request) {
+  const url = new URL(request.url);
+  url.pathname = "/index.html";
+
+  return new Response(null, {
+    headers: {
+      "x-middleware-rewrite": url.toString(),
     },
   });
 }
@@ -58,6 +83,10 @@ export default function middleware(request) {
     credentials.password !== expectedPassword
   ) {
     return unauthorized();
+  }
+
+  if (SPA_PATHS.has(pathname)) {
+    return rewriteToAppShell(request);
   }
 
   return next();
