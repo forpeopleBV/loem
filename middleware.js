@@ -1,20 +1,6 @@
-import { next, rewrite } from "@vercel/functions";
+import { next } from "@vercel/functions";
 
 const REALM = "LOEM";
-const SPA_PATHS = new Set([
-  "/brand-story",
-  "/brand-story/",
-  "/brand-in-action",
-  "/brand-in-action/",
-  "/lookbook",
-  "/lookbook/",
-  "/brand-assets",
-  "/brand-assets/",
-  "/assets",
-  "/assets/",
-  "/assets-downloads",
-  "/assets-downloads/",
-]);
 
 function unauthorized() {
   return new Response("Authentication required.", {
@@ -23,12 +9,6 @@ function unauthorized() {
       "WWW-Authenticate": `Basic realm="${REALM}", charset="UTF-8"`,
     },
   });
-}
-
-function rewriteToAppShell(request) {
-  const url = new URL(request.url);
-  url.pathname = "/index.html";
-  return rewrite(url);
 }
 
 function getCredentials(request) {
@@ -72,10 +52,6 @@ export default function middleware(request) {
     credentials.password !== expectedPassword
   ) {
     return unauthorized();
-  }
-
-  if (SPA_PATHS.has(pathname)) {
-    return rewriteToAppShell(request);
   }
 
   return next();
