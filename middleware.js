@@ -1,3 +1,5 @@
+import { next, rewrite } from "@vercel/functions";
+
 const REALM = "LOEM";
 const SPA_PATHS = new Set([
   "/brand-story",
@@ -14,14 +16,6 @@ const SPA_PATHS = new Set([
   "/assets-downloads/",
 ]);
 
-function next() {
-  return new Response(null, {
-    headers: {
-      "x-middleware-next": "1",
-    },
-  });
-}
-
 function unauthorized() {
   return new Response("Authentication required.", {
     status: 401,
@@ -34,12 +28,7 @@ function unauthorized() {
 function rewriteToAppShell(request) {
   const url = new URL(request.url);
   url.pathname = "/index.html";
-
-  return new Response(null, {
-    headers: {
-      "x-middleware-rewrite": url.toString(),
-    },
-  });
+  return rewrite(url);
 }
 
 function getCredentials(request) {
