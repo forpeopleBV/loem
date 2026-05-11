@@ -851,7 +851,8 @@ body.page-out {
   background: #eee8df;
 }
 
-.colour-media img {
+.colour-media img,
+.colour-media video {
   display: block;
   width: 100%;
   height: 100%;
