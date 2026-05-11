@@ -1364,6 +1364,14 @@ body.page-out {
     width: min(100%, 640px);
     grid-template-columns: 1fr;
     row-gap: 18px;
+    overflow: hidden;
+  }
+
+  .wordmark-freeform img,
+  .wordmark-freeform video,
+  .product-icons-freeform img,
+  .product-icons-freeform video {
+    max-width: 100%;
   }
 
   .lookbook-reveal--media {
@@ -1447,8 +1455,7 @@ body.page-out {
 
   .wordmark-media-card--parfum {
     order: 6;
-    margin-left: -22px;
-    width: calc(80% + 54px);
+    width: 92%;
   }
 
   .motif-copy {
@@ -1470,7 +1477,6 @@ body.page-out {
   .wordmark-media-card--phone {
     order: 9;
     margin-top: -82px;
-    margin-left: -22px;
     top: -10px;
     width: 84%;
   }
@@ -1479,7 +1485,6 @@ body.page-out {
     order: 10;
     top: 0;
     margin-top: 54px;
-    margin-left: -22px;
   }
 
   .wordmark-guide img {
@@ -1500,28 +1505,24 @@ body.page-out {
     order: 2;
     margin-left: auto;
     margin-top: 34px;
-    margin-right: -22px;
     width: 76%;
   }
 
   .product-icons-strip {
     order: 3;
-    margin-left: -30px;
     width: 100%;
   }
 
   .product-icons-media--bag {
     order: 4;
     margin-top: 34px;
-    margin-left: -22px;
-    width: calc(100% + 54px);
+    width: 100%;
   }
 
   .product-icons-media--iphone {
     order: 5;
     margin-left: auto;
     margin-top: 80px;
-    margin-right: -22px;
     width: 92%;
   }
 
@@ -1540,8 +1541,7 @@ body.page-out {
 
   .typography-media--label-pull {
     order: 7;
-    margin-left: -22px;
-    width: calc(82% + 54px);
+    width: 96%;
   }
 
   .typography-media--yellow-label {
@@ -1566,45 +1566,46 @@ body.page-out {
   .typography-media--magazin {
     order: 11;
     margin-top: 22px;
-    margin-right: -22px;
-    width: 96%;
+    width: 100%;
   }
 
   .colour-copy {
     order: 12;
     max-width: 100%;
+    margin-top: 58px;
   }
 
   .colour-media--water {
     order: 13;
-    width: 88%;
+    width: 100%;
+    aspect-ratio: 16 / 11;
   }
 
   .colour-media--label {
     order: 14;
     margin-left: auto;
-    margin-right: -22px;
-    width: 58%;
+    width: 68%;
+    aspect-ratio: 4 / 5;
   }
 
   .colour-palette-copy {
     order: 15;
     max-width: 100%;
+    margin-top: 18px;
     margin-bottom: 0;
   }
 
   .colour-palette {
     order: 16;
-    margin-left: -22px;
-    width: calc(100% + 44px);
+    width: 100%;
   }
 
   .colour-notes {
     order: 17;
     width: 100%;
     margin-left: 0;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 30px 22px;
+    grid-template-columns: 1fr;
+    gap: 24px;
     padding: 20px 0 0;
   }
 
@@ -1630,8 +1631,12 @@ body.page-out {
   .secondary-colour {
     order: 18;
     --secondary-colour-media-height: auto;
+    width: 100%;
+    margin-left: 0;
     grid-template-columns: 1fr;
-    padding: 18px 0 0;
+    gap: 18px;
+    padding: 42px 0 0;
+    overflow: visible;
   }
 
   .secondary-colour__intro,
@@ -1651,39 +1656,53 @@ body.page-out {
 
   .secondary-colour__media {
     height: auto;
-    aspect-ratio: 1 / 1.28;
-    margin-top: 18px;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    margin-top: 0;
+  }
+
+  .secondary-colour__media--left,
+  .secondary-colour__media--middle {
+    width: 100%;
   }
 
   .secondary-colour__media--blue {
-    margin-left: auto;
-    width: 92%;
+    width: 100%;
+    margin-left: 0;
   }
 
   .secondary-colour__palette {
     align-self: auto;
-    margin: 0;
-    width: 72%;
+    margin: 2px 0 8px;
+    width: 100%;
+  }
+
+  .secondary-colour__pantones {
+    position: static;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 14px;
+    margin-top: 12px;
+    font-size: clamp(11px, 3vw, 14px);
   }
 
   .secondary-colour__use {
-    padding-top: 24px;
+    padding-top: 8px;
   }
 
   .secondary-colour__application--left {
-    width: 86%;
-    margin-top: 42px;
+    width: 100%;
+    margin-top: 18px;
   }
 
   .secondary-colour__application--right {
-    width: 68%;
-    margin-top: 24px;
-    margin-left: auto;
+    width: 100%;
+    margin-top: 0;
+    margin-left: 0;
   }
 
   .secondary-colour__application--small {
-    width: 48%;
-    margin-top: 24px;
+    width: 72%;
+    margin-top: 0;
     margin-left: auto;
   }
 
