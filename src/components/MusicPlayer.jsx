@@ -295,9 +295,7 @@ export function MusicPlayer() {
                 isPlaying ? "music-player__pause-icon" : "music-player__play-icon"
               }
               aria-hidden="true"
-            >
-              {isPlaying ? "Ⅱ" : "▶"}
-            </span>
+            />
           </button>
           <button
             className="music-player__button"

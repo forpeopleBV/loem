@@ -151,6 +151,8 @@ body.lookbook-page {
 }
 
 .music-player__brand-toggle {
+  appearance: none;
+  -webkit-appearance: none;
   position: absolute;
   top: 12px;
   right: 12px;
@@ -179,6 +181,8 @@ body.lookbook-page {
 }
 
 .music-player__artwork-wrap {
+  appearance: none;
+  -webkit-appearance: none;
   position: relative;
   display: block;
   width: 92px;
@@ -313,6 +317,8 @@ body.lookbook-page {
 }
 
 .music-player__button {
+  appearance: none;
+  -webkit-appearance: none;
   display: grid;
   place-items: center;
   width: 28px;
@@ -350,11 +356,37 @@ body.lookbook-page {
 }
 
 .music-player__play-icon {
+  width: 0;
+  height: 0;
+  border-top: 0.42em solid transparent;
+  border-bottom: 0.42em solid transparent;
+  border-left: 0.66em solid currentColor;
   transform: translateX(0.09em);
 }
 
 .music-player__pause-icon {
+  position: relative;
+  width: 0.62em;
+  height: 0.82em;
   transform: translateY(-0.02em);
+}
+
+.music-player__pause-icon::before,
+.music-player__pause-icon::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0.22em;
+  background: currentColor;
+  content: "";
+}
+
+.music-player__pause-icon::before {
+  left: 0;
+}
+
+.music-player__pause-icon::after {
+  right: 0;
 }
 
 .music-player__button--play:hover,
@@ -469,6 +501,8 @@ body.lookbook-page {
 }
 
 .music-player__track {
+  appearance: none;
+  -webkit-appearance: none;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr) auto;
   gap: 10px;
