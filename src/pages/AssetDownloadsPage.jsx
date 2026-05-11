@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 
 const downloads = [
   {
+    name: "Download Artwork Pack",
+    description:
+      "Complete package with all LOEM artwork assets in one download, including wordmark, motif, signature, and product range icons.",
+    url: "/assets/downloads/Loem%20Artwork%20Pack.zip",
+    format: "ZIP",
+    size: "7.3 MB",
+    updated: "11 May 2026",
+    usedIn: "All brand assets",
+    actionLabel: "Download all",
+    featured: true,
+  },
+  {
     name: "Loem Wordmark",
     description:
       "Wordmark artwork in Ink Black and Cotton White across editable and web-ready formats.",
@@ -12,7 +24,7 @@ const downloads = [
     updated: "11 May 2026",
     usedIn: "Wordmark",
   },
-    {
+  {
     name: "Loem Signature",
     description:
       "Signature artwork in Ink Black and Cotton White, including static and animated formats.",
@@ -22,7 +34,7 @@ const downloads = [
     updated: "11 May 2026",
     usedIn: "Motif & Signature",
   },
-    {
+  {
     name: "Loem Motif",
     description:
       "Motif artwork in Ink Black and Cotton White, including static and animated formats.",
@@ -32,7 +44,7 @@ const downloads = [
     updated: "11 May 2026",
     usedIn: "Motif & Signature",
   },
-    {
+  {
     name: "Loem Product Range Icons",
     description:
       "Product line icon artwork for Core, Sleep, Skin, Jewellery, and Objects.",
@@ -78,6 +90,7 @@ const colours = [
     description:
       "Secondary base, used for bolder expression across campaign, social media and spatial design.",
     hex: "#27160F",
+    pantone: "PANTONE 476",
     usedIn: "Core Colour Palette",
   },
   {
@@ -92,6 +105,7 @@ const colours = [
     name: "Ink",
     description: "Used only for text, including motif, signature and body copy.",
     hex: "#171A20",
+    pantone: "PANTONE Black 6",
     usedIn: "Core Colour Palette",
   },
 ];
@@ -233,7 +247,12 @@ export function AssetDownloadsPage() {
                 }
 
                 return (
-                  <tr key={download.url} className={`asset-downloads__row--${download.kind}`}>
+                  <tr
+                    key={download.url}
+                    className={`asset-downloads__row--${download.kind}${
+                      download.featured ? " asset-downloads__row--featured" : ""
+                    }`}
+                  >
                     <th scope="row" data-label="Asset">
                       <span>{download.name}</span>
                       <small>{download.format}</small>
@@ -252,7 +271,7 @@ export function AssetDownloadsPage() {
                         target={download.external ? "_blank" : undefined}
                         rel={download.external ? "noopener noreferrer" : undefined}
                       >
-                        {download.external ? "Open" : "Download"}
+                        {download.actionLabel || (download.external ? "Open" : "Download")}
                       </a>
                     </td>
                   </tr>
@@ -266,6 +285,14 @@ export function AssetDownloadsPage() {
       <footer className="site-footer">
         <span className="site-footer__year">ESTABLISHED 2026</span>
         <small className="site-footer__disclaimer">INTERNAL USE ONLY</small>
+        <a
+          className="site-footer__credit"
+          href="https://www.forpeople.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          BY FORPEOPLE
+        </a>
       </footer>
     </div>
   );

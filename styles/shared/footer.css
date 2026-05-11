@@ -11,7 +11,8 @@
 }
 
 .site-footer__year,
-.site-footer__disclaimer {
+.site-footer__disclaimer,
+.site-footer__credit {
   display: block;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: 10px;
@@ -22,11 +23,18 @@
   white-space: nowrap;
 }
 
-.site-footer__year::after {
+.site-footer__year::after,
+.site-footer__disclaimer::after {
   content: "|";
   display: inline-block;
   margin-left: 10px;
   color: currentColor;
+}
+
+.site-footer__credit,
+.site-footer__credit:visited {
+  color: currentColor;
+  text-decoration: none;
 }
 
 @media (max-width: 780px) {

@@ -628,7 +628,7 @@ body.page-out {
   justify-self: end;
   width: var(--motif-copy-width);
   margin-top: calc(var(--motif-copy-width) * 1.215 + clamp(76px, 6.3vw, 136px));
-  margin-right: calc(var(--motif-pocket-width) - var(--motif-copy-width) + 5px);
+  margin-right: calc(var(--motif-pocket-width) - var(--motif-copy-width) + 8px);
   color: #27160f;
 }
 
@@ -748,6 +748,7 @@ body.page-out {
   grid-column: 6 / 13;
   grid-row: 3 / span 2;
   aspect-ratio: 1718 / 2576;
+  align-self: end;
   justify-self: end;
   margin-top: 80px;
   margin-right: var(--product-icons-edge-offset);
@@ -757,10 +758,11 @@ body.page-out {
 
 .product-icons-media--disc {
   grid-column: 3 / 6;
-  grid-row: 4;
+  grid-row: 3 / span 2;
   aspect-ratio: 818 / 1048;
+  align-self: end;
   justify-self: start;
-  margin-top: clamp(42px, 4.5vw, 86px);
+  margin-top: 0;
   width: 86%;
 }
 
@@ -879,9 +881,9 @@ body.page-out {
   aspect-ratio: 420 / 563;
   align-self: end;
   justify-self: end;
-  margin-right: var(--product-icons-edge-offset);
+  margin-right: calc(var(--product-icons-edge-offset) - 40%);
   margin-bottom: clamp(0px, 2.2vw, 42px);
-  width: calc(120% - var(--product-icons-edge-offset));
+  width: calc(155.25% - var(--product-icons-edge-offset));
   z-index: 4;
 }
 
@@ -927,6 +929,28 @@ body.page-out {
 
 .colour-note h3 {
   margin-bottom: 12px;
+}
+
+.colour-note--ink,
+.colour-note--umber,
+.colour-note--yellow {
+  display: flex;
+  flex-direction: column;
+  min-height: clamp(188px, 13vw, 258px);
+}
+
+.colour-note .colour-note__pantone {
+  margin: auto 0 0;
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(16px, 1.08vw, 21px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.colour-notes .colour-copy-link {
+  display: none;
 }
 
 .colour-copy-link {
@@ -996,22 +1020,23 @@ body.page-out {
   grid-template-columns: 25.013% 24.283% 25.43% 25.274%;
   grid-template-rows: auto 1fr auto;
   align-items: start;
-  width: calc(100% / 0.94);
-  margin-left: var(--product-icons-edge-offset);
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
   padding: clamp(12px, 2vw, 38px) 0 clamp(86px, 9vw, 168px);
+  overflow: hidden;
 }
 
 .secondary-colour__intro {
   grid-column: 1;
-  grid-row: 1;
-  align-self: start;
+  grid-row: 1 / 3;
+  align-self: end;
   max-width: 400px;
   padding: 0 clamp(16px, 2.3vw, 44px) 0;
 }
 
 .secondary-colour__media {
   grid-row: 1 / 3;
-  align-self: start;
+  align-self: end;
   height: var(--secondary-colour-media-height);
   margin: 0;
   overflow: hidden;
@@ -1029,11 +1054,14 @@ body.page-out {
 }
 
 .secondary-colour__media--blue {
-  --secondary-media-x: clamp(28px, 3.8vw, 74px);
+  --secondary-media-x: clamp(24px, 2.4vw, 46px);
+  --secondary-media-drop: clamp(84px, 7.2vw, 138px);
   grid-column: 4;
-  margin-left: clamp(28px, 3.8vw, 74px);
-  transform: translateX(var(--secondary-media-x));
-  width: 110%;
+  align-self: start;
+  height: calc(var(--secondary-colour-media-height) + var(--secondary-media-drop));
+  margin-left: clamp(24px, 2.4vw, 46px);
+  transform: translate(var(--secondary-media-x), var(--secondary-media-drop));
+  width: calc(100% + clamp(84px, 6vw, 132px));
 }
 
 .secondary-colour__media.lookbook-parallax-asset,
@@ -1046,7 +1074,7 @@ body.page-out {
 .secondary-colour__media--blue.lookbook-parallax-asset {
   transform: translate(
     calc(var(--secondary-media-x, 0px) + var(--px, 0px)),
-    var(--py, 0px)
+    calc(var(--secondary-media-drop, 0px) + var(--py, 0px))
   );
 }
 
@@ -1062,7 +1090,8 @@ body.page-out {
   grid-column: 2 / 4;
   grid-row: 1 / 3;
   align-self: end;
-  margin: 0 0 -1px;
+  margin: 0;
+  position: relative;
   width: 85%;
   z-index: 2;
 }
@@ -1073,12 +1102,28 @@ body.page-out {
   height: auto;
 }
 
+.secondary-colour__pantones {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 80%;
+  margin-top: clamp(12px, 1.2vw, 22px);
+  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(14px, 1vw, 20px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
 .secondary-colour__use {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 3;
   max-width: 410px;
   align-self: start;
-  padding: clamp(20px, 2vw, 38px) clamp(16px, 2.3vw, 44px) 0;
+  padding: clamp(44px, 4.2vw, 82px) clamp(16px, 2.3vw, 44px) 0;
 }
 
 .secondary-colour__application {
@@ -1099,7 +1144,8 @@ body.page-out {
   grid-row: 4 / span 2;
   aspect-ratio: 2624 / 3936;
   justify-self: start;
-  width: 82%;
+  width: 100%;
+  margin-left: 0;
   margin-top: clamp(58px, 6vw, 112px);
 }
 
@@ -1108,7 +1154,8 @@ body.page-out {
   grid-row: 4;
   aspect-ratio: 2451 / 3057;
   justify-self: center;
-  width: 86%;
+  width: 116%;
+  margin-left: 60%;
   margin-top: clamp(58px, 6vw, 112px);
 }
 
@@ -1116,9 +1163,10 @@ body.page-out {
   grid-column: 4;
   grid-row: 5;
   aspect-ratio: 2485 / 3058;
-  justify-self: center;
+  justify-self: start;
   width: 78%;
-  margin-top: clamp(48px, 5vw, 94px);
+  margin-left: -30%;
+  margin-top: clamp(86px, 7.4vw, 142px);
 }
 
 .lookbook-section--closing-video {
@@ -1570,6 +1618,16 @@ body.page-out {
     max-width: 100%;
     margin-left: 0;
     padding-left: 0;
+  }
+
+  .colour-note--ink,
+  .colour-note--umber,
+  .colour-note--yellow {
+    min-height: 0;
+  }
+
+  .colour-note .colour-note__pantone {
+    margin-top: 18px;
   }
 
   .secondary-colour {

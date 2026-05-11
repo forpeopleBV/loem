@@ -10,6 +10,17 @@ const ROUTE_BODY_CLASSES = [
   "page-out",
 ];
 
+const FORPEOPLE_CREDIT =
+  '<a class="site-footer__credit" href="https://www.forpeople.com/" target="_blank" rel="noopener noreferrer">BY FORPEOPLE</a>';
+
+function withFooterCredit(markup) {
+  if (!markup.includes("site-footer") || markup.includes("site-footer__credit")) {
+    return markup;
+  }
+
+  return markup.replace("</footer>", `      ${FORPEOPLE_CREDIT}\n    </footer>`);
+}
+
 export function RoutePage({ bodyClassName, markup, mount, navigate }) {
   useEffect(() => {
     document.body.classList.remove(...ROUTE_BODY_CLASSES);
@@ -22,5 +33,7 @@ export function RoutePage({ bodyClassName, markup, mount, navigate }) {
     };
   }, [bodyClassName, mount, navigate]);
 
-  return <div className="route-page" dangerouslySetInnerHTML={{ __html: markup }} />;
+  const pageMarkup = React.useMemo(() => withFooterCredit(markup), [markup]);
+
+  return <div className="route-page" dangerouslySetInnerHTML={{ __html: pageMarkup }} />;
 }

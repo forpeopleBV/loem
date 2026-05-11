@@ -109,6 +109,11 @@ body.brand-story-page {
   font-family: "Test Martina Plantijn", serif;
 }
 
+body.brand-story-page #root,
+body.brand-story-page .route-page {
+  background: #fffaf2;
+}
+
 body.lookbook-page {
   background: #fffaf2;
   color: #27160f;

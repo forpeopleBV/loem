@@ -56,8 +56,19 @@ function enhanceNavigationLabels() {
   });
 }
 
+function preventSecondaryIntroWidow() {
+  const secondaryIntro = document.querySelector(".secondary-colour__intro p");
+  if (!secondaryIntro) return;
+
+  secondaryIntro.innerHTML = secondaryIntro.innerHTML.replace(
+    /more fluidly\./,
+    "more&nbsp;fluidly.",
+  );
+}
+
 ensureBrandAssetsAction();
 enhanceNavigationLabels();
+preventSecondaryIntroWidow();
 const autoplayVideos = Array.from(
   document.querySelectorAll(".js-autoplay-video"),
 );
@@ -191,6 +202,11 @@ function updateSceneReveal(vh) {
 }
 
 function updateParallax(vh) {
+  const lockedProductIconVideos = [
+    document.querySelector(".product-icons-media--iphone"),
+    document.querySelector(".product-icons-media--disc"),
+  ].filter(Boolean);
+  const lockedProductIconVideoSet = new Set(lockedProductIconVideos);
   const lockedSecondaryColourItems = [
     document.querySelector(".secondary-colour__media--left"),
     document.querySelector(".secondary-colour__media--middle"),
@@ -213,7 +229,25 @@ function updateParallax(vh) {
     });
   }
 
+  if (lockedProductIconVideos.length) {
+    const source =
+      document.querySelector(".product-icons-media--iphone") ||
+      lockedProductIconVideos[0];
+    const depth = Number(source.dataset.parallax || 0.22);
+    const rect = getVirtualRect(source);
+    const centerY = rect.top + rect.height * 0.5;
+    const centerOffset = (centerY - vh * 0.5) / vh;
+    const flowX = 0;
+    const flowY = Math.round(-centerOffset * depth * 130 * 1.55);
+
+    lockedProductIconVideos.forEach((item) => {
+      item.style.setProperty("--px", `${flowX.toFixed(2)}px`);
+      item.style.setProperty("--py", `${flowY.toFixed(2)}px`);
+    });
+  }
+
   parallaxItems.forEach((item) => {
+    if (lockedProductIconVideoSet.has(item)) return;
     if (lockedSecondaryColourSet.has(item)) return;
 
     const depth = Number(item.dataset.parallax || 0.24);
