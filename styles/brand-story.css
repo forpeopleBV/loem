@@ -22,12 +22,9 @@
 
 @font-face {
   font-family: "Greed Condensed";
-  src:
-    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff2")
-      format("woff2"),
-    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff")
-      format("woff");
-  font-weight: 600;
+  src: url("/assets/fonts/Greed%20Condensed/GreedCondensed-TRIAL-Bold.otf")
+    format("opentype");
+  font-weight: 700;
   font-display: swap;
 }
 
@@ -1150,7 +1147,7 @@ body::-webkit-scrollbar {
   margin-top: 0.04em;
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(53.28px, 5.75vw, 110.16px);
-  font-weight: 700;
+  font-weight: 900;
   line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;

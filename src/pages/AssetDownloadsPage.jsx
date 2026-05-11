@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const downloads = [
   {
-    name: "Download Artwork Pack",
+    name: "LOEM ARTWORK PACK",
     description:
       "Complete package with all LOEM artwork assets in one download, including wordmark, motif, signature, and product range icons.",
     url: "/assets/downloads/Loem%20Artwork%20Pack.zip",
