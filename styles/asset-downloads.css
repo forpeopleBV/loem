@@ -134,6 +134,10 @@
   cursor: pointer;
 }
 
+.asset-downloads__palette-grid--secondary .asset-downloads__colour-chip {
+  grid-template-rows: 44px auto;
+}
+
 .asset-downloads__colour-copy {
   display: grid;
   gap: 7px;
@@ -290,6 +294,10 @@
 
   .asset-downloads__colour-chip {
     min-height: 98px;
+    grid-template-rows: 34px auto;
+  }
+
+  .asset-downloads__palette-grid--secondary .asset-downloads__colour-chip {
     grid-template-rows: 34px auto;
   }
 }

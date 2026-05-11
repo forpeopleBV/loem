@@ -1104,11 +1104,11 @@ body.page-out {
 
 .secondary-colour__pantones {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: 25.013% 24.283% 25.43% 25.274%;
   position: absolute;
   top: 100%;
   left: 0;
-  width: 80%;
+  width: 100%;
   margin-top: clamp(12px, 1.2vw, 22px);
   font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(14px, 1vw, 20px);

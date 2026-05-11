@@ -110,6 +110,29 @@ const colours = [
   },
 ];
 
+const secondaryColours = [
+  {
+    name: "Dark Green",
+    hex: "#62640B",
+    pantone: "PANTONE 385",
+  },
+  {
+    name: "Bright Green",
+    hex: "#D2D20D",
+    pantone: "PANTONE 380",
+  },
+  {
+    name: "Earth Brown",
+    hex: "#743116",
+    pantone: "PANTONE 2443",
+  },
+  {
+    name: "Purple",
+    hex: "#7886FA",
+    pantone: "PANTONE 7452",
+  },
+];
+
 const tableItems = [
   ...downloads.map((download) => ({ ...download, kind: "download" })),
   {
@@ -117,6 +140,12 @@ const tableItems = [
     format: "Colour",
     kind: "palette",
     url: "core-colour-palette",
+  },
+  {
+    name: "SECONDARY COLOUR PALETTE",
+    format: "Colour",
+    kind: "secondary-palette",
+    url: "secondary-colour-palette",
   },
 ];
 
@@ -237,6 +266,50 @@ export function AssetDownloadsPage() {
                                     {colour.pantone}
                                   </span>
                                 ) : null}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                }
+
+                if (download.kind === "secondary-palette") {
+                  return (
+                    <tr
+                      key={download.url}
+                      className="asset-downloads__row--palette asset-downloads__row--secondary-palette"
+                    >
+                      <th scope="row" data-label="Asset">
+                        <span>{download.name}</span>
+                        <small>{download.format}</small>
+                      </th>
+                      <td colSpan={4} data-label="Values">
+                        <div className="asset-downloads__palette-grid asset-downloads__palette-grid--secondary">
+                          {secondaryColours.map((colour) => (
+                            <button
+                              key={colour.hex}
+                              className="asset-downloads__colour-chip asset-downloads__colour-chip--secondary"
+                              type="button"
+                              onClick={() => handleCopyColour(colour.hex)}
+                              aria-label={`Copy ${colour.name} HEX value ${colour.hex}`}
+                            >
+                              <span
+                                className="asset-downloads__swatch"
+                                style={{ "--asset-colour": colour.hex }}
+                                aria-hidden="true"
+                              />
+                              <span className="asset-downloads__colour-copy">
+                                <span className="asset-downloads__colour-name">
+                                  {copiedHex === colour.hex ? "Copied" : colour.name}
+                                </span>
+                                <span className="asset-downloads__colour-hex">
+                                  {colour.hex}
+                                </span>
+                                <span className="asset-downloads__colour-pantone">
+                                  {colour.pantone}
+                                </span>
                               </span>
                             </button>
                           ))}
