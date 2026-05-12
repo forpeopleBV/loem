@@ -137,7 +137,10 @@ function updateDynamicBackground() {
 }
 
 function getEffectiveCanvasDpr() {
-  return clamp(window.devicePixelRatio || 1, 1, 4);
+  const viewport = window.visualViewport;
+  const width = viewport?.width || window.innerWidth || 0;
+  const browserDpr = window.devicePixelRatio || 1;
+  return clamp(width < 700 ? Math.max(browserDpr, 3) : browserDpr, 1, 4);
 }
 
 function getLandingViewportSize() {
@@ -450,11 +453,11 @@ centerVideoAsset.setAttribute("muted", "");
 centerVideoAsset.setAttribute("playsinline", "");
 centerVideoAsset.setAttribute("webkit-playsinline", "");
 centerVideoAsset.style.position = "fixed";
-centerVideoAsset.style.left = "-2px";
-centerVideoAsset.style.top = "-2px";
-centerVideoAsset.style.width = "1px";
-centerVideoAsset.style.height = "1px";
-centerVideoAsset.style.opacity = "0";
+centerVideoAsset.style.left = "0";
+centerVideoAsset.style.top = "0";
+centerVideoAsset.style.width = "2px";
+centerVideoAsset.style.height = "2px";
+centerVideoAsset.style.opacity = "0.001";
 centerVideoAsset.style.pointerEvents = "none";
 centerVideoAsset.style.zIndex = "-1";
 centerVideoAsset.setAttribute("aria-hidden", "true");
@@ -468,6 +471,7 @@ centerVideoAsset.load();
 
 let wasInLastSection = false;
 let centerVideoHasPlayedOnce = false;
+let centerVideoStartedOnce = false;
 let centerVideoPlayRequested = false;
 let centerVideoLastPlayAttempt = 0;
 let centerVideoResetForPlay = false;
@@ -481,7 +485,12 @@ const videoKeyCtx = videoKeyCanvas.getContext("2d", {
 });
 
 function tryStartCenterVideo() {
-  if (!centerVideoPlayRequested || centerVideoHasPlayedOnce) return;
+  if (
+    !centerVideoPlayRequested ||
+    centerVideoHasPlayedOnce ||
+    centerVideoStartedOnce
+  )
+    return;
 
   const now = performance.now();
   if (now - centerVideoLastPlayAttempt < 280) return;
@@ -506,7 +515,7 @@ function tryStartCenterVideo() {
   centerVideoAsset
     .play()
     .then(() => {
-      centerVideoHasPlayedOnce = true;
+      centerVideoStartedOnce = true;
       centerVideoPlayRequested = false;
     })
     .catch(() => {});
@@ -518,6 +527,7 @@ function tryStartCenterVideo() {
 
 centerVideoAsset.addEventListener("ended", () => {
   centerVideoHasPlayedOnce = true;
+  centerVideoStartedOnce = true;
   centerVideoPlayRequested = false;
 });
 
@@ -829,7 +839,7 @@ function drawCenterStep(step, centerX, alpha, yOffset = 0) {
   ctx.textBaseline = "middle";
   ctx.fillStyle = "rgba(17, 17, 17, 0.98)";
   ctx.shadowColor = "rgba(0,0,0,0.08)";
-  ctx.shadowBlur = 8;
+  ctx.shadowBlur = W < 700 ? 0 : 8;
 
   if (step.type === "video") {
     const video = centerVideoAsset;
@@ -972,9 +982,14 @@ function getFinalCardsExitProgress(sectionFloat) {
 function updateCenterVideoPlayback(sectionFloat) {
   const lastIndex = SECTION_TITLES.length - 1;
   const arrivedLastSection =
-    sectionFloat >= lastIndex - (W < 700 ? 0.42 : 0.04);
+    sectionFloat >= lastIndex - (W < 700 ? 0.08 : 0.04);
 
-  if (arrivedLastSection && !wasInLastSection && !centerVideoHasPlayedOnce) {
+  if (
+    arrivedLastSection &&
+    !wasInLastSection &&
+    !centerVideoHasPlayedOnce &&
+    !centerVideoStartedOnce
+  ) {
     centerVideoPlayRequested = true;
     centerVideoResetForPlay = false;
     centerVideoLastPlayAttempt = 0;

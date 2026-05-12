@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 
 const ROUTE_BODY_CLASSES = [
   "landing-page",
@@ -22,7 +22,7 @@ function withFooterCredit(markup) {
 }
 
 export function RoutePage({ bodyClassName, markup, mount, navigate }) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.body.classList.remove(...ROUTE_BODY_CLASSES);
     document.body.classList.add(...bodyClassName.split(/\s+/).filter(Boolean));
     const cleanup = mount?.({ navigate });
