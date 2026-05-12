@@ -1350,6 +1350,8 @@ body::-webkit-scrollbar {
 }
 
 .brand-story-page .site-footer {
+  margin-top: -1px;
+  background: #27160f;
   box-shadow: 0 0 0 100vmax #27160f;
   clip-path: inset(0 -100vmax);
 }
