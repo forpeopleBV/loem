@@ -323,7 +323,7 @@ body::-webkit-scrollbar {
   --site-footer-bg: transparent;
   --top-fade-mask-rgb: 237, 229, 218;
   min-height: 100vh;
-  background: #ede5da;
+  background: #27160f;
   color: #27160f;
   opacity: 1;
 }
@@ -1952,5 +1952,14 @@ body::-webkit-scrollbar {
     min-height: 46px;
     padding: 0 14px;
     font-size: clamp(11px, 3vw, 14px);
+  }
+
+  .brand-story-page .site-footer {
+    margin-top: -1px;
+    margin-bottom: 0;
+    padding-bottom: calc(118px + env(safe-area-inset-bottom));
+    background: #27160f;
+    box-shadow: 0 0 0 100vmax #27160f;
+    clip-path: inset(0 -100vmax);
   }
 }

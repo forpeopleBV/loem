@@ -149,7 +149,8 @@ canvas {
 .scroll-snap {
   position: relative;
   z-index: 2;
-  height: 100vh;
+  height: var(--landing-vh, 100vh);
+  height: var(--landing-vh, 100svh);
   overflow-y: auto;
   overflow-x: hidden;
   scroll-snap-type: y mandatory;
@@ -165,7 +166,8 @@ canvas {
 }
 
 .snap-section {
-  min-height: 100vh;
+  min-height: var(--landing-vh, 100vh);
+  min-height: var(--landing-vh, 100svh);
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }

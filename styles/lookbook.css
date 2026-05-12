@@ -1462,7 +1462,7 @@ body.page-out {
   .wordmark-guide {
     order: 4;
     grid-column: 1 / -1;
-    margin-top: -44px;
+    margin-top: -40px;
   }
 
   .wordmark-pocket {
@@ -1499,7 +1499,7 @@ body.page-out {
     grid-column: 2 / 3;
     width: min(56vw, 220px);
     margin-top: 80px;
-    margin-left: -24px;
+    margin-left: calc(30% - 24px);
   }
 
   .wordmark-media-card--phone {
@@ -1517,8 +1517,8 @@ body.page-out {
     grid-column: 2 / 3;
     top: 0;
     margin-top: -8px;
-    margin-left: -16px;
-    width: calc(100% + var(--mobile-page-gutter));
+    margin-left: 16px;
+    width: calc((100% + var(--mobile-page-gutter)) * 1.25);
   }
 
   .wordmark-guide img {
@@ -1540,9 +1540,10 @@ body.page-out {
     order: 3;
     grid-column: 2 / 3;
     margin-left: auto;
-    margin-top: 68px;
+    margin-top: 28px;
     margin-right: calc(var(--mobile-page-gutter) * -1);
-    width: calc(100% + 18px);
+    width: 82%;
+    margin-right: 5px;
   }
 
   .product-icons-strip {
@@ -1557,9 +1558,9 @@ body.page-out {
   .product-icons-media--bag {
     order: 4;
     grid-column: 1 / 2;
-    margin-top: -200px;
+    margin-top: -120px;
     margin-left: calc(var(--mobile-page-gutter) * -1);
-    width: calc(100% + 36px);
+    width: calc((100% + 36px) * 0.85);
   }
 
   .product-icons-media--iphone {
@@ -1816,9 +1817,16 @@ body.page-out {
     z-index: 2;
   }
 
+  .secondary-colour__application--small.lookbook-parallax-asset {
+    transform: translate(
+      calc(99% + var(--px, 0px)),
+      calc(40% + var(--py, 0px))
+    );
+  }
+
   .lookbook-section--closing-video {
     min-height: 70svh;
-    padding: 64px 22px;
+    padding: calc( 0vw) 22px 64px;
   }
 
   .closing-video {
@@ -1826,8 +1834,9 @@ body.page-out {
   }
 
   .brand-action-cta {
-    min-height: clamp(260px, 42vh, 480px);
-    padding: 22px 20px 44px;
+    align-items: start;
+    min-height: clamp(190px, 28vh, 320px);
+    padding: 44px 20px 28px;
   }
 
   .brand-action-cta__actions {
@@ -1841,5 +1850,14 @@ body.page-out {
     padding: 0 14px;
     min-height: 46px;
     font-size: 12px;
+  }
+
+  .lookbook-page .site-footer {
+    margin-top: -1px;
+    margin-bottom: 0;
+    padding-bottom: calc(118px + env(safe-area-inset-bottom));
+    background: #27160f;
+    box-shadow: 0 0 0 100vmax #27160f;
+    clip-path: inset(0 -100vmax);
   }
 }

@@ -136,14 +136,20 @@ function updateDynamicBackground() {
 
 function resize() {
   const dpr = window.devicePixelRatio || 1;
-  canvasDpr = dpr;
-  W = window.innerWidth;
-  H = window.innerHeight;
-  canvas.width = W * dpr;
-  canvas.height = H * dpr;
+  const viewport = window.visualViewport;
+  W = Math.max(1, Math.round(viewport?.width || window.innerWidth));
+  H = Math.max(1, Math.round(viewport?.height || window.innerHeight));
+  const backingW = Math.max(1, Math.ceil(W * dpr));
+  const backingH = Math.max(1, Math.ceil(H * dpr));
+  const scaleX = backingW / W;
+  const scaleY = backingH / H;
+  canvasDpr = Math.max(scaleX, scaleY);
+  document.documentElement.style.setProperty("--landing-vh", `${H}px`);
+  canvas.width = backingW;
+  canvas.height = backingH;
   canvas.style.width = `${W}px`;
   canvas.style.height = `${H}px`;
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
   cx = W / 2;
@@ -725,6 +731,15 @@ function drawCenterTransition(currentIndex, nextIndex, mix, revealProgress = 1) 
   const nextStep = CENTER_STEPS[nextIndex];
   const revealT = smoothstep(revealProgress);
   const revealYOffset = (1 - revealT) * clamp(H * 0.045, 22, 58);
+  if (W < 700) {
+    const currentAlpha = clamp(1 - mix * 2.35, 0, 1) * revealT;
+    const nextAlpha = clamp((mix - 0.58) / 0.42, 0, 1) * revealT;
+    drawCenterStep(currentStep, cx, currentAlpha, revealYOffset);
+    if (nextIndex !== currentIndex) {
+      drawCenterStep(nextStep, cx, nextAlpha, revealYOffset);
+    }
+    return;
+  }
   const slideDistance = clamp(W * CENTER_SLIDE_DISTANCE_RATIO, 180, 460);
   const revealXOffset = (1 - revealT) * slideDistance;
   const inShift = slideDistance * (1 - mix);
@@ -900,6 +915,7 @@ const onResize = () => {
   syncScrollStateToProgress();
 };
 window.addEventListener("resize", onResize);
+window.visualViewport?.addEventListener("resize", onResize);
 requestAnimationFrame(() => {
   if (disposed) return;
   updateScrollProgress();
@@ -917,10 +933,12 @@ return () => {
   scrollSnap.removeEventListener("scroll", onScroll);
   scrollSnap.removeEventListener("wheel", onWheel);
   window.removeEventListener("resize", onResize);
+  window.visualViewport?.removeEventListener("resize", onResize);
   navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
   lightCursorController.destroy?.();
   centerVideoAsset.pause();
   document.body.style.background = "";
+  document.documentElement.style.removeProperty("--landing-vh");
   document.body.classList.remove("page-loading", "page-in", "page-out");
 };
 }

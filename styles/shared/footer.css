@@ -41,5 +41,6 @@
   .site-footer {
     gap: 14px;
     padding: 36px 12px 14px;
+    margin-bottom: 13vh;
   }
 }
