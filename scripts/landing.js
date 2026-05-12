@@ -156,6 +156,30 @@ function resize() {
   cy = H / 2;
 }
 
+function refreshCanvasIfNeeded() {
+  const dpr = window.devicePixelRatio || 1;
+  const viewport = window.visualViewport;
+  const nextW = Math.max(1, Math.round(viewport?.width || window.innerWidth));
+  const nextH = Math.max(1, Math.round(viewport?.height || window.innerHeight));
+  const nextBackingW = Math.max(1, Math.ceil(nextW * dpr));
+  const nextBackingH = Math.max(1, Math.ceil(nextH * dpr));
+  const rect = canvas.getBoundingClientRect();
+  const cssScaled =
+    Math.abs(rect.width - W) > 0.5 || Math.abs(rect.height - H) > 0.5;
+
+  if (
+    nextW !== W ||
+    nextH !== H ||
+    canvas.width !== nextBackingW ||
+    canvas.height !== nextBackingH ||
+    cssScaled
+  ) {
+    resize();
+    updateScrollProgress();
+    syncScrollStateToProgress();
+  }
+}
+
 function getScrollMax() {
   return Math.max(1, scrollSnap.scrollHeight - scrollSnap.clientHeight);
 }
@@ -368,6 +392,8 @@ centerVideoAsset.load();
 
 let wasInLastSection = false;
 let centerVideoHasPlayedOnce = false;
+let centerVideoPlayRequested = false;
+let centerVideoLastPlayAttempt = 0;
 let finalActionsReady = false;
 let finalActionsDelayStarted = false;
 let finalActionsDelayTimer = null;
@@ -830,14 +856,27 @@ function updateCenterVideoPlayback(sectionFloat) {
   const arrivedLastSection = sectionFloat >= lastIndex - 0.02;
 
   if (arrivedLastSection && !wasInLastSection && !centerVideoHasPlayedOnce) {
+    centerVideoPlayRequested = true;
     centerVideoAsset.currentTime = 0;
-    centerVideoAsset
-      .play()
-      .then(() => {
-        centerVideoHasPlayedOnce = true;
-      })
-      .catch(() => {});
   }
+
+  if (arrivedLastSection && centerVideoPlayRequested && !centerVideoHasPlayedOnce) {
+    const now = performance.now();
+    if (now - centerVideoLastPlayAttempt > 420) {
+      centerVideoLastPlayAttempt = now;
+      centerVideoAsset.muted = true;
+      centerVideoAsset.defaultMuted = true;
+      centerVideoAsset.playsInline = true;
+      centerVideoAsset
+        .play()
+        .then(() => {
+          centerVideoHasPlayedOnce = true;
+          centerVideoPlayRequested = false;
+        })
+        .catch(() => {});
+    }
+  }
+
   wasInLastSection = arrivedLastSection;
 }
 
@@ -880,6 +919,7 @@ function drawCardPass(cards, exitProgress, drawFront) {
 let lastTime = performance.now();
 function frame(now) {
   if (disposed) return;
+  refreshCanvasIfNeeded();
   const dt = Math.min(now - lastTime, 50);
   lastTime = now;
 
@@ -948,6 +988,7 @@ const onResize = () => {
 };
 window.addEventListener("resize", onResize);
 window.visualViewport?.addEventListener("resize", onResize);
+window.visualViewport?.addEventListener("scroll", onResize, { passive: true });
 requestAnimationFrame(() => {
   if (disposed) return;
   updateScrollProgress();
@@ -966,6 +1007,7 @@ return () => {
   scrollSnap.removeEventListener("wheel", onWheel);
   window.removeEventListener("resize", onResize);
   window.visualViewport?.removeEventListener("resize", onResize);
+  window.visualViewport?.removeEventListener("scroll", onResize);
   navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
   lightCursorController.destroy?.();
   centerVideoAsset.pause();
