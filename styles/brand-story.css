@@ -1157,16 +1157,18 @@ body::-webkit-scrollbar {
   position: absolute;
   bottom: clamp(20px, 3.6vw, 68px);
   z-index: 1;
+  display: flex;
+  flex-direction: column;
   width: min(410px, 32vw);
   text-align: center;
 }
 
 .flow-state__copy--left {
-  left: clamp(28px, 6.25vw, 120px);
+  left: clamp(28px, 6.9vw, 132px);
 }
 
 .flow-state__copy--right {
-  right: clamp(28px, 7.6vw, 146px);
+  right: clamp(28px, 6.9vw, 132px);
 }
 
 .flow-state__copy--wide {
@@ -1174,7 +1176,7 @@ body::-webkit-scrollbar {
 }
 
 .flow-video-section[data-flow-state="boundless"] .flow-state__copy--wide {
-  width: min(460px, 36vw);
+  width: min(410px, 32vw);
 }
 
 .flow-state__eyebrow {
@@ -1193,6 +1195,12 @@ body::-webkit-scrollbar {
   font-size: clamp(13px, 1.12vw, 25px);
   font-weight: 300;
   line-height: 1.1;
+  text-wrap: balance;
+}
+
+.flow-video-section[data-flow-state="boundless"] .flow-state__body {
+  min-height: 2.2em;
+  text-wrap: balance;
 }
 
 .brand-overview {
@@ -1891,15 +1899,20 @@ body::-webkit-scrollbar {
   .flow-state__copy,
   .flow-state__copy--wide {
     bottom: clamp(52px, 12vh, 96px);
-    width: min(36vw, 150px);
+    width: min(39vw, 164px);
   }
 
   .flow-state__copy--left {
-    left: clamp(16px, 5vw, 28px);
+    left: clamp(14px, 4.7vw, 24px);
   }
 
   .flow-state__copy--right {
-    right: clamp(16px, 5vw, 28px);
+    right: clamp(14px, 4.7vw, 24px);
+  }
+
+  .flow-video-section[data-flow-state="boundless"] .flow-state__copy,
+  .flow-video-section[data-flow-state="boundless"] .flow-state__copy--wide {
+    width: min(40vw, 170px);
   }
 
   .flow-state__eyebrow {
@@ -1908,9 +1921,14 @@ body::-webkit-scrollbar {
   }
 
   .flow-state__body {
-    min-height: 0;
+    min-height: 4.24em;
     font-size: clamp(11px, 3.45vw, 15px);
     line-height: 1.06;
+    text-wrap: balance;
+  }
+
+  .flow-video-section[data-flow-state="boundless"] .flow-state__body {
+    min-height: 4.24em;
   }
 
   .brand-overview {
