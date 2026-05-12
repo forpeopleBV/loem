@@ -1564,6 +1564,14 @@ body::-webkit-scrollbar {
 }
 
 @media (max-width: 780px) {
+  body.brand-story-page {
+    --mobile-editorial-title-size: clamp(9px, 2.43vw, 13.5px);
+    --mobile-editorial-body-size: clamp(14.3px, 4.015vw, 19.8px);
+    --mobile-editorial-body-line: 1.19;
+    --mobile-page-gutter: 22px;
+    --mobile-grid-gap: 18px;
+  }
+
   .lookbook-story {
     width: 100%;
     padding: 118px 18px 72px;
@@ -1581,7 +1589,8 @@ body::-webkit-scrollbar {
 
   .lookbook-intro {
     text-align: left;
-    font-size: clamp(13px, 4.4vw, 25px);
+    font-size: var(--mobile-editorial-body-size);
+    line-height: var(--mobile-editorial-body-line);
   }
 
   .lookbook-collections {
@@ -1661,20 +1670,25 @@ body::-webkit-scrollbar {
   }
 
   .what-we-do {
-    width: 88vw;
-    padding: 92px 0 44px;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 52px var(--mobile-grid-gap);
+    align-items: start;
+    padding: 92px var(--mobile-page-gutter) 44px;
+    overflow: visible;
   }
 
   .our-name {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-areas:
-      "wordmark"
-      "copy";
+      "copy copy"
+      "wordmark wordmark";
     justify-items: center;
-    width: 88vw;
+    width: 100%;
     min-height: auto;
     gap: 34px;
-    padding: 32px 0 64px;
+    padding: 94px var(--mobile-page-gutter) 96px;
+    overflow: visible;
   }
 
   .our-name__wordmark {
@@ -1687,21 +1701,23 @@ body::-webkit-scrollbar {
   }
 
   .our-name__copy {
-    width: min(100%, 620px);
+    width: min(90%, 558px);
   }
 
   .our-name__body {
-    font-size: clamp(13px, 4.4vw, 25px);
+    font-size: var(--mobile-editorial-body-size);
+    line-height: var(--mobile-editorial-body-line);
   }
 
   .our-name__meta {
     margin-top: 34px;
-    font-size: clamp(10px, 3.3vw, 15px);
-    line-height: 1.2;
   }
 
   .what-we-do__image-wrap {
-    width: 100%;
+    grid-column: 1 / -1;
+    order: 2;
+    width: min(100%, 620px);
+    margin: 0 auto;
   }
 
   .what-we-do__meta {
@@ -1713,7 +1729,8 @@ body::-webkit-scrollbar {
   }
 
   .what-we-do__body {
-    font-size: clamp(13px, 4.4vw, 25px);
+    font-size: var(--mobile-editorial-body-size);
+    line-height: var(--mobile-editorial-body-line);
   }
 
   .what-we-do__body span:nth-child(2) {
@@ -1757,6 +1774,100 @@ body::-webkit-scrollbar {
 
   .mission {
     transform: translateY(var(--text-y));
+  }
+
+  .collections {
+    margin-top: 20%;
+  }
+
+  .what-we-do__copy,
+  .our-name__copy,
+  .philo-copy,
+  .mission {
+    text-align: center;
+  }
+
+  .what-we-do__copy {
+    grid-column: 1 / -1;
+    order: 1;
+    width: min(100%, 620px);
+    justify-self: center;
+  }
+
+  .our-name__wordmark-wrap {
+    width: calc(100% + (var(--mobile-page-gutter) * 2));
+    margin-top: 32px;
+    margin-left: calc(var(--mobile-page-gutter) * -1);
+  }
+
+  .philosophy {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px var(--mobile-grid-gap);
+    width: 100%;
+    padding: 58px var(--mobile-page-gutter) 72px;
+    overflow: visible;
+    translate: none;
+  }
+
+  .philo-collage {
+    grid-column: 1 / -1;
+    min-height: 88vw;
+  }
+
+  .philo-main {
+    left: calc(var(--mobile-page-gutter) * -1);
+    width: calc(68vw + var(--mobile-page-gutter));
+  }
+
+  .philo-side {
+    left: auto;
+    right: calc(var(--mobile-page-gutter) * -1);
+    bottom: 0;
+    width: 44vw;
+    height: 56vw;
+    z-index: 3;
+  }
+
+  .philo-copy {
+    grid-column: 1 / -1;
+    width: min(100%, 620px);
+    justify-self: center;
+    margin-top: 15%;
+  }
+
+  .mission-wrap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 24px var(--mobile-page-gutter) 68px;
+  }
+
+  .mission {
+    grid-column: 1 / -1;
+    width: min(100%, 620px);
+    justify-self: center;
+  }
+
+  .what-we-do__eyebrow,
+  .our-name__title,
+  .our-name__meta,
+  .eyebrow,
+  .collections > p,
+  .brand-overview__title,
+  .brand-overview__label {
+    font-family: "Test Martina Plantijn", Georgia, "Times New Roman", serif;
+    font-size: var(--mobile-editorial-title-size);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .what-we-do__body,
+  .our-name__body,
+  .philo-body,
+  .mission-body,
+  .brand-overview__body {
+    font-size: var(--mobile-editorial-body-size);
+    line-height: var(--mobile-editorial-body-line);
   }
 
   .flow-video-section {
@@ -1803,7 +1914,7 @@ body::-webkit-scrollbar {
   }
 
   .brand-overview {
-    padding: 86px 24px 44px;
+    padding: 86px var(--mobile-page-gutter) 44px;
   }
 
   .brand-overview__title {
@@ -1812,7 +1923,7 @@ body::-webkit-scrollbar {
 
   .brand-overview__list {
     width: min(620px, 88vw);
-    gap: 28px;
+    gap: 32px;
     margin-bottom: 54px;
   }
 
