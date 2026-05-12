@@ -57,7 +57,7 @@ const scrollSnap = document.getElementById("scrollSnap");
 const topChrome = document.getElementById("topChrome");
 const finalActions = document.getElementById("finalActions");
 const loadingProgress = document.getElementById("loadingProgress");
-const ctx = canvas.getContext("2d", { desynchronized: true });
+const ctx = canvas.getContext("2d", { alpha: true });
 let disposed = false;
 let frameId = 0;
 
@@ -99,6 +99,7 @@ let idleTime = 0;
 let initialAssetsLoaded = 0;
 let initialAssetsTotal = 0;
 const initialAssetPromises = [];
+const canvasRecalibrationTimers = [];
 const cardRevealState = { progress: 0 };
 let cardRevealAnimation = null;
 let lastBackgroundProgress = null;
@@ -134,11 +135,25 @@ function updateDynamicBackground() {
   ].join(", ");
 }
 
-function resize() {
-  const dpr = window.devicePixelRatio || 1;
+function getEffectiveCanvasDpr() {
   const viewport = window.visualViewport;
-  W = Math.max(1, Math.round(viewport?.width || window.innerWidth));
-  H = Math.max(1, Math.round(viewport?.height || window.innerHeight));
+  const viewportScale = viewport?.scale || 1;
+  return clamp((window.devicePixelRatio || 1) * viewportScale, 1, 4);
+}
+
+function getLandingViewportSize() {
+  const viewport = window.visualViewport;
+  return {
+    width: Math.max(1, Math.round(viewport?.width || window.innerWidth)),
+    height: Math.max(1, Math.round(viewport?.height || window.innerHeight)),
+  };
+}
+
+function resize() {
+  const viewportSize = getLandingViewportSize();
+  const dpr = getEffectiveCanvasDpr();
+  W = viewportSize.width;
+  H = viewportSize.height;
   const backingW = Math.max(1, Math.ceil(W * dpr));
   const backingH = Math.max(1, Math.ceil(H * dpr));
   const scaleX = backingW / W;
@@ -157,10 +172,10 @@ function resize() {
 }
 
 function refreshCanvasIfNeeded() {
-  const dpr = window.devicePixelRatio || 1;
-  const viewport = window.visualViewport;
-  const nextW = Math.max(1, Math.round(viewport?.width || window.innerWidth));
-  const nextH = Math.max(1, Math.round(viewport?.height || window.innerHeight));
+  const dpr = getEffectiveCanvasDpr();
+  const viewportSize = getLandingViewportSize();
+  const nextW = viewportSize.width;
+  const nextH = viewportSize.height;
   const nextBackingW = Math.max(1, Math.ceil(nextW * dpr));
   const nextBackingH = Math.max(1, Math.ceil(nextH * dpr));
   const rect = canvas.getBoundingClientRect();
@@ -178,6 +193,25 @@ function refreshCanvasIfNeeded() {
     updateScrollProgress();
     syncScrollStateToProgress();
   }
+}
+
+function recalibrateCanvas() {
+  if (disposed) return;
+  resize();
+  updateScrollProgress();
+  syncScrollStateToProgress();
+}
+
+function scheduleCanvasRecalibrationBurst() {
+  [0, 80, 180, 360, 720, 1280].forEach((delay) => {
+    const timer = window.setTimeout(() => {
+      recalibrateCanvas();
+      requestAnimationFrame(() => {
+        if (!disposed) recalibrateCanvas();
+      });
+    }, delay);
+    canvasRecalibrationTimers.push(timer);
+  });
 }
 
 function getScrollMax() {
@@ -210,9 +244,12 @@ function trackInitialAsset(promise) {
 function revealLandingWhenReady() {
   Promise.all(initialAssetPromises).finally(() => {
     if (disposed) return;
+    recalibrateCanvas();
+    scheduleCanvasRecalibrationBurst();
     document.body.classList.add("page-in");
     requestAnimationFrame(() => {
       if (disposed) return;
+      recalibrateCanvas();
       document.body.classList.remove("page-loading");
       cardRevealAnimation?.stop();
       cardRevealState.progress = 0;
@@ -979,6 +1016,7 @@ function frame(now) {
 resize();
 updateScrollProgress();
 syncScrollStateToProgress();
+scheduleCanvasRecalibrationBurst();
 scrollSnap.addEventListener("scroll", onScroll, { passive: true });
 scrollSnap.addEventListener("wheel", onWheel, { passive: true });
 const onResize = () => {
@@ -986,13 +1024,28 @@ const onResize = () => {
   updateScrollProgress();
   syncScrollStateToProgress();
 };
+const onViewportRestabilized = () => {
+  recalibrateCanvas();
+  scheduleCanvasRecalibrationBurst();
+};
+const onVisibilityChange = () => {
+  if (!document.hidden) onViewportRestabilized();
+};
 window.addEventListener("resize", onResize);
+window.addEventListener("orientationchange", onViewportRestabilized);
+window.addEventListener("pageshow", onViewportRestabilized);
+document.addEventListener("visibilitychange", onVisibilityChange);
 window.visualViewport?.addEventListener("resize", onResize);
 window.visualViewport?.addEventListener("scroll", onResize, { passive: true });
+let viewportResizeObserver = null;
+if ("ResizeObserver" in window) {
+  viewportResizeObserver = new ResizeObserver(onResize);
+  viewportResizeObserver.observe(scrollSnap);
+  viewportResizeObserver.observe(document.documentElement);
+}
 requestAnimationFrame(() => {
   if (disposed) return;
-  updateScrollProgress();
-  syncScrollStateToProgress();
+  recalibrateCanvas();
 });
 revealLandingWhenReady();
 frameId = requestAnimationFrame(frame);
@@ -1006,8 +1059,13 @@ return () => {
   scrollSnap.removeEventListener("scroll", onScroll);
   scrollSnap.removeEventListener("wheel", onWheel);
   window.removeEventListener("resize", onResize);
+  window.removeEventListener("orientationchange", onViewportRestabilized);
+  window.removeEventListener("pageshow", onViewportRestabilized);
+  document.removeEventListener("visibilitychange", onVisibilityChange);
   window.visualViewport?.removeEventListener("resize", onResize);
   window.visualViewport?.removeEventListener("scroll", onResize);
+  viewportResizeObserver?.disconnect();
+  canvasRecalibrationTimers.forEach((timer) => window.clearTimeout(timer));
   navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
   lightCursorController.destroy?.();
   centerVideoAsset.pause();
