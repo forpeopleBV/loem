@@ -85,6 +85,8 @@ let H = 0;
 let cx = 0;
 let cy = 0;
 let canvasDpr = window.devicePixelRatio || 1;
+let canvasBackingW = 0;
+let canvasBackingH = 0;
 let scrollProgress = 0;
 const scrollState = {
   renderProgress: 0,
@@ -154,18 +156,54 @@ function getLandingViewportSize() {
   };
 }
 
+function getCanvasBackingSize(cssWidth, cssHeight, dpr) {
+  const viewport = window.visualViewport;
+  const isMobileViewport =
+    Math.min(cssWidth, viewport?.width || window.innerWidth) < 700;
+  const maxCssWidth = isMobileViewport
+    ? Math.max(
+        cssWidth,
+        window.innerWidth || 0,
+        document.documentElement.clientWidth || 0,
+        viewport?.width || 0,
+        window.screen?.width || 0,
+      )
+    : cssWidth;
+  const maxCssHeight = isMobileViewport
+    ? Math.max(
+        cssHeight,
+        window.innerHeight || 0,
+        document.documentElement.clientHeight || 0,
+        viewport?.height || 0,
+        window.screen?.height || 0,
+      )
+    : cssHeight;
+
+  return {
+    width: Math.max(1, Math.ceil(maxCssWidth * dpr)),
+    height: Math.max(1, Math.ceil(maxCssHeight * dpr)),
+  };
+}
+
 function resize() {
   const viewportSize = getLandingViewportSize();
   const dpr = getEffectiveCanvasDpr();
   W = viewportSize.width;
   H = viewportSize.height;
-  const backingW = Math.max(1, Math.ceil(W * dpr));
-  const backingH = Math.max(1, Math.ceil(H * dpr));
-  const scaleX = backingW / W;
-  const scaleY = backingH / H;
+  const backing = getCanvasBackingSize(W, H, dpr);
+  const backingChanged =
+    canvasBackingW !== backing.width || canvasBackingH !== backing.height;
+
+  if (backingChanged) {
+    canvasBackingW = backing.width;
+    canvasBackingH = backing.height;
+    canvas.width = canvasBackingW;
+    canvas.height = canvasBackingH;
+  }
+
+  const scaleX = canvasBackingW / W;
+  const scaleY = canvasBackingH / H;
   canvasDpr = Math.max(scaleX, scaleY);
-  canvas.width = backingW;
-  canvas.height = backingH;
   ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
@@ -178,8 +216,7 @@ function refreshCanvasIfNeeded() {
   const viewportSize = getLandingViewportSize();
   const nextW = viewportSize.width;
   const nextH = viewportSize.height;
-  const nextBackingW = Math.max(1, Math.ceil(nextW * dpr));
-  const nextBackingH = Math.max(1, Math.ceil(nextH * dpr));
+  const nextBacking = getCanvasBackingSize(nextW, nextH, dpr);
   const rect = canvas.getBoundingClientRect();
   const cssScaled =
     Math.abs(rect.width - W) > 0.5 || Math.abs(rect.height - H) > 0.5;
@@ -187,8 +224,8 @@ function refreshCanvasIfNeeded() {
   if (
     nextW !== W ||
     nextH !== H ||
-    canvas.width !== nextBackingW ||
-    canvas.height !== nextBackingH ||
+    canvasBackingW !== nextBacking.width ||
+    canvasBackingH !== nextBacking.height ||
     cssScaled
   ) {
     resize();
@@ -409,17 +446,31 @@ centerVideoAsset.autoplay = false;
 centerVideoAsset.preload = "auto";
 centerVideoAsset.loop = false;
 centerVideoAsset.removeAttribute("controls");
+centerVideoAsset.setAttribute("muted", "");
+centerVideoAsset.setAttribute("playsinline", "");
+centerVideoAsset.setAttribute("webkit-playsinline", "");
+centerVideoAsset.style.position = "fixed";
+centerVideoAsset.style.left = "-2px";
+centerVideoAsset.style.top = "-2px";
+centerVideoAsset.style.width = "1px";
+centerVideoAsset.style.height = "1px";
+centerVideoAsset.style.opacity = "0";
+centerVideoAsset.style.pointerEvents = "none";
+centerVideoAsset.style.zIndex = "-1";
+centerVideoAsset.setAttribute("aria-hidden", "true");
 centerVideoAsset.addEventListener("error", () => {
   if (centerVideoAsset.src.includes(CENTER_VIDEO_FALLBACK_PATH)) return;
   centerVideoAsset.src = CENTER_VIDEO_FALLBACK_PATH;
   centerVideoAsset.load();
 });
+document.body.append(centerVideoAsset);
 centerVideoAsset.load();
 
 let wasInLastSection = false;
 let centerVideoHasPlayedOnce = false;
 let centerVideoPlayRequested = false;
 let centerVideoLastPlayAttempt = 0;
+let centerVideoResetForPlay = false;
 let finalActionsReady = false;
 let finalActionsDelayStarted = false;
 let finalActionsDelayTimer = null;
@@ -427,6 +478,47 @@ let finalActionsDelayConsumed = false;
 const videoKeyCanvas = document.createElement("canvas");
 const videoKeyCtx = videoKeyCanvas.getContext("2d", {
   willReadFrequently: true,
+});
+
+function tryStartCenterVideo() {
+  if (!centerVideoPlayRequested || centerVideoHasPlayedOnce) return;
+
+  const now = performance.now();
+  if (now - centerVideoLastPlayAttempt < 280) return;
+  centerVideoLastPlayAttempt = now;
+
+  centerVideoAsset.muted = true;
+  centerVideoAsset.defaultMuted = true;
+  centerVideoAsset.playsInline = true;
+
+  if (centerVideoAsset.readyState < 1) {
+    centerVideoAsset.load();
+    return;
+  }
+
+  if (!centerVideoResetForPlay) {
+    try {
+      centerVideoAsset.currentTime = 0;
+    } catch {}
+    centerVideoResetForPlay = true;
+  }
+
+  centerVideoAsset
+    .play()
+    .then(() => {
+      centerVideoHasPlayedOnce = true;
+      centerVideoPlayRequested = false;
+    })
+    .catch(() => {});
+}
+
+["loadedmetadata", "loadeddata", "canplay", "playing"].forEach((eventName) => {
+  centerVideoAsset.addEventListener(eventName, tryStartCenterVideo);
+});
+
+centerVideoAsset.addEventListener("ended", () => {
+  centerVideoHasPlayedOnce = true;
+  centerVideoPlayRequested = false;
 });
 
 const particles = Array.from({ length: CARDS_PER_SECTION }, (_, i) => {
@@ -879,30 +971,16 @@ function getFinalCardsExitProgress(sectionFloat) {
 
 function updateCenterVideoPlayback(sectionFloat) {
   const lastIndex = SECTION_TITLES.length - 1;
-  const arrivedLastSection = sectionFloat >= lastIndex - 0.02;
+  const arrivedLastSection =
+    sectionFloat >= lastIndex - (W < 700 ? 0.42 : 0.04);
 
   if (arrivedLastSection && !wasInLastSection && !centerVideoHasPlayedOnce) {
     centerVideoPlayRequested = true;
-    centerVideoAsset.currentTime = 0;
+    centerVideoResetForPlay = false;
+    centerVideoLastPlayAttempt = 0;
   }
 
-  if (arrivedLastSection && centerVideoPlayRequested && !centerVideoHasPlayedOnce) {
-    const now = performance.now();
-    if (now - centerVideoLastPlayAttempt > 420) {
-      centerVideoLastPlayAttempt = now;
-      centerVideoAsset.muted = true;
-      centerVideoAsset.defaultMuted = true;
-      centerVideoAsset.playsInline = true;
-      centerVideoAsset
-        .play()
-        .then(() => {
-          centerVideoHasPlayedOnce = true;
-          centerVideoPlayRequested = false;
-        })
-        .catch(() => {});
-    }
-  }
-
+  if (arrivedLastSection) tryStartCenterVideo();
   wasInLastSection = arrivedLastSection;
 }
 
@@ -1055,6 +1133,7 @@ return () => {
   navLinks.forEach((link) => link.removeEventListener("click", onNavClick));
   lightCursorController.destroy?.();
   centerVideoAsset.pause();
+  centerVideoAsset.remove();
   document.body.style.background = "";
   document.documentElement.style.removeProperty("--landing-vh");
   document.body.classList.remove("page-loading", "page-in", "page-out");
