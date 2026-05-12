@@ -434,8 +434,11 @@ function updateScenesAndParallax(now) {
     video.playsInline = true;
     video.loop = true;
     video.autoplay = true;
+    video.removeAttribute("controls");
     video.load();
     const tryPlay = () => video.play().catch(() => {});
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay, { once: true });
     video.addEventListener("canplay", tryPlay, { once: true });
     const observer = new IntersectionObserver(
       (entries) => {

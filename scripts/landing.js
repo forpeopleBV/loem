@@ -336,14 +336,49 @@ if (document.fonts?.ready) {
 const centerVideoAsset = document.createElement("video");
 centerVideoAsset.src = CENTER_VIDEO_PATH;
 centerVideoAsset.muted = true;
+centerVideoAsset.defaultMuted = true;
 centerVideoAsset.playsInline = true;
+centerVideoAsset.autoplay = true;
 centerVideoAsset.preload = "auto";
-centerVideoAsset.loop = false;
+centerVideoAsset.removeAttribute("controls");
 centerVideoAsset.addEventListener("error", () => {
   if (centerVideoAsset.src.includes(CENTER_VIDEO_FALLBACK_PATH)) return;
   centerVideoAsset.src = CENTER_VIDEO_FALLBACK_PATH;
   centerVideoAsset.load();
 });
+
+function isMobileCenterVideo() {
+  return window.matchMedia?.("(max-width: 700px)").matches || W < 700;
+}
+
+function syncCenterVideoMode() {
+  centerVideoAsset.loop = !isMobileCenterVideo();
+}
+
+function tryPlayCenterVideo({ restart = false } = {}) {
+  syncCenterVideoMode();
+  if (restart) {
+    centerVideoAsset.currentTime = 0;
+  }
+  centerVideoAsset.play().catch(() => {});
+}
+
+function primeCenterVideo() {
+  syncCenterVideoMode();
+  if (isMobileCenterVideo()) {
+    centerVideoAsset.pause();
+    centerVideoAsset.currentTime = 0;
+    return;
+  }
+  tryPlayCenterVideo();
+}
+
+centerVideoAsset.addEventListener("canplay", primeCenterVideo);
+centerVideoAsset.addEventListener("loadeddata", primeCenterVideo, {
+  once: true,
+});
+centerVideoAsset.load();
+primeCenterVideo();
 
 let wasInLastSection = false;
 let centerVideoHasPlayedOnce = false;
@@ -795,16 +830,15 @@ function getFinalCardsExitProgress(sectionFloat) {
 }
 
 function updateCenterVideoPlayback(sectionFloat) {
+  syncCenterVideoMode();
   const lastIndex = SECTION_TITLES.length - 1;
   const arrivedLastSection = sectionFloat >= lastIndex - 0.02;
 
   if (arrivedLastSection && !wasInLastSection && !centerVideoHasPlayedOnce) {
-    centerVideoAsset
-      .play()
-      .then(() => {
-        centerVideoHasPlayedOnce = true;
-      })
-      .catch(() => {});
+    tryPlayCenterVideo({ restart: isMobileCenterVideo() });
+    centerVideoHasPlayedOnce = true;
+  } else if (arrivedLastSection && !isMobileCenterVideo()) {
+    tryPlayCenterVideo();
   }
   wasInLastSection = arrivedLastSection;
 }

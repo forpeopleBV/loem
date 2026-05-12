@@ -360,9 +360,12 @@ requestAnimationFrame(() => {
     video.playsInline = true;
     video.loop = true;
     video.autoplay = true;
+    video.removeAttribute("controls");
     video.load();
 
     const tryPlay = () => video.play().catch(() => {});
+    tryPlay();
+    video.addEventListener("loadeddata", tryPlay, { once: true });
 
     if (!("IntersectionObserver" in window)) {
       tryPlay();
