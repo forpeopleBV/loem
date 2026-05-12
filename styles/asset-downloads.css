@@ -300,4 +300,9 @@
   .asset-downloads__palette-grid--secondary .asset-downloads__colour-chip {
     grid-template-rows: 34px auto;
   }
+
+  .asset-downloads .site-footer {
+    margin-bottom: 0;
+    padding-bottom: calc(118px + env(safe-area-inset-bottom));
+  }
 }
