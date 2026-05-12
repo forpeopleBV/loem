@@ -1170,7 +1170,11 @@ body::-webkit-scrollbar {
 }
 
 .flow-state__copy--wide {
-  width: min(620px, 44vw);
+  width: min(410px, 32vw);
+}
+
+.flow-video-section[data-flow-state="boundless"] .flow-state__copy--wide {
+  width: min(460px, 36vw);
 }
 
 .flow-state__eyebrow {
@@ -1268,7 +1272,7 @@ body::-webkit-scrollbar {
 
 .brand-action-cta {
   width: 100%;
-  margin-left: 0;
+  margin: -1px 0 0;
   position: relative;
   display: grid;
   place-items: center;
