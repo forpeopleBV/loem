@@ -269,6 +269,23 @@ function getResponsiveCardOffsetScale() {
   return clamp(W / 760, 0.38, 1);
 }
 
+function getMobileVerticalSpread() {
+  if (W >= 700) return 1;
+  return clamp(1 + (700 - W) / 520, 1.24, 1.55);
+}
+
+function getMobileScatterY(slot) {
+  if (W >= 700) return 0;
+  const scatter = [-0.34, 0.28, -0.12, 0.42, -0.48, 0.18, -0.25, 0.34, -0.4, 0.5];
+  return (scatter[slot % scatter.length] || 0) * clamp(H * 0.18, 84, 150);
+}
+
+function snapCanvasValue(value) {
+  if (W >= 700) return value;
+  const step = 1 / Math.max(1, canvasDpr);
+  return Math.round(value / step) * step;
+}
+
 function updateFinalActions(sectionFloat) {
   const threshold = SECTION_TITLES.length - 1.05;
   const inFinalZone = sectionFloat >= threshold;
@@ -338,47 +355,16 @@ centerVideoAsset.src = CENTER_VIDEO_PATH;
 centerVideoAsset.muted = true;
 centerVideoAsset.defaultMuted = true;
 centerVideoAsset.playsInline = true;
-centerVideoAsset.autoplay = true;
+centerVideoAsset.autoplay = false;
 centerVideoAsset.preload = "auto";
+centerVideoAsset.loop = false;
 centerVideoAsset.removeAttribute("controls");
 centerVideoAsset.addEventListener("error", () => {
   if (centerVideoAsset.src.includes(CENTER_VIDEO_FALLBACK_PATH)) return;
   centerVideoAsset.src = CENTER_VIDEO_FALLBACK_PATH;
   centerVideoAsset.load();
 });
-
-function isMobileCenterVideo() {
-  return window.matchMedia?.("(max-width: 700px)").matches || W < 700;
-}
-
-function syncCenterVideoMode() {
-  centerVideoAsset.loop = !isMobileCenterVideo();
-}
-
-function tryPlayCenterVideo({ restart = false } = {}) {
-  syncCenterVideoMode();
-  if (restart) {
-    centerVideoAsset.currentTime = 0;
-  }
-  centerVideoAsset.play().catch(() => {});
-}
-
-function primeCenterVideo() {
-  syncCenterVideoMode();
-  if (isMobileCenterVideo()) {
-    centerVideoAsset.pause();
-    centerVideoAsset.currentTime = 0;
-    return;
-  }
-  tryPlayCenterVideo();
-}
-
-centerVideoAsset.addEventListener("canplay", primeCenterVideo);
-centerVideoAsset.addEventListener("loadeddata", primeCenterVideo, {
-  once: true,
-});
 centerVideoAsset.load();
-primeCenterVideo();
 
 let wasInLastSection = false;
 let centerVideoHasPlayedOnce = false;
@@ -491,44 +477,48 @@ const sectionMedia = SECTION_TITLES.map(() => createSectionMedia());
 
 function drawCard(media, sx, sy, w, h, opacity, blur) {
   if (opacity < 0.01) return;
+  const drawSx = snapCanvasValue(sx);
+  const drawSy = snapCanvasValue(sy);
+  const drawWBox = snapCanvasValue(w);
+  const drawHBox = snapCanvasValue(h);
   ctx.save();
   ctx.globalAlpha = opacity;
   const cardBlur = media.disableBlur ? 0 : blur;
   if (cardBlur > 0.2) ctx.filter = `blur(${cardBlur.toFixed(2)}px)`;
-  const hw = w / 2;
-  const hh = h / 2;
+  const hw = drawWBox / 2;
+  const hh = drawHBox / 2;
   if (!media.transparentBg) {
     ctx.fillStyle = "#d9d2c8";
-    ctx.fillRect(sx - hw, sy - hh, w, h);
+    ctx.fillRect(drawSx - hw, drawSy - hh, drawWBox, drawHBox);
   }
   ctx.save();
   ctx.beginPath();
-  ctx.rect(sx - hw, sy - hh, w, h);
+  ctx.rect(drawSx - hw, drawSy - hh, drawWBox, drawHBox);
   ctx.clip();
   const img = media.img;
   const loaded = img && img.complete && img.naturalWidth > 0;
   if (loaded) {
     const s =
       media.fitMode === "contain"
-        ? Math.min(w / img.naturalWidth, h / img.naturalHeight)
-        : Math.max(w / img.naturalWidth, h / img.naturalHeight);
-    const drawW = img.naturalWidth * s;
-    const drawH = img.naturalHeight * s;
+        ? Math.min(drawWBox / img.naturalWidth, drawHBox / img.naturalHeight)
+        : Math.max(drawWBox / img.naturalWidth, drawHBox / img.naturalHeight);
+    const drawW = snapCanvasValue(img.naturalWidth * s);
+    const drawH = snapCanvasValue(img.naturalHeight * s);
 
     if (media.flipX || media.flipY) {
-      ctx.translate(sx, sy);
+      ctx.translate(drawSx, drawSy);
       ctx.scale(media.flipX ? -1 : 1, media.flipY ? -1 : 1);
       ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
     } else {
-      ctx.drawImage(img, sx - drawW / 2, sy - drawH / 2, drawW, drawH);
+      ctx.drawImage(img, drawSx - drawW / 2, drawSy - drawH / 2, drawW, drawH);
     }
   } else {
     ctx.fillStyle = media.transparentBg ? "rgba(255,255,255,0.35)" : "#c8c1b6";
-    ctx.fillRect(sx - hw, sy - hh, w, h);
+    ctx.fillRect(drawSx - hw, drawSy - hh, drawWBox, drawHBox);
     if (media.transparentBg) {
       ctx.strokeStyle = "rgba(0, 0, 0, 0.24)";
       ctx.lineWidth = 1;
-      ctx.strokeRect(sx - hw, sy - hh, w, h);
+      ctx.strokeRect(drawSx - hw, drawSy - hh, drawWBox, drawHBox);
     }
   }
 
@@ -546,6 +536,7 @@ function projectLayer(
 ) {
   const responsiveCardScale = getResponsiveCardScale();
   const responsiveOffsetScale = getResponsiveCardOffsetScale();
+  const mobileVerticalSpread = getMobileVerticalSpread();
   const wobbleSpin = cameraWobble.x * CAMERA_WOBBLE_SPIN;
   const baseSpin = spinRad + phaseOffset + wobbleSpin;
   const R = Math.min(W, H) * WORLD_RADIUS;
@@ -571,7 +562,7 @@ function projectLayer(
     const fz = ry * SIN_TILT_X + rz * COS_TILT_X;
 
     const rawSx = cx + rx * R * HORIZONTAL_SPREAD * p.orbitX;
-    const rawSy = cy + fy * R * p.orbitY;
+    const rawSy = cy + fy * R * p.orbitY * mobileVerticalSpread;
     const depth = (fz + 1) / 2;
     const media = sectionMedia[sectionIndex][p.slot];
     const shiftX =
@@ -596,7 +587,12 @@ function projectLayer(
     const depthWobble = 0.38 + depth * 0.72;
     const sx = rawSx + shiftX + idleWaveX - wobbleX * depthWobble;
     const sy =
-      rawSy + shiftY + idleWaveY - wobbleY * depthWobble + revealYOffset;
+      rawSy +
+      shiftY +
+      getMobileScatterY(p.slot) +
+      idleWaveY -
+      wobbleY * depthWobble +
+      revealYOffset;
 
     const boostedDepth = clamp(depth + (media.layerBoost || 0), 0, 1);
     const renderDepth = media.forceFront ? 2 + boostedDepth : boostedDepth;
@@ -830,15 +826,17 @@ function getFinalCardsExitProgress(sectionFloat) {
 }
 
 function updateCenterVideoPlayback(sectionFloat) {
-  syncCenterVideoMode();
   const lastIndex = SECTION_TITLES.length - 1;
   const arrivedLastSection = sectionFloat >= lastIndex - 0.02;
 
   if (arrivedLastSection && !wasInLastSection && !centerVideoHasPlayedOnce) {
-    tryPlayCenterVideo({ restart: isMobileCenterVideo() });
-    centerVideoHasPlayedOnce = true;
-  } else if (arrivedLastSection && !isMobileCenterVideo()) {
-    tryPlayCenterVideo();
+    centerVideoAsset.currentTime = 0;
+    centerVideoAsset
+      .play()
+      .then(() => {
+        centerVideoHasPlayedOnce = true;
+      })
+      .catch(() => {});
   }
   wasInLastSection = arrivedLastSection;
 }
