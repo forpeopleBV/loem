@@ -14,9 +14,12 @@
 
 @font-face {
   font-family: "Greed Condensed";
-  src: url("/assets/fonts/Greed%20Condensed/GreedCondensed-TRIAL-Bold.otf")
-    format("opentype");
-  font-weight: 700;
+  src:
+    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff2")
+      format("woff2"),
+    url("/assets/fonts/Greed%20Condensed/GreedCondensed-SemiBold.woff")
+      format("woff");
+  font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
@@ -463,7 +466,8 @@ body.page-out {
 .wordmark-copy a,
 .motif-copy a,
 .product-icons-copy a,
-.typography-copy a {
+.typography-copy a,
+.colour-values-link {
   display: inline-block;
   margin-top: 16px;
   color: #27160f;
@@ -486,7 +490,9 @@ body.page-out {
 .product-icons-copy a:hover,
 .product-icons-copy a:focus-visible,
 .typography-copy a:hover,
-.typography-copy a:focus-visible {
+.typography-copy a:focus-visible,
+.colour-values-link:hover,
+.colour-values-link:focus-visible {
   color: #ff9d00;
   outline: none;
 }
@@ -928,28 +934,6 @@ body.page-out {
   margin-bottom: 12px;
 }
 
-.colour-note--ink,
-.colour-note--umber,
-.colour-note--yellow {
-  display: flex;
-  flex-direction: column;
-  min-height: clamp(188px, 13vw, 258px);
-}
-
-.colour-note .colour-note__pantone {
-  margin: auto 0 0;
-  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(16px, 1.08vw, 21px);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-}
-
-.colour-notes .colour-copy-link {
-  display: none;
-}
-
 .colour-copy-link {
   display: inline-block;
   margin: 12px 0 0;
@@ -1088,7 +1072,6 @@ body.page-out {
   grid-row: 1 / 3;
   align-self: end;
   margin: 0;
-  position: relative;
   width: 85%;
   z-index: 2;
 }
@@ -1097,22 +1080,6 @@ body.page-out {
   display: block;
   width: 100%;
   height: auto;
-}
-
-.secondary-colour__pantones {
-  display: grid;
-  grid-template-columns: 25.013% 24.283% 25.43% 25.274%;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  margin-top: clamp(12px, 1.2vw, 22px);
-  font-family: "Greed Condensed", "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(14px, 1vw, 20px);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0;
-  text-transform: uppercase;
 }
 
 .secondary-colour__use {
@@ -1152,8 +1119,9 @@ body.page-out {
   aspect-ratio: 2451 / 3057;
   justify-self: center;
   width: 116%;
-  margin-left: 60%;
-  margin-top: clamp(58px, 6vw, 112px);
+  margin-left: 35%;
+  
+  margin-top: clamp(58px,5.5vw, 112px);
 }
 
 .secondary-colour__application--small {
@@ -1364,14 +1332,6 @@ body.page-out {
     width: min(100%, 640px);
     grid-template-columns: 1fr;
     row-gap: 18px;
-    overflow: hidden;
-  }
-
-  .wordmark-freeform img,
-  .wordmark-freeform video,
-  .product-icons-freeform img,
-  .product-icons-freeform video {
-    max-width: 100%;
   }
 
   .lookbook-reveal--media {
@@ -1455,7 +1415,8 @@ body.page-out {
 
   .wordmark-media-card--parfum {
     order: 6;
-    width: 92%;
+    margin-left: -22px;
+    width: calc(80% + 54px);
   }
 
   .motif-copy {
@@ -1477,6 +1438,7 @@ body.page-out {
   .wordmark-media-card--phone {
     order: 9;
     margin-top: -82px;
+    margin-left: -22px;
     top: -10px;
     width: 84%;
   }
@@ -1485,6 +1447,7 @@ body.page-out {
     order: 10;
     top: 0;
     margin-top: 54px;
+    margin-left: -22px;
   }
 
   .wordmark-guide img {
@@ -1505,24 +1468,28 @@ body.page-out {
     order: 2;
     margin-left: auto;
     margin-top: 34px;
+    margin-right: -22px;
     width: 76%;
   }
 
   .product-icons-strip {
     order: 3;
+    margin-left: -30px;
     width: 100%;
   }
 
   .product-icons-media--bag {
     order: 4;
     margin-top: 34px;
-    width: 100%;
+    margin-left: -22px;
+    width: calc(100% + 54px);
   }
 
   .product-icons-media--iphone {
     order: 5;
     margin-left: auto;
     margin-top: 80px;
+    margin-right: -22px;
     width: 92%;
   }
 
@@ -1541,7 +1508,8 @@ body.page-out {
 
   .typography-media--label-pull {
     order: 7;
-    width: 96%;
+    margin-left: -22px;
+    width: calc(82% + 54px);
   }
 
   .typography-media--yellow-label {
@@ -1566,46 +1534,45 @@ body.page-out {
   .typography-media--magazin {
     order: 11;
     margin-top: 22px;
-    width: 100%;
+    margin-right: -22px;
+    width: 96%;
   }
 
   .colour-copy {
     order: 12;
     max-width: 100%;
-    margin-top: 58px;
   }
 
   .colour-media--water {
     order: 13;
-    width: 100%;
-    aspect-ratio: 16 / 11;
+    width: 88%;
   }
 
   .colour-media--label {
     order: 14;
     margin-left: auto;
-    width: 68%;
-    aspect-ratio: 4 / 5;
+    margin-right: -22px;
+    width: 58%;
   }
 
   .colour-palette-copy {
     order: 15;
     max-width: 100%;
-    margin-top: 18px;
     margin-bottom: 0;
   }
 
   .colour-palette {
     order: 16;
-    width: 100%;
+    margin-left: -22px;
+    width: calc(100% + 44px);
   }
 
   .colour-notes {
     order: 17;
     width: 100%;
     margin-left: 0;
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 30px 22px;
     padding: 20px 0 0;
   }
 
@@ -1618,25 +1585,11 @@ body.page-out {
     padding-left: 0;
   }
 
-  .colour-note--ink,
-  .colour-note--umber,
-  .colour-note--yellow {
-    min-height: 0;
-  }
-
-  .colour-note .colour-note__pantone {
-    margin-top: 18px;
-  }
-
   .secondary-colour {
     order: 18;
     --secondary-colour-media-height: auto;
-    width: 100%;
-    margin-left: 0;
     grid-template-columns: 1fr;
-    gap: 18px;
-    padding: 42px 0 0;
-    overflow: visible;
+    padding: 18px 0 0;
   }
 
   .secondary-colour__intro,
@@ -1656,53 +1609,39 @@ body.page-out {
 
   .secondary-colour__media {
     height: auto;
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    margin-top: 0;
-  }
-
-  .secondary-colour__media--left,
-  .secondary-colour__media--middle {
-    width: 100%;
+    aspect-ratio: 1 / 1.28;
+    margin-top: 18px;
   }
 
   .secondary-colour__media--blue {
-    width: 100%;
-    margin-left: 0;
+    margin-left: auto;
+    width: 92%;
   }
 
   .secondary-colour__palette {
     align-self: auto;
-    margin: 2px 0 8px;
-    width: 100%;
-  }
-
-  .secondary-colour__pantones {
-    position: static;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 14px;
-    margin-top: 12px;
-    font-size: clamp(11px, 3vw, 14px);
+    margin: 0;
+    width: 72%;
   }
 
   .secondary-colour__use {
-    padding-top: 8px;
+    padding-top: 24px;
   }
 
   .secondary-colour__application--left {
-    width: 100%;
-    margin-top: 18px;
+    width: 86%;
+    margin-top: 42px;
   }
 
   .secondary-colour__application--right {
-    width: 100%;
-    margin-top: 0;
-    margin-left: 0;
+    width: 68%;
+    margin-top: 24px;
+    margin-left: 35%;
   }
 
   .secondary-colour__application--small {
-    width: 72%;
-    margin-top: 0;
+    width: 48%;
+    margin-top: 24px;
     margin-left: auto;
   }
 
