@@ -1827,6 +1827,7 @@ body.page-out {
   .lookbook-section--closing-video {
     min-height: 70svh;
     padding: calc( 0vw) 22px 64px;
+   
   }
 
   .closing-video {
